@@ -25,14 +25,6 @@ tei_ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
 
 def safe_write_json(data, path, sort_keys=False, merge=False):
-    """
-    Safely writes JSON data to a file, with optional merging.
-
-    :param data: The data to write (list, dict or set).
-    :param path: File path to write to.
-    :param sort_keys: Whether to sort lists before writing.
-    :param merge: If True, merges with existing content instead of overwriting.
-    """
     for attempt in range(2):
         try:
             # Bestehende Daten einlesen, wenn merging aktiv ist
@@ -40,16 +32,33 @@ def safe_write_json(data, path, sort_keys=False, merge=False):
                 try:
                     with open(path, "r", encoding="utf-8") as f:
                         existing = json.load(f)
-                except Exception:
+                except (FileNotFoundError, json.JSONDecodeError, PermissionError):
                     existing = [] if isinstance(data, (list, set)) else {}
 
                 # Set → Liste umwandeln
                 if isinstance(data, set):
                     data = list(data)
 
-                # Merge-Strategie abhängig vom Typ
+                # 🔄 Merge-Strategie
                 if isinstance(data, list) and isinstance(existing, list):
-                    data = list(set(existing).union(set(data)))
+                    if all(isinstance(x, dict) for x in data + existing):
+                        # ✅ dedupliziere dicts nach (Vers, Benannte Figur)
+                        seen = set()
+                        merged = []
+                        for entry in existing + data:
+                            key = (
+                                entry.get("Vers"),
+                                entry.get("Benannte Figur"),
+                                entry.get("Eigennennung") or entry.get("Bezeichnung") or entry.get("Erzähler")
+                            )
+                            if key not in seen:
+                                merged.append(entry)
+                                seen.add(key)
+                        data = merged
+                    else:
+                        # list of str etc.
+                        data = list(set(existing).union(set(data)))
+
                 elif isinstance(data, dict) and isinstance(existing, dict):
                     existing.update(data)
                     data = existing
@@ -65,6 +74,7 @@ def safe_write_json(data, path, sort_keys=False, merge=False):
                     indent=2
                 )
             return
+
         except PermissionError as e:
             if attempt == 0:
                 print(f"⚠️ Zugriff verweigert auf {path}. Warte 1 Sekunde und versuche erneut...")
@@ -72,7 +82,6 @@ def safe_write_json(data, path, sort_keys=False, merge=False):
             else:
                 print(f"❌ Zweiter Versuch fehlgeschlagen. Datei bleibt gesperrt: {path}")
                 raise e
-
 
 def safe_read_json(path, default=None):
     """
