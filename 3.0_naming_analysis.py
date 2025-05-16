@@ -1082,7 +1082,10 @@ def lemmatize_and_categorize_entry(entry, lemma_normalization, paths, ignored_le
     tokens = [t for t in tokenize(text.lower()) if t.isalpha()]
 
     # Filter only real word tokens
-    missing = [t for t in tokens if t.isalpha() and resolve_lemma(t, lemma_normalization) == t]
+    missing = [
+        t for t in tokens
+        if t.isalpha() and not any(t in v or t == k for k, v in lemma_normalization.items())
+    ]
 
     if missing:
         while True:
