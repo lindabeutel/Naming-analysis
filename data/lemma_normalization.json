@@ -81,7 +81,8 @@
   ],
   "Apollo": [
     "appollen",
-    "appollo"
+    "appollo",
+    "appollon"
   ],
   "Arthan": [
     "arthan"
@@ -130,7 +131,8 @@
     "plasien"
   ],
   "Brechmundâ": [
-    "brachmunt"
+    "brachmunt",
+    "brechmunda"
   ],
   "Bretagne": [
     "brittannia"
@@ -142,6 +144,9 @@
   "Clargis": [
     "clargirs",
     "clargis"
+  ],
+  "Clariens": [
+    "clariens"
   ],
   "Cursabile": [
     "cursabile"
@@ -174,6 +179,9 @@
   "Ekerîch": [
     "ekerich",
     "ekerichen"
+  ],
+  "Engel": [
+    "engel"
   ],
   "Engelirs": [
     "engelirs",
@@ -210,6 +218,9 @@
   ],
   "Garpîn": [
     "garpin"
+  ],
+  "Gebewîn": [
+    "gebewinen"
   ],
   "Genelûn": [
     "genelun",
@@ -273,6 +284,9 @@
   "Horre": [
     "horre"
   ],
+  "Iclarions": [
+    "iclarions"
+  ],
   "Ilaz": [
     "ilaz"
   ],
@@ -302,6 +316,9 @@
   ],
   "Josias": [
     "iosias"
+  ],
+  "Josua": [
+    "iosuê"
   ],
   "Judas": [
     "iudas",
@@ -372,6 +389,9 @@
   ],
   "Malsarôn": [
     "malsaron"
+  ],
+  "Maltrens": [
+    "maltrens"
   ],
   "Mantel": [
     "mantel"
@@ -453,7 +473,12 @@
     "otnant"
   ],
   "Otto": [
+    "otten",
     "otto"
+  ],
+  "Paligân": [
+    "paligan",
+    "paliganen"
   ],
   "Pande": [
     "pande"
@@ -577,6 +602,9 @@
   ],
   "Tenemarke": [
     "tenemarche"
+  ],
+  "Tervagant": [
+    "teruagant"
   ],
   "Thibors": [
     "thibors"
@@ -804,7 +832,8 @@
     "gode",
     "got",
     "gote",
-    "gotes"
+    "gotes",
+    "zegote"
   ],
   "grunt": [
     "grunt"
@@ -886,6 +915,7 @@
     "du",
     "ich",
     "ir",
+    "iwer",
     "min",
     "mine",
     "minem",
@@ -973,6 +1003,9 @@
   "küniclîn": [
     "chungelin"
   ],
+  "küniginne": [
+    "chuoninginne"
+  ],
   "künne": [
     "chunne"
   ],
@@ -998,6 +1031,7 @@
     "maere",
     "maeren",
     "mare",
+    "maren",
     "mere"
   ],
   "maget": [
