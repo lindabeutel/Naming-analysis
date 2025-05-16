@@ -1095,7 +1095,14 @@ def lemmatize_and_categorize_entry(entry, lemma_normalization, paths, ignored_le
                 f"⚠ Number of lemmata ({len(new_lemmata)}) doesn't match number of tokens ({len(missing)}). Please try again.")
 
         for token, lemma in zip(missing, new_lemmata):
-            lemma_normalization[token] = lemma
+            lemma_normalization.setdefault(lemma, [])
+            if token not in lemma_normalization[lemma]:
+                lemma_normalization[lemma].append(token)
+
+        # 🔤 Sort alphabetically
+        for lemma in lemma_normalization:
+            lemma_normalization[lemma] = sorted(set(lemma_normalization[lemma]))
+
         save_lemma_normalization(lemma_normalization, path=paths["lemma_normalization_json"])
 
     lemmata = [resolve_lemma(t, lemma_normalization) for t in tokens]
@@ -1247,7 +1254,10 @@ def save_ignored_lemmas(data, path="ignored_lemmas.json"):
     safe_write_json(data, path, sort_keys=True, merge=True)
 
 def save_lemma_categories(data, path="lemma_categories.json"):
-    safe_write_json(data, path, merge=True)
+    existing = safe_read_json(path, default={})
+    existing.update(data)
+    sorted_data = dict(sorted(existing.items()))
+    safe_write_json(sorted_data, path, merge=False)
 
 def export_all_data_to_new_excel(paths, options):
     """

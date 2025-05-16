@@ -1,593 +1,1248 @@
 {
-  "pipines": "Pipin",
-  "gotes": "got",
-  "der": "der",
-  "cheiser": "keiser",
-  "here": "hêr",
-  "got": "got",
-  "dem": "der",
-  "tuvil": "tiuvel",
-  "karl": "Karl",
-  "gote": "got",
-  "kuninge": "künic",
-  "dinist": "dienest",
-  "man": "man",
-  "des": "der",
-  "tuvelis": "tiuvel",
-  "keiseres": "keiser",
-  "keiser": "keiser",
-  "allir": "al",
-  "hiemele": "himel",
-  "helt": "helt",
-  "ruolant": "Ruolant",
-  "oliuir": "Olivier",
-  "wigant": "wîgant",
-  "samson": "Samsôn",
-  "herzoge": "herzoge",
-  "herre": "hêrre",
-  "anseis": "Anseîs",
-  "gerges": "Gergers",
-  "mare": "maere",
-  "wernes": "Wernes",
-  "graue": "grâve",
-  "engelirs": "Engelirs",
-  "anshelm": "Anshelm",
-  "kaisers": "keiser",
-  "gotefrit": "Gotefrit",
-  "uanere": "venre",
-  "keisere": "keiser",
-  "rovlant": "Ruolant",
-  "kaiseres": "keiser",
-  "min": "ich",
-  "trechtin": "truhtîn",
-  "uwir": "ich",
-  "meisterschefte": "meisterschaft",
-  "erzebiscof": "erzebischof",
-  "biscof": "bischof",
-  "unser": "ich",
-  "kuoninc": "künic",
-  "dauid": "David",
-  "appollen": "Apollo",
-  "machmet": "Mahomet",
-  "sinem": "ich",
-  "gesellen": "geselle",
-  "ein": "ein",
-  "alter": "alt",
-  "heiden": "heiden",
-  "iosias": "Josias",
-  "di": "der",
-  "namen": "name",
-  "dri": "drî",
-  "minis": "ich",
-  "trechtinis": "truhtîn",
-  "deo": "deus",
-  "uil": "vil",
-  "uirmezen": "vermëzzen",
-  "marsilie": "Marsilie",
-  "kaiser": "keiser",
-  "sin": "ich",
-  "blanscandiz": "Blandscandîz",
-  "libir": "liep",
-  "deme": "der",
-  "dinen": "ich",
-  "sun": "sun",
-  "alte": "alt",
-  "sente": "sancte",
-  "michehelis": "Michael",
-  "wirdir": "wider",
-  "warte": "warte",
-  "clargis": "Clargis",
-  "uon": "von",
-  "parguel": "Parguel",
-  "estropiz": "Estropiz",
-  "sinin": "ich",
-  "stramariz": "Stramariz",
-  "priamur": "Priamur",
-  "von": "von",
-  "gerglant": "Gerglant",
-  "baiziel": "Baiziel",
-  "matheus": "Matheus",
-  "oeheim": "oeheim",
-  "malbrant": "Malbrant",
-  "iomel": "Jomel",
-  "chuone": "küene",
-  "un": "unde",
-  "snel": "snël",
-  "kuoniges": "künic",
-  "salomon": "Salomon",
-  "den": "der",
-  "lebendigen": "lëbendec",
-  "einer": "ein",
-  "megede": "maget",
-  "selben": "sëlbic",
-  "edele": "edel",
-  "kuonc": "künic",
-  "du": "ich",
-  "wâren": "wâr",
-  "marssilie": "Marsilie",
-  "heilige": "heilec",
-  "crist": "Krist",
-  "alten": "alt",
-  "ware": "wâr",
-  "appollo": "Apollo",
-  "rechtin": "rëhte",
-  "heilere": "heilaere",
-  "diepolt": "Diebalt",
-  "marchgraue": "marcgrâve",
-  "otto": "Otto",
-  "gergirs": "Gergis",
-  "iuo": "Ivo",
-  "ingram": "Ingram",
-  "geselle": "geselle",
-  "geist": "geist",
-  "uiant": "vîant",
-  "mit": "mit",
-  "barte": "bart",
-  "mahmeten": "Mahomet",
-  "guot": "guot",
-  "gode": "got",
-  "einen": "ein",
-  "waren": "wâr",
-  "roemische": "roemesch",
-  "voget": "voget",
-  "marssilien": "Marsilie",
-  "turpin": "Turpîn",
-  "uoget": "voget",
-  "rome": "Rôm",
-  "himilische": "himelisch",
-  "wirt": "wirt",
-  "uwerem": "ich",
-  "schephere": "schepfaere",
-  "naimes": "Naimes",
-  "beieren": "Beiern",
-  "herren": "hêrre",
-  "machmeten": "Mahomet",
-  "minem": "ich",
-  "biscophsce": "bischof",
-  "iohannes": "Johannes",
-  "kaisere": "keiser",
-  "mines": "ich",
-  "keiseris": "keiser",
-  "tuvel": "tiuvel",
-  "sancte": "sancte",
-  "michelis": "Michaeli",
-  "genelun": "Genelûn",
-  "lieber": "liep",
-  "din": "ich",
-  "neue": "nëve",
-  "uone": "von",
-  "oigir": "Oigir",
-  "tenemarche": "Tenemarke",
-  "dierrich": "Dierrîch",
-  "starche": "starc",
-  "wido": "Wido",
-  "wasconie": "Basken",
-  "albonie": "Albonie",
-  "aiuone": "Avon",
-  "ritschart": "Ritschart",
-  "tortuone": "Tortona",
-  "diebalt": "Diebalt",
-  "remis": "Reims",
-  "heinrich": "Heinrich",
-  "garmes": "Garmes",
-  "raines": "Reims",
-  "milun": "Milun",
-  "aschalbaies": "Aschalpems",
-  "walthere": "Walther",
-  "gergis": "Gergis",
-  "maere": "maere",
-  "ansgir": "Ansgir",
-  "reimunt": "Reimunt",
-  "brittannia": "Bretagne",
-  "biscoph": "bischof",
-  "genelunes": "Genelûn",
-  "sante": "sancte",
-  "iohannen": "Johannes",
-  "grunt": "grunt",
-  "ueste": "veste",
-  "cristinheit": "kristenheit",
-  "houbet": "houbet",
-  "arbeit": "arbeit",
-  "bluoet": "bluot",
-  "heiligin": "heilec",
-  "glouben": "geloube",
-  "heiligen": "heilec",
-  "geistes": "geist",
-  "stiefuater": "stiefvater",
-  "romischeme": "roemesch",
-  "uogete": "voget",
-  "rovlante": "Ruolant",
-  "baldewin": "Baldewîn",
-  "riche": "rîche",
-  "rovlanden": "Ruolant",
-  "kaiseris": "keiser",
-  "dinir": "ich",
-  "swester": "swëster",
-  "luozele": "lützel",
-  "pasanzi": "Basanzi",
-  "basilie": "Basilie",
-  "bruoder": "bruoder",
-  "chaiser": "keiser",
-  "genelune": "Genelûn",
-  "ture": "tiure",
-  "rovlande": "Ruolant",
-  "geswige": "geswige",
-  "ir": "ich",
-  "karle": "Karl",
-  "maeren": "maere",
-  "romischen": "roemesch",
-  "britten": "britten",
-  "beiere": "Beiern",
-  "madelger": "Madelgêr",
-  "herzogin": "herzoge",
-  "romere": "Rômaere",
-  "mantel": "Mantel",
-  "unde": "unde",
-  "lieben": "liep",
-  "uweren": "ich",
-  "arme": "arm",
-  "weise": "weise",
-  "kuonige": "künic",
-  "edelen": "edel",
-  "chunige": "künic",
-  "ich": "ich",
-  "bin": "sîn",
-  "alt": "alt",
-  "uirwizzer": "virwiz",
-  "krist": "Krist",
-  "armen": "arm",
-  "iudas": "Judas",
-  "judas": "Judas",
-  "genelûn": "Genelûn",
-  "oliuiren": "Olivier",
-  "snellen": "snël",
-  "geiste": "geist",
-  "chuoninc": "künic",
-  "romische": "roemesch",
-  "die": "der",
-  "bote": "bote",
-  "chuonich": "künic",
-  "kuonich": "künic",
-  "aller": "al",
-  "himele": "himel",
-  "chuoninge": "künic",
-  "kuoninge": "künic",
-  "chuonige": "künic",
-  "chuonic": "künic",
-  "liber": "liep",
-  "algaphiles": "Algafiles",
-  "valsaron": "Falsaron",
-  "ualdebrun": "Valdebrûn",
-  "orphalis": "Orphalis",
-  "glibon": "Glibon",
-  "clargirs": "Clargis",
-  "gersiz": "Gersîz",
-  "plangirz": "Plangirz",
-  "genelunen": "Genelûn",
-  "karlen": "Karl",
-  "ungetruwe": "ungetriuwe",
-  "ratgebe": "râtgëbe",
-  "rovlanten": "Ruolant",
-  "tuuil": "tiuvel",
-  "rolandes": "Ruolant",
-  "tuvele": "tiuvel",
-  "ungetruwen": "ungetriuwe",
-  "chuonc": "künic",
-  "frunt": "vriunt",
-  "oliboris": "Oliboris",
-  "friunt": "vriunt",
-  "brachmunt": "Brechmundâ",
-  "alrich": "Alrich",
-  "pande": "Pande",
-  "wlter": "Wlter",
-  "ilmar": "Ilmar",
-  "ilaz": "Ilaz",
-  "zamne": "Zammen",
-  "antelun": "Antelun",
-  "horre": "Horre",
-  "maglirte": "Maglirte",
-  "mars": "Mars",
-  "jouinus": "Jupiter",
-  "dritte": "dritte",
-  "saturnus": "Saturn",
-  "margariz": "Margarîz",
-  "zernubele": "Zernubele",
-  "adelrot": "Adalrôt",
-  "falsaron": "Falsaron",
-  "marssilies": "Marsilie",
-  "sinen": "ich",
-  "herzogen": "herzoge",
-  "baigeren": "Beiern",
-  "getruwer": "getriuwe",
-  "minen": "ich",
-  "palt": "balt",
-  "chaiseres": "keiser",
-  "tiuel": "tiuvel",
-  "himiliske": "himelisch",
-  "heiliger": "heilec",
-  "witwen": "witewe",
-  "weisen": "weise",
-  "ain": "ein",
-  "wise": "wîs",
-  "unt": "unde",
-  "biderbe": "bíderbe",
-  "algafiles": "Algafiles",
-  "ohaim": "oeheim",
-  "marsilies": "Marsilie",
-  "himilischen": "himelisch",
-  "baieren": "Beiern",
-  "sent": "sancte",
-  "egidien": "Ägidius",
-  "unseren": "ich",
-  "neuen": "nëve",
-  "gnadeclicher": "genaedec",
-  "entrunner": "entrinnen",
-  "knecht": "knëht",
-  "ualantes": "vâlant",
-  "ubel": "übel",
-  "gaist": "geist",
-  "drin": "drî",
-  "criste": "Krist",
-  "rike": "rîche",
-  "guote": "guot",
-  "rovlantes": "Ruolant",
-  "trechtines": "truhtîn",
-  "engelris": "Engelirs",
-  "ekerich": "Ekerîch",
-  "gernis": "Gergis",
-  "pernger": "Beringêr",
-  "atto": "Hatte",
-  "ansis": "Anseîs",
-  "gerhart": "Gerhart",
-  "walter": "Walther",
-  "helede": "helt",
-  "iunge": "junc",
-  "richtare": "rihtaere",
-  "mere": "maere",
-  "tiueles": "tiuvel",
-  "oliuire": "Olivier",
-  "psalmista": "psalmista",
-  "rechten": "rëhte",
-  "schephare": "schepfaere",
-  "heilare": "heilaere",
-  "oberisten": "ober",
-  "ewart": "êwart",
-  "alterot": "Adalrôt",
-  "wilde": "wilde",
-  "rolanten": "Ruolant",
-  "rolante": "Ruolant",
-  "chunc": "künic",
-  "cursabile": "Cursabile",
-  "chuninc": "künic",
-  "rolanden": "Ruolant",
-  "philonin": "Philon",
-  "liebir": "liep",
-  "malprimes": "Malprimes",
-  "ampregalt": "Ampelgart",
-  "ammirat": "Ammirat",
-  "paluir": "Balvier",
-  "starcher": "starc",
-  "tortulose": "Tortosa",
-  "targis": "Targîs",
-  "wis": "wîs",
-  "dinis": "ich",
-  "uiantis": "vîant",
-  "sines": "ich",
-  "kinde": "kint",
-  "karelen": "Karl",
-  "sibiliae": "Sevilla",
-  "dyonisien": "Denis",
-  "cernubiles": "Zernubele",
-  "chuninge": "künic",
-  "miner": "ich",
-  "alden": "Aldâ",
-  "wundirliche": "wunderlich",
-  "alexander": "Alexander",
-  "gergers": "Gergers",
-  "milte": "milte",
-  "dionisien": "Dionisius",
-  "chuoniges": "künic",
-  "adalrot": "Adalrôt",
-  "minim": "ich",
-  "peter": "Petrus",
-  "mahmete": "Mahomet",
-  "dinem": "ich",
-  "mahmet": "Mahomet",
-  "garpin": "Garpîn",
-  "gegin": "gegen",
-  "bruder": "bruoder",
-  "degen": "dëgen",
-  "her": "hêrre",
-  "witel": "Witel",
-  "chune": "küene",
-  "arthan": "Arthan",
-  "machmetes": "Mahomet",
-  "rolant": "Ruolant",
-  "ewigen": "êwic",
-  "marsilien": "Marsilie",
-  "kunige": "künic",
-  "haiden": "heiden",
-  "almerie": "Almeria",
-  "tortan": "Tortan",
-  "grauen": "grâve",
-  "orten": "Orte",
-  "maximin": "Maximîn",
-  "falsarones": "Falsaron",
-  "agrentin": "Agrigent",
-  "marcellen": "Marcelle",
-  "uigennen": "Viana",
-  "rich": "rîche",
-  "dinistman": "dienestman",
-  "marcgraue": "marcgrâve",
-  "waldram": "Waldram",
-  "himelische": "himelisch",
-  "biscofes": "bischof",
-  "malprimis": "Malprimis",
-  "ampelgart": "Ampelgart",
-  "egeris": "Gergers",
-  "ciciron": "Ciciron",
-  "cicirone": "Ciciron",
-  "egeriers": "Gergers",
-  "haideniske": "heidenisch",
-  "amurafel": "Amurafel",
-  "armez": "arm",
-  "chungelin": "küniclîn",
-  "prutan": "Prutan",
-  "muralan": "Muralan",
-  "amarezur": "Amarezur",
-  "luciferen": "Luzifer",
-  "mortgire": "mortgiric",
-  "ainem": "ein",
-  "christes": "Krist",
-  "herodes": "Herodes",
-  "eschermunt": "Eschermunt",
-  "ualeterne": "Valterne",
-  "ludewic": "Ludewîc",
-  "neren": "Nêre",
-  "pandolt": "Pandolt",
-  "martian": "Martian",
-  "nerpa": "Nerpa",
-  "hatte": "Hatte",
-  "warer": "wâr",
-  "estorgant": "Estorgant",
-  "regenfrit": "Regenfrit",
-  "tagespurc": "Dagsburg",
-  "hillunc": "Hillung",
-  "uastmar": "Vastmar",
-  "normandîe": "Normandie",
-  "witrant": "Witrant",
-  "otnant": "Otnant",
-  "pillunc": "Pillung",
-  "sigebant": "Sigebant",
-  "hatten": "Hatte",
-  "beringer": "Beringêr",
-  "stalmariz": "Stramariz",
-  "beringeres": "Beringêr",
-  "gedeon": "Gideon",
-  "cornubiles": "Zernubele",
-  "chunisten": "küene",
-  "helde": "helt",
-  "pin": "sîn",
-  "ganzer": "ganz",
-  "scarpulon": "Scarpulôn",
-  "iren": "Ire",
-  "iue": "Ivo",
-  "cristes": "Krist",
-  "uz": "ûz",
-  "yspanie": "Spanien",
-  "grandon": "Grandon",
-  "sunes": "sun",
-  "oberiste": "ober",
-  "ualdeprun": "Valdebrûn",
-  "tiweren": "tiure",
-  "sampson": "Samsôn",
-  "alfrich": "Alfric",
-  "affrica": "Afrika",
-  "tiwerliche": "tiure",
-  "alfrichen": "Alfric",
-  "capadocia": "Kappadokien",
-  "gernises": "Gergis",
-  "ekerichen": "Ekerîch",
-  "herlichen": "hêrlich",
-  "peringeren": "Beringêr",
-  "ualtia": "Valtia",
-  "antoir": "Antoîr",
-  "gwimuten": "Gwimut",
-  "genoz": "genôz",
-  "chartan": "Kartan",
-  "tiuerliche": "tiure",
-  "abysse": "Abysse",
-  "malsaron": "Malsarôn",
-  "torchen": "Torke",
-  "pruder": "bruoder",
-  "estorchen": "Estorke",
-  "iustinen": "Justîn",
-  "sigeloten": "Sigelot",
-  "engelrirs": "Engelirs",
-  "spemualriz": "Spemvalrîz",
-  "guten": "guot",
-  "siner": "ich",
-  "muter": "muoter",
-  "kunc": "künic",
-  "besten": "beste",
-  "urtannen": "Urtanne",
-  "chunen": "küene",
-  "karles": "Karl",
-  "pharaonem": "Pharao",
-  "sinim": "ich",
-  "alroten": "Adalrôt",
-  "thibors": "Thibors",
-  "sarraguz": "Saragossa",
-  "in": "in",
-  "helle": "helle",
-  "ubele": "übel",
-  "engelirsen": "Engelirs",
-  "alfabinem": "Alfabîn",
-  "englirs": "Engelirs",
-  "egeries": "Gergers",
-  "peringer": "Beringêr",
-  "gesunden": "gesunt",
-  "turpines": "Turpîn",
-  "al": "al",
-  "waltente": "waltendic",
-  "karlinge": "Karlinge",
-  "durch": "durch",
-  "soteniu": "sieden",
-  "gimme": "gimme",
-  "riter": "rîtaere",
-  "ere": "êre",
-  "hergeselle": "hergeselle",
-  "liebe": "liep",
-  "alde": "Aldâ",
-  "minin": "ich",
-  "wigante": "wîgant",
-  "uerratere": "verrâtaere",
-  "unserin": "ich",
-  "herrin": "hêrre",
-  "frouwe": "vrouwe",
-  "marie": "Maria",
-  "laurentien": "Laurentius",
-  "roslin": "Roslin",
-  "pegon": "Pegôn",
-  "chunne": "künne",
-  "falbinen": "Falbin",
-  "ebelinen": "Ebelin",
-  "gerharten": "Gerhart",
-  "rosselinen": "Roslin",
-  "erwelten": "erweln",
-  "iuen": "Ivo",
-  "pegonen": "Pegôn",
-  "pilme": "Pelmo",
-  "degionem": "Degiôn",
-  "iorfalir": "Jorfalir",
-  "tiure": "tiure",
-  "chuniges": "künic",
-  "tiuueles": "tiuvel",
-  "algarich": "Algarich",
-  "oliuirin": "Olivier",
-  "ziren": "ziere",
-  "karln": "Karl",
-  "dritten": "dritte",
-  "cristen": "Krist",
-  "tugente": "tugent",
-  "uater": "vater",
-  "allerlibistin": "allerliebest",
-  "tiwerlicher": "tiurlich",
-  "liebiste": "liep",
-  "scalc": "schalc",
-  "unter": "under",
-  "tanen": "tân",
-  "rolantes": "Ruolant",
-  "unseres": "ich",
-  "waltheren": "Walther",
-  "urchunde": "urkünde",
-  "tiuriste": "tiure",
-  "frouwin": "vrouwe",
-  "marien": "Maria",
-  "egidie": "Aegidius",
-  "lerare": "lêraere",
-  "sime": "ich",
-  "admirate": "admirât",
-  "regenheres": "regenhêrre",
-  "barn": "bar"
+  "Pipin": [
+    "pipines"
+  ],
+  "got": [
+    "gode",
+    "got",
+    "gote",
+    "gotes"
+  ],
+  "der": [
+    "dem",
+    "deme",
+    "den",
+    "der",
+    "des",
+    "di",
+    "die"
+  ],
+  "keiser": [
+    "chaiser",
+    "chaiseres",
+    "cheiser",
+    "kaiser",
+    "kaisere",
+    "kaiseres",
+    "kaiseris",
+    "kaisers",
+    "keiser",
+    "keisere",
+    "keiseres",
+    "keiseris"
+  ],
+  "hêr": [
+    "here"
+  ],
+  "tiuvel": [
+    "tiuel",
+    "tiueles",
+    "tiuueles",
+    "tuuil",
+    "tuvel",
+    "tuvele",
+    "tuvelis",
+    "tuvil"
+  ],
+  "Karl": [
+    "karelen",
+    "karl",
+    "karle",
+    "karlen",
+    "karles",
+    "karln"
+  ],
+  "künic": [
+    "chunc",
+    "chunige",
+    "chuniges",
+    "chuninc",
+    "chuninge",
+    "chuonc",
+    "chuonic",
+    "chuonich",
+    "chuonige",
+    "chuoniges",
+    "chuoninc",
+    "chuoninge",
+    "kunc",
+    "kunige",
+    "kuninge",
+    "kuonc",
+    "kuonich",
+    "kuonige",
+    "kuoniges",
+    "kuoninc",
+    "kuoninge"
+  ],
+  "dienest": [
+    "dinist"
+  ],
+  "man": [
+    "man"
+  ],
+  "al": [
+    "al",
+    "aller",
+    "allir"
+  ],
+  "himel": [
+    "hiemele",
+    "himele"
+  ],
+  "helt": [
+    "helde",
+    "helede",
+    "helt"
+  ],
+  "Ruolant": [
+    "rolanden",
+    "rolandes",
+    "rolant",
+    "rolante",
+    "rolanten",
+    "rolantes",
+    "rovlande",
+    "rovlanden",
+    "rovlant",
+    "rovlante",
+    "rovlanten",
+    "rovlantes",
+    "ruolant"
+  ],
+  "Olivier": [
+    "oliuir",
+    "oliuire",
+    "oliuiren",
+    "oliuirin"
+  ],
+  "wîgant": [
+    "wigant",
+    "wigante"
+  ],
+  "Samsôn": [
+    "sampson",
+    "samson"
+  ],
+  "herzoge": [
+    "herzoge",
+    "herzogen",
+    "herzogin"
+  ],
+  "hêrre": [
+    "her",
+    "herre",
+    "herren",
+    "herrin"
+  ],
+  "Anseîs": [
+    "anseis",
+    "ansis"
+  ],
+  "Gergers": [
+    "egeriers",
+    "egeries",
+    "egeris",
+    "gergers",
+    "gerges"
+  ],
+  "maere": [
+    "maere",
+    "maeren",
+    "mare",
+    "mere"
+  ],
+  "Wernes": [
+    "wernes"
+  ],
+  "grâve": [
+    "graue",
+    "grauen"
+  ],
+  "Engelirs": [
+    "engelirs",
+    "engelirsen",
+    "engelrirs",
+    "engelris",
+    "englirs"
+  ],
+  "Anshelm": [
+    "anshelm"
+  ],
+  "Gotefrit": [
+    "gotefrit"
+  ],
+  "venre": [
+    "uanere"
+  ],
+  "ich": [
+    "din",
+    "dinem",
+    "dinen",
+    "dinir",
+    "dinis",
+    "du",
+    "ich",
+    "ir",
+    "min",
+    "mine",
+    "minem",
+    "minen",
+    "miner",
+    "mines",
+    "minim",
+    "minin",
+    "minis",
+    "sime",
+    "sin",
+    "sinem",
+    "sinen",
+    "siner",
+    "sines",
+    "sinim",
+    "sinin",
+    "unser",
+    "unseren",
+    "unseres",
+    "unserin",
+    "uwerem",
+    "uweren",
+    "uwir"
+  ],
+  "truhtîn": [
+    "trechtin",
+    "trechtines",
+    "trechtinis"
+  ],
+  "meisterschaft": [
+    "meisterschefte"
+  ],
+  "erzebischof": [
+    "erzebiscof"
+  ],
+  "bischof": [
+    "biscof",
+    "biscofes",
+    "biscoph",
+    "biscophsce"
+  ],
+  "David": [
+    "dauid"
+  ],
+  "Apollo": [
+    "appollen",
+    "appollo"
+  ],
+  "Mahomet": [
+    "machmet",
+    "machmeten",
+    "machmetes",
+    "mahmet",
+    "mahmete",
+    "mahmeten"
+  ],
+  "geselle": [
+    "geselle",
+    "gesellen"
+  ],
+  "ein": [
+    "ain",
+    "ainem",
+    "ein",
+    "einen",
+    "einer"
+  ],
+  "alt": [
+    "alt",
+    "alte",
+    "alten",
+    "alter"
+  ],
+  "heiden": [
+    "haiden",
+    "heiden"
+  ],
+  "Josias": [
+    "iosias"
+  ],
+  "name": [
+    "namen"
+  ],
+  "drî": [
+    "dri",
+    "drin"
+  ],
+  "deus": [
+    "deo"
+  ],
+  "vil": [
+    "uil"
+  ],
+  "vermëzzen": [
+    "uirmezen"
+  ],
+  "Marsilie": [
+    "marsilie",
+    "marsilien",
+    "marsilies",
+    "marssilie",
+    "marssilien",
+    "marssilies"
+  ],
+  "Blandscandîz": [
+    "blanscandiz"
+  ],
+  "liep": [
+    "liber",
+    "libir",
+    "liebe",
+    "lieben",
+    "lieber",
+    "liebir",
+    "liebiste"
+  ],
+  "sun": [
+    "sun",
+    "sunes"
+  ],
+  "sancte": [
+    "sancte",
+    "sante",
+    "sent",
+    "sente"
+  ],
+  "Michael": [
+    "michehelis"
+  ],
+  "wider": [
+    "wirdir"
+  ],
+  "warte": [
+    "warte"
+  ],
+  "Clargis": [
+    "clargirs",
+    "clargis"
+  ],
+  "von": [
+    "uon",
+    "uone",
+    "von"
+  ],
+  "Parguel": [
+    "parguel"
+  ],
+  "Estropiz": [
+    "estropiz"
+  ],
+  "Stramariz": [
+    "stalmariz",
+    "stramariz"
+  ],
+  "Priamur": [
+    "priamur"
+  ],
+  "Gerglant": [
+    "gerglant"
+  ],
+  "Baiziel": [
+    "baiziel"
+  ],
+  "Matheus": [
+    "matheus"
+  ],
+  "oeheim": [
+    "oeheim",
+    "ohaim"
+  ],
+  "Malbrant": [
+    "malbrant"
+  ],
+  "Jomel": [
+    "iomel"
+  ],
+  "küene": [
+    "chune",
+    "chunen",
+    "chunisten",
+    "chuone"
+  ],
+  "unde": [
+    "un",
+    "unde",
+    "unt"
+  ],
+  "snël": [
+    "snel",
+    "snellen"
+  ],
+  "Salomon": [
+    "salomon"
+  ],
+  "lëbendec": [
+    "lebendigen"
+  ],
+  "maget": [
+    "megede"
+  ],
+  "sëlbic": [
+    "selben"
+  ],
+  "edel": [
+    "edele",
+    "edelen"
+  ],
+  "wâr": [
+    "ware",
+    "waren",
+    "warer",
+    "wâren"
+  ],
+  "heilec": [
+    "heilige",
+    "heiligen",
+    "heiliger",
+    "heiligin"
+  ],
+  "Krist": [
+    "christes",
+    "crist",
+    "criste",
+    "cristen",
+    "cristes",
+    "krist"
+  ],
+  "rëhte": [
+    "rechten",
+    "rechtin"
+  ],
+  "heilaere": [
+    "heilare",
+    "heilere"
+  ],
+  "Diebalt": [
+    "diebalt",
+    "diepolt"
+  ],
+  "marcgrâve": [
+    "marcgraue",
+    "marchgraue"
+  ],
+  "Otto": [
+    "otto"
+  ],
+  "Gergis": [
+    "gergirs",
+    "gergis",
+    "gernis",
+    "gernises"
+  ],
+  "Ivo": [
+    "iue",
+    "iuen",
+    "iuo"
+  ],
+  "Ingram": [
+    "ingram"
+  ],
+  "geist": [
+    "gaist",
+    "geist",
+    "geiste",
+    "geistes"
+  ],
+  "vîant": [
+    "uiant",
+    "uiantis"
+  ],
+  "mit": [
+    "mit"
+  ],
+  "bart": [
+    "barte"
+  ],
+  "guot": [
+    "guot",
+    "guote",
+    "guten"
+  ],
+  "roemesch": [
+    "roemische",
+    "romische",
+    "romischeme",
+    "romischen"
+  ],
+  "voget": [
+    "uoget",
+    "uogete",
+    "voget"
+  ],
+  "Turpîn": [
+    "turpin",
+    "turpines"
+  ],
+  "Rôm": [
+    "rome"
+  ],
+  "himelisch": [
+    "himelische",
+    "himilische",
+    "himilischen",
+    "himiliske"
+  ],
+  "wirt": [
+    "wirt"
+  ],
+  "schepfaere": [
+    "schephare",
+    "schephere"
+  ],
+  "Naimes": [
+    "naimes"
+  ],
+  "Beiern": [
+    "baieren",
+    "baigeren",
+    "beiere",
+    "beieren"
+  ],
+  "Johannes": [
+    "iohannen",
+    "iohannes"
+  ],
+  "Michaeli": [
+    "michelis"
+  ],
+  "Genelûn": [
+    "genelun",
+    "genelune",
+    "genelunen",
+    "genelunes",
+    "genelûn"
+  ],
+  "nëve": [
+    "neue",
+    "neuen"
+  ],
+  "Oigir": [
+    "oigir"
+  ],
+  "Tenemarke": [
+    "tenemarche"
+  ],
+  "Dierrîch": [
+    "dierrich"
+  ],
+  "starc": [
+    "starche",
+    "starcher"
+  ],
+  "Wido": [
+    "wido"
+  ],
+  "Basken": [
+    "wasconie"
+  ],
+  "Albonie": [
+    "albonie"
+  ],
+  "Avon": [
+    "aiuone"
+  ],
+  "Ritschart": [
+    "ritschart"
+  ],
+  "Tortona": [
+    "tortuone"
+  ],
+  "Reims": [
+    "raines",
+    "remis"
+  ],
+  "Heinrich": [
+    "heinrich"
+  ],
+  "Garmes": [
+    "garmes"
+  ],
+  "Milun": [
+    "milun"
+  ],
+  "Aschalpems": [
+    "aschalbaies"
+  ],
+  "Walther": [
+    "walter",
+    "walthere",
+    "waltheren"
+  ],
+  "Ansgir": [
+    "ansgir"
+  ],
+  "Reimunt": [
+    "reimunt"
+  ],
+  "Bretagne": [
+    "brittannia"
+  ],
+  "grunt": [
+    "grunt"
+  ],
+  "veste": [
+    "ueste"
+  ],
+  "kristenheit": [
+    "cristinheit"
+  ],
+  "houbet": [
+    "houbet"
+  ],
+  "arbeit": [
+    "arbeit"
+  ],
+  "bluot": [
+    "bluoet"
+  ],
+  "geloube": [
+    "glouben"
+  ],
+  "stiefvater": [
+    "stiefuater"
+  ],
+  "Baldewîn": [
+    "baldewin"
+  ],
+  "rîche": [
+    "rich",
+    "riche",
+    "rike"
+  ],
+  "swëster": [
+    "swester"
+  ],
+  "lützel": [
+    "luozele"
+  ],
+  "Basanzi": [
+    "pasanzi"
+  ],
+  "Basilie": [
+    "basilie"
+  ],
+  "bruoder": [
+    "bruder",
+    "bruoder",
+    "pruder"
+  ],
+  "tiure": [
+    "tiuerliche",
+    "tiure",
+    "tiuriste",
+    "tiweren",
+    "tiwerliche",
+    "ture"
+  ],
+  "geswige": [
+    "geswige"
+  ],
+  "britten": [
+    "britten"
+  ],
+  "Madelgêr": [
+    "madelger"
+  ],
+  "Rômaere": [
+    "romere"
+  ],
+  "Mantel": [
+    "mantel"
+  ],
+  "arm": [
+    "arme",
+    "armen",
+    "armez"
+  ],
+  "weise": [
+    "weise",
+    "weisen"
+  ],
+  "sîn": [
+    "bin",
+    "pin"
+  ],
+  "virwiz": [
+    "uirwizzer"
+  ],
+  "Judas": [
+    "iudas",
+    "judas"
+  ],
+  "bote": [
+    "bote"
+  ],
+  "Algafiles": [
+    "algafiles",
+    "algaphiles"
+  ],
+  "Falsaron": [
+    "falsaron",
+    "falsarones",
+    "valsaron"
+  ],
+  "Valdebrûn": [
+    "ualdebrun",
+    "ualdeprun"
+  ],
+  "Orphalis": [
+    "orphalis"
+  ],
+  "Glibon": [
+    "glibon"
+  ],
+  "Gersîz": [
+    "gersiz"
+  ],
+  "Plangirz": [
+    "plangirz"
+  ],
+  "ungetriuwe": [
+    "ungetruwe",
+    "ungetruwen"
+  ],
+  "râtgëbe": [
+    "ratgebe"
+  ],
+  "vriunt": [
+    "friunt",
+    "frunt"
+  ],
+  "Oliboris": [
+    "oliboris"
+  ],
+  "Brechmundâ": [
+    "brachmunt"
+  ],
+  "Alrich": [
+    "alrich"
+  ],
+  "Pande": [
+    "pande"
+  ],
+  "Wlter": [
+    "wlter"
+  ],
+  "Ilmar": [
+    "ilmar"
+  ],
+  "Ilaz": [
+    "ilaz"
+  ],
+  "Zammen": [
+    "zamne"
+  ],
+  "Antelun": [
+    "antelun"
+  ],
+  "Horre": [
+    "horre"
+  ],
+  "Maglirte": [
+    "maglirte"
+  ],
+  "Mars": [
+    "mars"
+  ],
+  "Jupiter": [
+    "jouinus"
+  ],
+  "dritte": [
+    "dritte",
+    "dritten"
+  ],
+  "Saturn": [
+    "saturnus"
+  ],
+  "Margarîz": [
+    "margariz"
+  ],
+  "Zernubele": [
+    "cernubiles",
+    "cornubiles",
+    "zernubele"
+  ],
+  "Adalrôt": [
+    "adalrot",
+    "adelrot",
+    "alroten",
+    "alterot"
+  ],
+  "getriuwe": [
+    "getruwer"
+  ],
+  "balt": [
+    "palt"
+  ],
+  "witewe": [
+    "witwen"
+  ],
+  "wîs": [
+    "wis",
+    "wise"
+  ],
+  "bíderbe": [
+    "biderbe"
+  ],
+  "Ägidius": [
+    "egidien"
+  ],
+  "genaedec": [
+    "gnadeclicher"
+  ],
+  "entrinnen": [
+    "entrunner"
+  ],
+  "knëht": [
+    "knecht"
+  ],
+  "vâlant": [
+    "ualantes"
+  ],
+  "übel": [
+    "ubel",
+    "ubele"
+  ],
+  "Ekerîch": [
+    "ekerich",
+    "ekerichen"
+  ],
+  "Beringêr": [
+    "beringer",
+    "beringeres",
+    "peringer",
+    "peringeren",
+    "pernger"
+  ],
+  "Hatte": [
+    "atto",
+    "hatte",
+    "hatten"
+  ],
+  "Gerhart": [
+    "gerhart",
+    "gerharten"
+  ],
+  "junc": [
+    "iunge"
+  ],
+  "rihtaere": [
+    "richtare"
+  ],
+  "psalmista": [
+    "psalmista"
+  ],
+  "ober": [
+    "oberiste",
+    "oberisten"
+  ],
+  "êwart": [
+    "ewart"
+  ],
+  "wilde": [
+    "wilde"
+  ],
+  "Cursabile": [
+    "cursabile"
+  ],
+  "Philon": [
+    "philonin"
+  ],
+  "Malprimes": [
+    "malprimes"
+  ],
+  "Ampelgart": [
+    "ampelgart",
+    "ampregalt"
+  ],
+  "Ammirat": [
+    "ammirat"
+  ],
+  "Balvier": [
+    "paluir"
+  ],
+  "Tortosa": [
+    "tortulose"
+  ],
+  "Targîs": [
+    "targis"
+  ],
+  "kint": [
+    "kinde"
+  ],
+  "Sevilla": [
+    "sibiliae"
+  ],
+  "Denis": [
+    "dyonisien"
+  ],
+  "Aldâ": [
+    "alde",
+    "alden"
+  ],
+  "wunderlich": [
+    "wundirliche"
+  ],
+  "Alexander": [
+    "alexander"
+  ],
+  "milte": [
+    "milte"
+  ],
+  "Dionisius": [
+    "dionisien"
+  ],
+  "Petrus": [
+    "peter"
+  ],
+  "Garpîn": [
+    "garpin"
+  ],
+  "gegen": [
+    "gegin"
+  ],
+  "dëgen": [
+    "degen"
+  ],
+  "Witel": [
+    "witel"
+  ],
+  "Arthan": [
+    "arthan"
+  ],
+  "êwic": [
+    "ewigen"
+  ],
+  "Almeria": [
+    "almerie"
+  ],
+  "Tortan": [
+    "tortan"
+  ],
+  "Orte": [
+    "orten"
+  ],
+  "Maximîn": [
+    "maximin"
+  ],
+  "Agrigent": [
+    "agrentin"
+  ],
+  "Marcelle": [
+    "marcellen"
+  ],
+  "Viana": [
+    "uigennen"
+  ],
+  "dienestman": [
+    "dinistman"
+  ],
+  "Waldram": [
+    "waldram"
+  ],
+  "Malprimis": [
+    "malprimis"
+  ],
+  "Ciciron": [
+    "ciciron",
+    "cicirone"
+  ],
+  "heidenisch": [
+    "haideniske"
+  ],
+  "Amurafel": [
+    "amurafel"
+  ],
+  "küniclîn": [
+    "chungelin"
+  ],
+  "Prutan": [
+    "prutan"
+  ],
+  "Muralan": [
+    "muralan"
+  ],
+  "Amarezur": [
+    "amarezur"
+  ],
+  "Luzifer": [
+    "luciferen"
+  ],
+  "mortgiric": [
+    "mortgire"
+  ],
+  "Herodes": [
+    "herodes"
+  ],
+  "Eschermunt": [
+    "eschermunt"
+  ],
+  "Valterne": [
+    "ualeterne"
+  ],
+  "Ludewîc": [
+    "ludewic"
+  ],
+  "Nêre": [
+    "neren"
+  ],
+  "Pandolt": [
+    "pandolt"
+  ],
+  "Martian": [
+    "martian"
+  ],
+  "Nerpa": [
+    "nerpa"
+  ],
+  "Estorgant": [
+    "estorgant"
+  ],
+  "Regenfrit": [
+    "regenfrit"
+  ],
+  "Dagsburg": [
+    "tagespurc"
+  ],
+  "Hillung": [
+    "hillunc"
+  ],
+  "Vastmar": [
+    "uastmar"
+  ],
+  "Normandie": [
+    "normandîe"
+  ],
+  "Witrant": [
+    "witrant"
+  ],
+  "Otnant": [
+    "otnant"
+  ],
+  "Pillung": [
+    "pillunc"
+  ],
+  "Sigebant": [
+    "sigebant"
+  ],
+  "Gideon": [
+    "gedeon"
+  ],
+  "ganz": [
+    "ganzer"
+  ],
+  "Scarpulôn": [
+    "scarpulon"
+  ],
+  "Ire": [
+    "iren"
+  ],
+  "ûz": [
+    "uz"
+  ],
+  "Spanien": [
+    "yspanie"
+  ],
+  "Grandon": [
+    "grandon"
+  ],
+  "Alfric": [
+    "alfrich",
+    "alfrichen"
+  ],
+  "Afrika": [
+    "affrica"
+  ],
+  "Kappadokien": [
+    "capadocia"
+  ],
+  "hêrlich": [
+    "herlichen"
+  ],
+  "Valtia": [
+    "ualtia"
+  ],
+  "Antoîr": [
+    "antoir"
+  ],
+  "Gwimut": [
+    "gwimuten"
+  ],
+  "genôz": [
+    "genoz"
+  ],
+  "Kartan": [
+    "chartan"
+  ],
+  "Abysse": [
+    "abysse"
+  ],
+  "Malsarôn": [
+    "malsaron"
+  ],
+  "Torke": [
+    "torchen"
+  ],
+  "Estorke": [
+    "estorchen"
+  ],
+  "Justîn": [
+    "iustinen"
+  ],
+  "Sigelot": [
+    "sigeloten"
+  ],
+  "Spemvalrîz": [
+    "spemualriz"
+  ],
+  "muoter": [
+    "muter"
+  ],
+  "beste": [
+    "besten"
+  ],
+  "Urtanne": [
+    "urtannen"
+  ],
+  "Pharao": [
+    "pharaonem"
+  ],
+  "Thibors": [
+    "thibors"
+  ],
+  "Saragossa": [
+    "sarraguz"
+  ],
+  "in": [
+    "in"
+  ],
+  "helle": [
+    "helle"
+  ],
+  "Alfabîn": [
+    "alfabinem"
+  ],
+  "gesunt": [
+    "gesunden"
+  ],
+  "waltendic": [
+    "waltente"
+  ],
+  "Karlinge": [
+    "karlinge"
+  ],
+  "durch": [
+    "durch"
+  ],
+  "sieden": [
+    "soteniu"
+  ],
+  "gimme": [
+    "gimme"
+  ],
+  "rîtaere": [
+    "riter"
+  ],
+  "êre": [
+    "ere"
+  ],
+  "hergeselle": [
+    "hergeselle"
+  ],
+  "verrâtaere": [
+    "uerratere"
+  ],
+  "vrouwe": [
+    "frouwe",
+    "frouwin"
+  ],
+  "Maria": [
+    "marie",
+    "marien"
+  ],
+  "Laurentius": [
+    "laurentien"
+  ],
+  "Roslin": [
+    "roslin",
+    "rosselinen"
+  ],
+  "Pegôn": [
+    "pegon",
+    "pegonen"
+  ],
+  "künne": [
+    "chunne"
+  ],
+  "Falbin": [
+    "falbinen"
+  ],
+  "Ebelin": [
+    "ebelinen"
+  ],
+  "erweln": [
+    "erwelten"
+  ],
+  "Pelmo": [
+    "pilme"
+  ],
+  "Degiôn": [
+    "degionem"
+  ],
+  "Jorfalir": [
+    "iorfalir"
+  ],
+  "Algarich": [
+    "algarich"
+  ],
+  "ziere": [
+    "ziren"
+  ],
+  "tugent": [
+    "tugente"
+  ],
+  "vater": [
+    "uater"
+  ],
+  "allerliebest": [
+    "allerlibistin"
+  ],
+  "tiurlich": [
+    "tiwerlicher"
+  ],
+  "schalc": [
+    "scalc"
+  ],
+  "under": [
+    "unter"
+  ],
+  "tân": [
+    "tanen"
+  ],
+  "urkünde": [
+    "urchunde"
+  ],
+  "Aegidius": [
+    "egidie"
+  ],
+  "lêraere": [
+    "lerare"
+  ],
+  "admirât": [
+    "admirate"
+  ],
+  "regenhêrre": [
+    "regenheres"
+  ],
+  "bar": [
+    "barn"
+  ]
 }
