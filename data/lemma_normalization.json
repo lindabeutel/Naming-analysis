@@ -21,6 +21,7 @@
     "chaiser",
     "chaiseres",
     "cheiser",
+    "der",
     "kaiser",
     "kaisere",
     "kaiseres",
@@ -389,6 +390,7 @@
     "selben"
   ],
   "edel": [
+    "adel",
     "edele",
     "edelen"
   ],
@@ -488,6 +490,7 @@
     "himelische",
     "himilische",
     "himilischen",
+    "himilischer",
     "himiliske"
   ],
   "wirt": [
@@ -901,7 +904,8 @@
     "dionisien"
   ],
   "Petrus": [
-    "peter"
+    "peter",
+    "petres"
   ],
   "Garpîn": [
     "garpin"
@@ -1162,6 +1166,7 @@
   ],
   "vrouwe": [
     "frouwe",
+    "frouwen",
     "frouwin"
   ],
   "Maria": [
@@ -1244,5 +1249,8 @@
   ],
   "bar": [
     "barn"
+  ],
+  "Blasius": [
+    "plasien"
   ]
 }

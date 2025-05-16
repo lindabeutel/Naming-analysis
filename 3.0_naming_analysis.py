@@ -1248,7 +1248,11 @@ def load_lemma_normalization(path="lemma_normalization.json"):
     return safe_read_json(path, default={})
 
 def save_lemma_normalization(data, path="lemma_normalization.json"):
-    safe_write_json(data, path, merge=True)
+    sorted_data = {
+        lemma: sorted(set(variants))
+        for lemma, variants in sorted(data.items())
+    }
+    safe_write_json(sorted_data, path, merge=False)
 
 def save_ignored_lemmas(data, path="ignored_lemmas.json"):
     safe_write_json(data, path, sort_keys=True, merge=True)
