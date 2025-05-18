@@ -124,7 +124,7 @@ def initialize_project():
     book_name = input("Which book are we working on today? (e.g., Eneasroman): ").strip()
     book_name = book_name[0].upper() + book_name[1:]
 
-    os.makedirs("data", exist_ok=True)
+    project_dir = os.path.join("data", book_name)
 
     config_path = os.path.join("data", f"config_{book_name}.json")
     progress_path = os.path.join("data", f"progress_{book_name}.json")
@@ -1291,9 +1291,19 @@ def export_all_data_to_new_excel(paths, options):
     :param options: Dictionary with Boolean flags for: namings, collocations, categorization
     """
 
+    print("🟢 Starting export of all naming data...")
+
     # Generate target path with "_final" suffix
     original_name = os.path.basename(paths["original_excel"])
     target_name = original_name.replace(".xlsx", "_final.xlsx")
+
+    # Support alternate keys for export paths
+    paths = {
+        **paths,
+        "json_benennungen": paths.get("json_benennungen") or paths.get("missing_namings_json"),
+        "json_kollokationen": paths.get("json_kollokationen") or paths.get("collocations_json"),
+        "json_kategorisierung": paths.get("json_kategorisierung") or paths.get("categorization_json"),
+    }
 
     # 🔧 Ensure output directory exists
     output_dir = "/mnt/endproduct"
@@ -1308,13 +1318,16 @@ def export_all_data_to_new_excel(paths, options):
     sheet = wb["Gesamt"]
 
     if options.get("benennungen", False):
-        insert_namings(sheet, paths["json_benennungen"])
+        print("📤 Exporting confirmed namings...")
+        insert_namings(sheet, paths["missing_namings_json"])
 
     if options.get("kollokationen", False):
-        update_collocations(sheet, paths["json_kollokationen"])
+        print("📤 Exporting collocations...")
+        update_collocations(sheet, paths["collocations_json"])
 
     if options.get("kategorisierung", False):
-        create_sheet_with_categorized_lemmata(wb, sheet, paths["json_kategorisierung"])
+        print("📤 Exporting categorized lemmata (this may take a while)...")
+        create_sheet_with_categorized_lemmata(wb, sheet, paths["categorization_json"])
 
     wb.save(target_path)
     print(f"✅ Export completed: {target_path}")
@@ -1332,16 +1345,17 @@ def get_format_template(sheet, column_index):
 
 def insert_namings(sheet, json_path):
     """
-    Fügt bestätigte Benennungen in das Blatt 'Gesamt' ein.
-    Formatierung pro Spalte wird über 'hole_formatvorlage()' übernommen.
-    Neue Zeilen werden farblich hervorgehoben.
+    Inserts confirmed namings into the 'Gesamt' worksheet.
+    Column formatting is inherited from 'get_format_template()'.
+    New rows are visually highlighted.
     """
+
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    confirmed_entries = [entry for entry in data if entry.get("Status") == "bestätigt"]
+    confirmed_entries = [entry for entry in data if entry.get("Status") == "confirmed"]
     if not confirmed_entries:
-        print("ℹ️ Keine bestätigten Benennungen zum Einfügen.")
+        print("ℹ️ No confirmed namings to insert.")
         return
 
     last_line = sheet.max_row + 1
@@ -1372,7 +1386,7 @@ def insert_namings(sheet, json_path):
 
         last_line += 1
 
-    print("✅ Benennungen erfolgreich ergänzt.")
+    print("✅ Namings successfully added.")
 
 def update_collocations(sheet, json_path):
     """
@@ -1433,10 +1447,10 @@ def create_sheet_with_categorized_lemmata(wb, original_sheet, json_path):
     ws_new = wb.copy_worksheet(ws_original)
     ws_new.title = 'lemmatisiert'
 
-    # Position worksheet directly after 'Gesamt'
     if 'Gesamt' in wb.sheetnames:
         idx = wb.sheetnames.index('Gesamt') + 1
-        wb._sheets.insert(idx, wb._sheets.pop(wb.sheetnames.index('lemmatisiert')))
+        wb._sheets.insert(idx, wb._sheets.pop(-1))  # move the last sheet (just created)
+        wb._sheets[idx].title = 'lemmatisiert'
 
     headers = [
         "Benannte Figur", "Vers", "Eigennennung", "Nennende Figur", "Bezeichnung", "Erzähler",
