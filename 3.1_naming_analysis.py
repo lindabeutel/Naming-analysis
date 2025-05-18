@@ -18,6 +18,7 @@ from typing import Union
 import openpyxl
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import PatternFill
+from openpyxl.styles import Font, Alignment, Border
 from openpyxl import load_workbook
 
 DataType = dict[str, Union[pd.DataFrame, Element, str, None]]
@@ -1288,19 +1289,16 @@ def save_lemma_categories(data, path="lemma_categories.json"):
     sorted_data = dict(sorted(existing.items()))
     safe_write_json(sorted_data, path, merge=False)
 
-def export_all_data_to_new_excel(paths, options):
+def export_all_data_to_new_excel(book_name, paths, options):
     """
     Integrates confirmed namings, adds collocations, and creates a lemmatized worksheet.
 
-    :param paths: Dictionary containing file paths (original_excel, json_benennungen, json_kollokationen, json_kategorisierung)
-    :param options: Dictionary with Boolean flags for: namings, collocations, categorization
+    :param book_name: The name of the text corpus (used for directory and filename construction)
+    :param paths: Dictionary containing file paths (e.g., original_excel, missing_namings_json, etc.)
+    :param options: Dictionary with Boolean flags for: benennungen, kollokationen, kategorisierung
     """
 
     print("🟢 Starting export of all naming data...")
-
-    # Generate target path with "_final" suffix
-    original_name = os.path.basename(paths["original_excel"])
-    target_name = original_name.replace(".xlsx", "_final.xlsx")
 
     # Support alternate keys for export paths
     paths = {
@@ -1311,10 +1309,9 @@ def export_all_data_to_new_excel(paths, options):
     }
 
     # 🔧 Ensure output directory exists
-    output_dir = "/mnt/endproduct"
-    os.makedirs(output_dir, exist_ok=True)
-
-    target_path = os.path.join(output_dir, str(target_name))
+    project_dir = os.path.join("data", book_name)
+    os.makedirs(project_dir, exist_ok=True)
+    target_path = os.path.join(project_dir, f"{book_name}_final.xlsx")
 
     # Copy Excel file
     shutil.copy(paths["original_excel"], target_path)
@@ -1331,7 +1328,7 @@ def export_all_data_to_new_excel(paths, options):
         update_collocations(sheet, paths["collocations_json"])
 
     if options.get("kategorisierung", False):
-        print("📤 Exporting categorized lemmata (this may take a while)...")
+        print("📤 Exporting categorized lemmata (this may take a second)...")
         create_sheet_with_categorized_lemmata(wb, sheet, paths["categorization_json"])
 
     wb.save(target_path)
@@ -1433,85 +1430,68 @@ def update_collocations(sheet, json_path):
 
     print(f"✅ {updated_count} collocations successfully updated.")
 
-def create_sheet_with_categorized_lemmata(wb, original_sheet, json_path):
+def create_sheet_with_categorized_lemmata(wb, _, json_path):
     """
-    Creates a new worksheet 'lemmatized' with structured designations and epithets
-    based on the data from the JSON file. Column formatting is applied using get_format_template().
+    Creates a new worksheet 'lemmatisiert' with structured designations and epithets.
+    Format and structure are copied from the 'Gesamt' sheet in the template.
     """
+
+    # Load JSON data
     with open(json_path, "r", encoding="utf-8") as f:
         annotations = json.load(f)
 
-    # Reference original sheet
-    ws_original = original_sheet
+    # Replace existing sheet if necessary
+    if "lemmatisiert" in wb.sheetnames:
+        del wb["lemmatisiert"]
+    ws_new = wb.create_sheet("lemmatisiert")
 
-    # Delete existing 'lemmatized' sheet if present
-    if 'lemmatisiert' in wb.sheetnames:
-        del wb['lemmatisiert']
+    # Define base styles
+    regular_font = Font(name="Times New Roman", size=8, bold=False)
+    bold_font = Font(name="Times New Roman", size=8, bold=True)
 
-    # Create copy of original sheet
-    ws_new = wb.copy_worksheet(ws_original)
-    ws_new.title = 'lemmatisiert'
+    default_alignment = Alignment(horizontal="left", vertical="bottom")  # bottom-aligned
+    default_border = Border()
 
-    if 'Gesamt' in wb.sheetnames:
-        idx = wb.sheetnames.index('Gesamt') + 1
-        wb._sheets.insert(idx, wb._sheets.pop(-1))  # move the last sheet (just created)
-        wb._sheets[idx].title = 'lemmatisiert'
-
+    # Define column headers
     headers = [
         "Benannte Figur", "Vers", "Eigennennung", "Nennende Figur", "Bezeichnung", "Erzähler",
         "Bezeichnung 1", "Bezeichnung 2", "Bezeichnung 3", "Bezeichnung 4",
         "Epitheta 1", "Epitheta 2", "Epitheta 3", "Epitheta 4", "Epitheta 5"
     ]
 
-    df_new = pd.DataFrame(annotations)
+    df = pd.DataFrame(annotations)
     for col in headers:
-        if col not in df_new.columns:
-            df_new[col] = ""
+        if col not in df.columns:
+            df[col] = ""
+    df = df[headers]
 
-            if col == "Nennende Figur" and 'Gesamt' in wb.sheetnames:
-                ws_gesamt = wb['Gesamt']
-                header_row = [cell.value for cell in ws_gesamt[1]]
-                verse_idx = header_row.index("Vers") + 1
-                naming_idx = header_row.index("Nennende Figur") + 1
+    # Write header row with bold formatting
+    for col_idx, header in enumerate(headers, start=1):
+        col_letter = get_column_letter(col_idx)
+        cell = ws_new.cell(row=1, column=col_idx, value=header)
+        ws_new.column_dimensions[col_letter].width = 20
+        cell.font = bold_font
+        cell.alignment = default_alignment
+        cell.border = default_border
+        cell.number_format = "General"
 
-                verse_to_namer = {}
-                for row in ws_gesamt.iter_rows(min_row=2):
-                    verse_val = row[verse_idx - 1].value
-                    naming_val = row[naming_idx - 1].value
-                    if verse_val is not None:
-                        verse_to_namer[verse_val] = naming_val
+    # Write data rows with regular formatting
+    for row_idx, row in df.iterrows():
+        for col_idx, header in enumerate(headers, start=1):
+            cell = ws_new.cell(row=row_idx + 2, column=col_idx, value=row[header])
+            cell.font = regular_font
+            cell.alignment = default_alignment
+            cell.border = default_border
+            cell.number_format = "General"
 
-                df_new["Nennende Figur"] = df_new["Vers"].map(verse_to_namer).fillna("")
+    # Freeze only the first row
+    ws_new.freeze_panes = "A2"
 
-    df_new = df_new[headers]
-
-    # Remove old 'Kollokationen' column if present
-    for col in ws_new.iter_cols(min_row=1, max_row=1):
-        if col[0].value == "Kollokationen":
-            ws_new.delete_cols(col[0].column, 1)
-            break
-
-    # Remove duplicate columns
-    existing_headers = [cell.value for cell in ws_new[1]]
-    redundant_cols = [i + 1 for i, h in enumerate(existing_headers) if h in headers]
-    for idx in sorted(redundant_cols, reverse=True):
-        ws_new.delete_cols(idx)
-
-    # Insert new headers and formatted data
-    for col_offset, header in enumerate(headers):
-        col_index = col_offset + 1
-        ws_new.cell(row=1, column=col_index, value=header)
-        font_tpl, alignment_tpl, border_tpl, number_format_tpl = get_format_template(ws_original, 1)
-
-        for row_idx, value in enumerate(df_new[header], start=2):
-            cell = ws_new.cell(row=row_idx, column=col_index, value=value)
-            if font_tpl:
-                cell.font = font_tpl
-                cell.alignment = alignment_tpl
-                cell.border = border_tpl
-                cell.number_format = number_format_tpl
-
+    # Enable auto-filter on the header
     ws_new.auto_filter.ref = f"A1:{get_column_letter(len(headers))}1"
+
+    # Move the sheet to second position
+    wb._sheets.insert(1, wb._sheets.pop(wb._sheets.index(ws_new)))
 
     print("✅ Worksheet 'lemmatisiert' successfully created.")
 
@@ -1615,7 +1595,7 @@ def main():
             "kollokationen": fill_collocations,
             "kategorisierung": do_categorization
         }
-        export_all_data_to_new_excel(paths, options)
+        export_all_data_to_new_excel(book_name, paths, options)
 
 
 if __name__ == "__main__":
