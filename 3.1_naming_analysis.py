@@ -125,19 +125,24 @@ def initialize_project():
     book_name = book_name[0].upper() + book_name[1:]
 
     project_dir = os.path.join("data", book_name)
+    os.makedirs(project_dir, exist_ok=True)
+    os.makedirs("data", exist_ok=True)  # Für globale Dateien, falls nicht vorhanden
 
-    config_path = os.path.join("data", f"config_{book_name}.json")
-    progress_path = os.path.join("data", f"progress_{book_name}.json")
+    config_path = os.path.join(project_dir, f"config_{book_name}.json")
+    progress_path = os.path.join(project_dir, f"progress_{book_name}.json")
 
     paths = {
-        "missing_namings_json": os.path.join("data", f"missing_namings_{book_name}.json"),
+        # Projektbezogene Dateien
+        "missing_namings_json": os.path.join(project_dir, f"missing_namings_{book_name}.json"),
         "progress_json": progress_path,
-        "collocations_json": os.path.join("data", f"collocations_{book_name}.json"),
-        "categorization_json": os.path.join("data", f"categorization_{book_name}.json"),
+        "collocations_json": os.path.join(project_dir, f"collocations_{book_name}.json"),
+        "categorization_json": os.path.join(project_dir, f"categorization_{book_name}.json"),
+        "config_json": config_path,
+
+        # Globale Dateien
         "lemma_normalization_json": os.path.join("data", "lemma_normalization.json"),
         "ignored_lemmas_json": os.path.join("data", "ignored_lemmas.json"),
-        "lemma_categories_json": os.path.join("data", "lemma_categories.json"),
-        "config_json": config_path
+        "lemma_categories_json": os.path.join("data", "lemma_categories.json")
     }
 
     # Fortschritt laden oder initialisieren
