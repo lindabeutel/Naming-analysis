@@ -1317,16 +1317,16 @@ def run_analysis_menu(config_data, paths, data):
         choice = ask_user_choice("> ", ["1", "2", "3", "4"])
 
         if choice == "1":
-            run_wordlist_menu(config_data, paths, data)
+            run_wordlist_menu(config_data, paths)
         elif choice == "2":
             run_keyword_menu(config_data, paths, data)
         elif choice == "3":
-            run_collocation_menu(config_data, paths, data)
+            run_collocation_menu(config_data, paths)
         elif choice == "4":
             print("📦 Analysis completed.")
             break
 
-def run_wordlist_menu(config_data, paths, data):
+def run_wordlist_menu(config_data, paths):
     """
     Interactive menu for generating wordlists:
     - by column
@@ -1551,12 +1551,14 @@ def run_keyword_menu(config_data, paths, data):
 
     target_choice = ask_user_choice("> ", ["1", "2"])
 
+    reference_books = None
+
     if target_choice == "2":
         raw_name = input("✍ Please enter the figure name:\n> ").strip()
         entries = safe_read_json(target_json, default=[])
         resolved = resolve_figure_name(raw_name, entries)
         if resolved is None:
-            return  # Abbruch bei nicht bestätigtem oder nicht auffindbarem Namen
+            return None
         target = resolved
         target_type = "figure"
 
@@ -1620,7 +1622,7 @@ def run_keyword_menu(config_data, paths, data):
         return run_keyword_menu(config_data, paths, data)
     else:
         print("↩️ Returning to analysis menu.")
-        return
+        return None
 
 def generate_keywords(
     target_figure: str | None,
@@ -1729,7 +1731,7 @@ def extract_tokens(entries: list[dict], unit: str) -> list[str]:
 
     return tokens
 
-def run_collocation_menu(config_data, paths, data):
+def run_collocation_menu(config_data, paths):
     """
     Interactive menu to search for collocation contexts of a specific type
     (designation or epithet), optionally restricted to a figure.
@@ -1830,10 +1832,10 @@ def generate_collocations(
         match = df[
             (df["Vers"] == vers) &
             (df["Benannte Figur"] == figur) &
-            (df.apply(lambda row: get_first_valid_text(
-                row.get("Erzähler"),
-                row.get("Bezeichnung"),
-                row.get("Eigennennung")
+            (df.apply(lambda r: get_first_valid_text(
+                r.get("Erzähler"),
+                r.get("Bezeichnung"),
+                r.get("Eigennennung")
             ) == original_text, axis=1))
         ]
 
@@ -1866,7 +1868,6 @@ def load_collocation_sheet(config_data: dict, book_name: str) -> pd.DataFrame | 
     Ensures that the required column 'Kollokationen' is present.
     Returns the DataFrame if successful, else None.
     """
-    import pandas as pd
 
     primary_path = os.path.join("data", book_name, f"{book_name}_final.xlsx")
     fallback_path = config_data.get("excel_path")
@@ -1903,13 +1904,13 @@ def format_kwic(context: str, keyword: str) -> tuple[str, str, str]:
 
     if index == -1:
         # keyword not found – treat whole line as left context
-        return (context.strip(), "", "")
+        return context.strip(), "", ""
 
     left = context[:index].strip()
     hit = keyword
     right = context[index + len(keyword):].strip()
 
-    return (left, hit, right)
+    return left, hit, right
 
 def export_all_data_to_new_excel(book_name, paths, options):
     """
