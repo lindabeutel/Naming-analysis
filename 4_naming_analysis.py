@@ -16,7 +16,7 @@ from xml.etree.ElementTree import Element
 
 from copy import copy, deepcopy
 
-from typing import Union
+from typing import Union, List
 
 from collections import Counter
 
@@ -1366,19 +1366,25 @@ def run_wordlist_menu(paths, book_name):
             generate_wordlist_by_column(column_input, json_path, output_path)
 
         elif choice == "2":
-            figure = input("✍ Please enter the figure name:\n> ").strip()
+            figure = ask_valid_figure_name(paths["categorization_json"])
+            if figure is None:
+                return
             filename = f"wordlist_Bezeichnung_{figure}.csv".replace(" ", "_")
             output_path = os.path.join(output_dir, filename)
             generate_bezeichnungen_for_figure(figure, json_path, output_path)
 
         elif choice == "3":
-            figure = input("✍ Please enter the figure name:\n> ").strip()
+            figure = ask_valid_figure_name(paths["categorization_json"])
+            if figure is None:
+                return
             filename = f"wordlist_Epitheta_{figure}.csv".replace(" ", "_")
             output_path = os.path.join(output_dir, filename)
             generate_epitheta_for_figure(figure, json_path, output_path)
 
         elif choice == "4":
-            figure = input("✍ Please enter the figure name:\n> ").strip()
+            figure = ask_valid_figure_name(paths["categorization_json"])
+            if figure is None:
+                return
             filename = f"wordlist_Combined_{figure}.csv".replace(" ", "_")
             output_path = os.path.join(output_dir, filename)
             generate_combined_bez_epi(figure, json_path, output_path)
@@ -1429,7 +1435,11 @@ def resolve_figure_name(name: str, entries: list[dict]) -> str | None:
     Checks if the given figure name exists in the data. If not, suggests the closest match.
     Returns the resolved name or None if the user rejects the suggestion or no match is found.
     """
-    all_names = {e.get("Benannte Figur") for e in entries if e.get("Benannte Figur")}
+    all_names = {
+        str(name).strip()
+        for name in [e.get("Benannte Figur") for e in entries]
+        if isinstance(name, str) and name.strip()
+    }
     if name in all_names:
         return name
 
@@ -1448,11 +1458,30 @@ def resolve_figure_name(name: str, entries: list[dict]) -> str | None:
         print(f'⚠️ Figure "{name}" not found and no similar name could be suggested.')
         return None
 
+def ask_valid_figure_name(json_path: str) -> str | None:
+    """
+    Repeatedly asks for a valid figure name and resolves it against the entries
+    from the given categorization JSON path using resolve_figure_name().
+    """
+    entries = safe_read_json(json_path, default=[])
+
+    while True:
+        raw = input("✍ Please enter the figure name:\n> ").strip()
+        if not raw:
+            print("⚠️ Input cannot be empty.")
+            continue
+
+        resolved = resolve_figure_name(raw, entries)
+        if resolved is not None:
+            return resolved
+
+        print("⚠️ No matching figure found. Please try again.")
+
+
 def generate_bezeichnungen_for_figure(figure_name: str, json_path: str, output_path: str):
     entries = safe_read_json(json_path, default=[])
-    resolved_name = resolve_figure_name(figure_name, entries)
-    if resolved_name is None:
-        return
+    # no need to resolve again – already handled
+    resolved_name = figure_name
 
     filtered = [e for e in entries if e.get("Benannte Figur") == resolved_name]
     values = []
@@ -1476,9 +1505,8 @@ def generate_bezeichnungen_for_figure(figure_name: str, json_path: str, output_p
 
 def generate_epitheta_for_figure(figure_name: str, json_path: str, output_path: str):
     entries = safe_read_json(json_path, default=[])
-    resolved_name = resolve_figure_name(figure_name, entries)
-    if resolved_name is None:
-        return
+    # no need to resolve again – already handled
+    resolved_name = figure_name
 
     filtered = [e for e in entries if e.get("Benannte Figur") == resolved_name]
     values = []
@@ -1507,9 +1535,8 @@ def generate_combined_bez_epi(figure_name: str, json_path: str, output_path: str
     Output is saved as CSV with 'Wert' and 'Anzahl'.
     """
     entries = safe_read_json(json_path, default=[])
-    resolved_name = resolve_figure_name(figure_name, entries)
-    if resolved_name is None:
-        return
+    # no need to resolve again – already handled
+    resolved_name = figure_name
 
     filtered = [e for e in entries if e.get("Benannte Figur") == resolved_name]
     values = []
@@ -1554,12 +1581,9 @@ def run_keyword_menu(config_data, paths, data, book_name):
     reference_books = None
 
     if target_choice == "2":
-        raw_name = input("✍ Please enter the figure name:\n> ").strip()
-        entries = safe_read_json(target_json, default=[])
-        resolved = resolve_figure_name(raw_name, entries)
-        if resolved is None:
-            return None
-        target = resolved
+        target = ask_valid_figure_name(target_json)
+        if target is None:
+            return
         target_type = "figure"
 
     else:
@@ -1581,13 +1605,13 @@ def run_keyword_menu(config_data, paths, data, book_name):
         "3": "combined"
     }[unit_choice]
 
-    print("\n🧪 Enter significance threshold (-log10(p)), default = 0.5:")
+    print("\n🧪 Enter significance threshold (Log-Likelihood G²), default = 3.84:")
     threshold_input = input("> ").strip()
     try:
-        threshold = float(threshold_input) if threshold_input else 0.5
+        threshold = float(threshold_input) if threshold_input else 3.84
     except ValueError:
-        print("⚠️ Invalid input – using default threshold 0.5")
-        threshold = 0.5
+        print("⚠️ Invalid input – using default threshold 3.84")
+        threshold = 3.84
 
     # Prepare output filename
     target_label = target.replace(" ", "_")
@@ -1665,34 +1689,34 @@ def generate_keywords(
     reference_counts = Counter(reference_tokens)
 
     results = []
+    total_target = sum(target_counts.values())
+    total_ref = sum(reference_counts.values())
+
     for token, count_t in target_counts.items():
         count_r = reference_counts.get(token, 0)
 
-        # basic smoothing
-        if count_t == 0 and count_r == 0:
-            continue
-
-        # log-likelihood / log ratio
         if count_t + count_r == 0:
             continue
-        p = (count_t + count_r) / (sum(target_counts.values()) + sum(reference_counts.values()))
-        expected_t = p * sum(target_counts.values())
-        expected_r = p * sum(reference_counts.values())
 
-        if expected_t > 0 and count_t > 0:
-            log_t = count_t * math.log2(count_t / expected_t)
-        else:
-            log_t = 0
+        # Log-likelihood Berechnung (G²)
+        p = (count_t + count_r) / (total_target + total_ref)
+        expected_t = p * total_target
+        expected_r = p * total_ref
 
-        if expected_r > 0 and count_r > 0:
-            log_r = count_r * math.log2(count_r / expected_r)
-        else:
-            log_r = 0
+        log_t = count_t * math.log2(count_t / expected_t) if count_t > 0 and expected_t > 0 else 0
+        log_r = count_r * math.log2(count_r / expected_r) if count_r > 0 and expected_r > 0 else 0
 
         keyness = 2 * (log_t + log_r)
 
         if keyness >= threshold:
-            results.append((token, count_t, count_r, round(keyness, 2)))
+            if count_t > count_r:
+                typ = "positive"
+            elif count_r > count_t:
+                typ = "negative"
+            else:
+                typ = "neutral"
+
+            results.append((token, count_t, count_r, round(keyness, 2), typ))
 
     # Sort descending
     results.sort(key=lambda x: (-x[3], x[0]))
@@ -1701,7 +1725,7 @@ def generate_keywords(
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, "w", encoding="utf-8", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["Wort", "Zielanzahl", "Referenzanzahl", "Keyness"])
+        writer.writerow(["Wort", "Zielanzahl", "Referenzanzahl", "Keyness", "Typ"])
         for row in results:
             writer.writerow(row)
 
@@ -1738,6 +1762,7 @@ def run_collocation_menu(config_data, paths, book_name):
     Results can be shown in the console or saved as CSV.
     """
 
+    _ = config_data
     categorization_path = paths["categorization_json"]
 
     print("\n📌 Do you want to analyze the whole work or only a specific figure?")
@@ -1748,40 +1773,46 @@ def run_collocation_menu(config_data, paths, book_name):
     only_figure = None
 
     if target_mode == "2":
-        raw_name = input("✍ Please enter the figure name:\n> ").strip()
-        entries = safe_read_json(categorization_path, default=[])
-        resolved = resolve_figure_name(raw_name, entries)
-        if resolved is None:
-            return  # Abbruch bei nicht bestätigtem Vorschlag oder keiner Übereinstimmung
-        only_figure = resolved
+        only_figure = ask_valid_figure_name(categorization_path)
+        if only_figure is None:
+            return
 
     type_value = input("🔍 Please enter the type to search for (e.g., \"küene\"):\n> ").strip()
 
-    print("\n📤 Where should the results be displayed?")
-    print("[1] Console")
-    print("[2] Save as CSV file")
+    while True:
+        print("\n📤 Where should the results be displayed?")
+        print("[1] Console")
+        print("[2] Save as CSV file")
 
-    output_choice = ask_user_choice("> ", ["1", "2"])
-    output_target = "console" if output_choice == "1" else "csv"
+        output_choice = ask_user_choice("> ", ["1", "2"])
+        output_target = "console" if output_choice == "1" else "csv"
 
-    if output_target == "csv":
-        type_label = type_value.replace(" ", "_")
-        fig_label = only_figure.replace(" ", "_") if only_figure else "whole_work"
-        output_dir = os.path.join("data", book_name, "analysis")
-        os.makedirs(output_dir, exist_ok=True)
-        filename = f"collocations_{fig_label}_{type_label}_{book_name}.csv"
-        output_path = os.path.join(output_dir, filename)
-    else:
-        output_path = None
+        if output_target == "csv":
+            type_label = type_value.replace(" ", "_")
+            fig_label = only_figure.replace(" ", "_") if only_figure else "whole_work"
+            output_dir = os.path.join("data", book_name, "analysis")
+            os.makedirs(output_dir, exist_ok=True)
+            filename = f"collocations_{fig_label}_{type_label}_{book_name}.csv"
+            output_path = os.path.join(output_dir, filename)
+        else:
+            output_path = None
 
-    generate_collocations(
-        type_value=type_value,
-        book_name=book_name,
-        config_data=config_data,
-        only_figure=only_figure,
-        output_target=output_target,
-        output_path=output_path
-    )
+        try:
+            generate_collocations(
+                type_value=type_value,
+                book_name=book_name,
+                config_data=config_data,
+                only_figure=only_figure,
+                output_target=output_target,
+                output_path=output_path
+            )
+            break  # ✅ innerhalb von while
+
+        except PermissionError:
+            print("\n⚠️ The Excel file appears to be open.")
+            print("❗ Please close it and try again.")
+            print("↩️ Returning to output choice...\n")
+
 
 def generate_collocations(
     type_value: str,
@@ -1796,8 +1827,9 @@ def generate_collocations(
     optionally filtered by figure. Matches type occurrences from the JSON categorization file.
     Outputs formatted KWIC lines either to console or as CSV.
     """
-    json_path = os.path.join("data", f"categorization_{book_name}.json")
+    json_path = os.path.join("data", book_name, f"categorization_{book_name}.json")
     entries = safe_read_json(json_path, default=[])
+    lemma_map = safe_read_json("data/lemma_normalization.json", default={})
 
     # Filter entries by figure if given
     if only_figure:
@@ -1846,7 +1878,17 @@ def generate_collocations(
         if not isinstance(kollokation, str) or not kollokation.strip():
             continue
 
-        left, hit, right = format_kwic(kollokation, type_value)
+                # Hole alle zugehörigen Varianten aus dem Lemma-Mapping
+        raw_variants = lemma_map.get(type_value, [])
+
+        # Sicherheit: Nur gültige Strings verwenden
+        variants: List[str] = [v.strip() for v in raw_variants if isinstance(v, str) and v.strip()]
+
+        # Fallback: Original-Keyword selbst auch aufnehmen (kleingeschrieben)
+        if isinstance(type_value, str) and type_value.strip():
+            variants.append(type_value.strip().lower())
+
+        left, hit, right = format_kwic(kollokation, variants)
         results.append((vers, figur, left, hit, right))
 
     # Output formatting
@@ -1865,52 +1907,54 @@ def load_collocation_sheet(config_data: dict, book_name: str) -> pd.DataFrame | 
     """
     Loads the Excel sheet 'Gesamt' from either the finalized file in data/<book>/<book>_final.xlsx
     or from the fallback path stored in config_data["excel_path"].
-    Ensures that the required column 'Kollokationen' is present.
     Returns the DataFrame if successful, else None.
+    Raises PermissionError if the file is open and cannot be read.
     """
-
     primary_path = os.path.join("data", book_name, f"{book_name}_final.xlsx")
     fallback_path = config_data.get("excel_path")
 
-    for path in [primary_path, fallback_path]:
-        if not path or not os.path.exists(path):
-            continue
-
+    if os.path.exists(primary_path):
         try:
-            df = pd.read_excel(path, sheet_name="Gesamt", engine="openpyxl")
+            df = pd.read_excel(primary_path, sheet_name="Gesamt", engine="openpyxl")
+            if "Kollokationen" not in df.columns:
+                print(f"⚠️ Sheet 'Gesamt' in file '{primary_path}' has no 'Kollokationen' column.")
+                return None
+            return df
+        except PermissionError as e:
+            raise e  # lassen wir weiter oben abfangen
+
+    # Nur wenn Datei nicht existiert: Fallback
+    if fallback_path and os.path.exists(fallback_path):
+        try:
+            df = pd.read_excel(fallback_path, sheet_name="Gesamt", engine="openpyxl")
+            if "Kollokationen" not in df.columns:
+                print(f"⚠️ Sheet 'Gesamt' in fallback file '{fallback_path}' has no 'Kollokationen' column.")
+                return None
+            return df
         except Exception as e:
-            print(f"⚠️ Could not load sheet 'Gesamt' from: {path} → {e}")
-            continue
+            print(f"⚠️ Could not load fallback file: {e}")
+            return None
 
-        if "Kollokationen" not in df.columns:
-            print(f"⚠️ Sheet 'Gesamt' in file '{path}' does not contain a 'Kollokationen' column.")
-            continue
-
-        return df
-
-    print("❌ No valid Excel file with sheet 'Gesamt' and column 'Kollokationen' found.")
+    print("❌ No valid Excel file found for collocations.")
     return None
 
-def format_kwic(context: str, keyword: str) -> tuple[str, str, str]:
+def format_kwic(context: str, variants: list[str]) -> tuple[str, str, str]:
     """
-    Splits the context string into left, hit (keyword), and right parts.
-    Only the first occurrence of the keyword is considered.
-
-    :param context: Full sentence or verse from 'Kollokationen' column
-    :param keyword: The type string to highlight
-    :return: Tuple of (left, hit, right)
+    Splits the context string into left, hit (matched variant), and right parts.
+    Only the first match from the list of variants is considered.
     """
-    index = context.find(keyword)
+    context_lower = context.lower()
 
-    if index == -1:
-        # keyword not found – treat whole line as left context
-        return context.strip(), "", ""
+    for variant in variants:
+        index = context_lower.find(variant.lower())
+        if index != -1:
+            left = context[:index].strip()
+            hit = context[index:index + len(variant)]
+            right = context[index + len(variant):].strip()
+            return left, hit, right
 
-    left = context[:index].strip()
-    hit = keyword
-    right = context[index + len(keyword):].strip()
-
-    return left, hit, right
+    # No variant matched
+    return context.strip(), "", ""
 
 def export_all_data_to_new_excel(book_name, paths, options):
     """
