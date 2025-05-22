@@ -642,21 +642,22 @@ def search_tei_with_dict(
         verse_text = ' '.join([seg.text for seg in line.findall(".//tei:seg", tei_ns) if seg.text])
         normalized_verse = normalize_text(verse_text)
 
-        missing_namings = check_and_extend_namings(
-            verse_number,
-            verse_text,
-            normalized_verse,
-            df,
-            naming_dict,
-            missing_namings,
-            root,
-            paths,
-            perform_categorization,
-            lemma_normalization,
-            ignored_lemmas,
-            lemma_categories,
-            categorized_entries
-        )
+        if check_namings:
+            missing_namings = check_and_extend_namings(
+                verse_number,
+                verse_text,
+                normalized_verse,
+                df,
+                naming_dict,
+                missing_namings,
+                root,
+                paths,
+                perform_categorization,
+                lemma_normalization,
+                ignored_lemmas,
+                lemma_categories,
+                categorized_entries
+            )
 
         if perform_collocations:
             check_and_add_collocations(
@@ -664,7 +665,7 @@ def search_tei_with_dict(
             )
         if perform_categorization:
 
-            df_verse = df[df["Vers"] == verse_number]
+            df_verse = df[(df["Vers"] >= verse_number) & (df["Vers"] < verse_number + 1)]
             entries = df_verse.to_dict(orient="records")
 
             for entry in entries:
