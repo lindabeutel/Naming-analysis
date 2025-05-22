@@ -1729,6 +1729,188 @@ def extract_tokens(entries: list[dict], unit: str) -> list[str]:
 
     return tokens
 
+def run_collocation_menu(config_data, paths, data):
+    """
+    Interactive menu to search for collocation contexts of a specific type
+    (designation or epithet), optionally restricted to a figure.
+    Results can be shown in the console or saved as CSV.
+    """
+    book_name = config_data.get("book_name") or paths["categorization_json"].split("_")[1]
+    categorization_path = paths["categorization_json"]
+
+    print("\n📌 Do you want to analyze the whole work or only a specific figure?")
+    print("[1] Whole work")
+    print("[2] Specific figure")
+
+    target_mode = ask_user_choice("> ", ["1", "2"])
+    only_figure = None
+
+    if target_mode == "2":
+        raw_name = input("✍ Please enter the figure name:\n> ").strip()
+        entries = safe_read_json(categorization_path, default=[])
+        resolved = resolve_figure_name(raw_name, entries)
+        if resolved is None:
+            return  # Abbruch bei nicht bestätigtem Vorschlag oder keiner Übereinstimmung
+        only_figure = resolved
+
+    type_value = input("🔍 Please enter the type to search for (e.g., \"küene\"):\n> ").strip()
+
+    print("\n📤 Where should the results be displayed?")
+    print("[1] Console")
+    print("[2] Save as CSV file")
+
+    output_choice = ask_user_choice("> ", ["1", "2"])
+    output_target = "console" if output_choice == "1" else "csv"
+
+    if output_target == "csv":
+        type_label = type_value.replace(" ", "_")
+        fig_label = only_figure.replace(" ", "_") if only_figure else "whole_work"
+        output_dir = os.path.join("data", book_name, "analysis")
+        os.makedirs(output_dir, exist_ok=True)
+        filename = f"collocations_{fig_label}_{type_label}.csv"
+        output_path = os.path.join(output_dir, filename)
+    else:
+        output_path = None
+
+    generate_collocations(
+        type_value=type_value,
+        book_name=book_name,
+        config_data=config_data,
+        only_figure=only_figure,
+        output_target=output_target,
+        output_path=output_path
+    )
+
+def generate_collocations(
+    type_value: str,
+    book_name: str,
+    config_data: dict,
+    only_figure: str | None,
+    output_target: str,
+    output_path: str | None
+):
+    """
+    Extracts all collocations containing a given type string from the final Excel file,
+    optionally filtered by figure. Matches type occurrences from the JSON categorization file.
+    Outputs formatted KWIC lines either to console or as CSV.
+    """
+    json_path = os.path.join("data", f"categorization_{book_name}.json")
+    entries = safe_read_json(json_path, default=[])
+
+    # Filter entries by figure if given
+    if only_figure:
+        entries = [e for e in entries if e.get("Benannte Figur") == only_figure]
+
+    # Load Excel with fallback and sheet/column check
+    df = load_collocation_sheet(config_data, book_name)
+    if df is None:
+        print("❌ Could not load the Excel sheet with 'Kollokationen'.")
+        return
+
+    results = []
+
+    for entry in entries:
+        all_type_fields = [
+            entry.get(f"Bezeichnung {i}") for i in range(1, 5)
+        ] + [
+            entry.get(f"Epitheta {i}") for i in range(1, 6)
+        ]
+
+        if not any(t == type_value for t in all_type_fields if isinstance(t, str)):
+            continue
+
+        vers = entry.get("Vers")
+        figur = entry.get("Benannte Figur")
+        original_text = get_first_valid_text(
+            entry.get("Erzähler"),
+            entry.get("Bezeichnung"),
+            entry.get("Eigennennung")
+        )
+
+        match = df[
+            (df["Vers"] == vers) &
+            (df["Benannte Figur"] == figur) &
+            (df.apply(lambda row: get_first_valid_text(
+                row.get("Erzähler"),
+                row.get("Bezeichnung"),
+                row.get("Eigennennung")
+            ) == original_text, axis=1))
+        ]
+
+        if match.empty:
+            continue
+
+        kollokation = match.iloc[0].get("Kollokationen")
+        if not isinstance(kollokation, str) or not kollokation.strip():
+            continue
+
+        left, hit, right = format_kwic(kollokation, type_value)
+        results.append((vers, figur, left, hit, right))
+
+    # Output formatting
+    if output_target == "console":
+        for _, _, left, hit, right in results:
+            print(f"{left.strip():>40}  \033[1m\033[93m{hit}\033[0m  {right.strip():<40}")
+    elif output_target == "csv" and output_path:
+        with open(output_path, "w", encoding="utf-8", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["Vers", "Benannte Figur", "Left", "Hit", "Right"])
+            for row in results:
+                writer.writerow(row)
+        print(f"✅ Collocation results saved to: {output_path}")
+
+def load_collocation_sheet(config_data: dict, book_name: str) -> pd.DataFrame | None:
+    """
+    Loads the Excel sheet 'Gesamt' from either the finalized file in data/<book>/<book>_final.xlsx
+    or from the fallback path stored in config_data["excel_path"].
+    Ensures that the required column 'Kollokationen' is present.
+    Returns the DataFrame if successful, else None.
+    """
+    import pandas as pd
+
+    primary_path = os.path.join("data", book_name, f"{book_name}_final.xlsx")
+    fallback_path = config_data.get("excel_path")
+
+    for path in [primary_path, fallback_path]:
+        if not path or not os.path.exists(path):
+            continue
+
+        try:
+            df = pd.read_excel(path, sheet_name="Gesamt", engine="openpyxl")
+        except Exception as e:
+            print(f"⚠️ Could not load sheet 'Gesamt' from: {path} → {e}")
+            continue
+
+        if "Kollokationen" not in df.columns:
+            print(f"⚠️ Sheet 'Gesamt' in file '{path}' does not contain a 'Kollokationen' column.")
+            continue
+
+        return df
+
+    print("❌ No valid Excel file with sheet 'Gesamt' and column 'Kollokationen' found.")
+    return None
+
+def format_kwic(context: str, keyword: str) -> tuple[str, str, str]:
+    """
+    Splits the context string into left, hit (keyword), and right parts.
+    Only the first occurrence of the keyword is considered.
+
+    :param context: Full sentence or verse from 'Kollokationen' column
+    :param keyword: The type string to highlight
+    :return: Tuple of (left, hit, right)
+    """
+    index = context.find(keyword)
+
+    if index == -1:
+        # keyword not found – treat whole line as left context
+        return (context.strip(), "", "")
+
+    left = context[:index].strip()
+    hit = keyword
+    right = context[index + len(keyword):].strip()
+
+    return (left, hit, right)
+
 def export_all_data_to_new_excel(book_name, paths, options):
     """
     Integrates confirmed namings, adds collocations, and creates a lemmatized worksheet.
@@ -2032,7 +2214,12 @@ def main():
         perform_categorization=do_categorization
     )
 
-    # 🔹 10. Optional export
+    # 🔹 10. Optional analysis after data collection
+    analyze_after = ask_user_choice("Do you want to run an analysis now? (y/n): ", ["y", "n"])
+    if analyze_after == "y":
+        run_analysis_menu(config_data, paths, data)
+
+    # 🔹 11. Optional export
     export = ask_user_choice("Do you want to export all results? (y/n): ", ["y", "n"]) == "y"
     if export:
         paths["original_excel"] = data["excel_path"]
