@@ -9,6 +9,7 @@ import shutil
 import time
 import csv
 import difflib
+import math
 
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import Element
@@ -1533,6 +1534,200 @@ def generate_combined_bez_epi(figure_name: str, json_path: str, output_path: str
             writer.writerow([val, count])
 
     print(f"✅ Combined wordlist for '{resolved_name}' written to: {output_path}")
+
+def run_keyword_menu(config_data, paths, data):
+    """
+    Interactive menu for configuring and running a keyword analysis.
+    Collects target, reference, unit and threshold, then calls generate_keywords().
+    """
+    book_name = config_data.get("book_name") or paths["categorization_json"].split("_")[1]
+    target_json = paths["categorization_json"]
+    output_dir = os.path.join("data", book_name, "analysis")
+    os.makedirs(output_dir, exist_ok=True)
+
+    print("\n📌 Do you want to analyze the whole work or a specific figure?")
+    print("[1] Whole work")
+    print("[2] Specific figure")
+
+    target_choice = ask_user_choice("> ", ["1", "2"])
+
+    if target_choice == "2":
+        raw_name = input("✍ Please enter the figure name:\n> ").strip()
+        entries = safe_read_json(target_json, default=[])
+        resolved = resolve_figure_name(raw_name, entries)
+        if resolved is None:
+            return  # Abbruch bei nicht bestätigtem oder nicht auffindbarem Namen
+        target = resolved
+        target_type = "figure"
+
+    else:
+        target = book_name
+        target_type = "whole_work"
+        print("📘 Please enter the names of the works to include in the reference corpus (comma-separated):")
+        references = input("> ").strip()
+        reference_books = [r.strip() for r in references.split(",") if r.strip()]
+
+    print("\n🎯 What should be the unit of comparison?")
+    print("[1] Designations (Bezeichnungen)")
+    print("[2] Epithets (Epitheta)")
+    print("[3] Combined")
+
+    unit_choice = ask_user_choice("> ", ["1", "2", "3"])
+    unit = {
+        "1": "bezeichnung",
+        "2": "epitheta",
+        "3": "combined"
+    }[unit_choice]
+
+    print("\n🧪 Enter significance threshold (-log10(p)), default = 0.5:")
+    threshold_input = input("> ").strip()
+    try:
+        threshold = float(threshold_input) if threshold_input else 0.5
+    except ValueError:
+        print("⚠️ Invalid input – using default threshold 0.5")
+        threshold = 0.5
+
+    # Prepare output filename
+    target_label = target.replace(" ", "_")
+    output_file = f"keywords_{unit}_{target_label}.csv"
+    output_path = os.path.join(output_dir, output_file)
+
+    # Call the actual keyword function
+    if target_type == "figure":
+        generate_keywords(
+            target_figure=target,
+            reference_books=None,
+            unit=unit,
+            threshold=threshold,
+            target_json=target_json,
+            output_path=output_path
+        )
+    else:
+        generate_keywords(
+            target_figure=None,
+            reference_books=reference_books,
+            unit=unit,
+            threshold=threshold,
+            target_json=target_json,
+            output_path=output_path
+        )
+
+    print(f"✅ Keyword analysis written to: {output_path}")
+
+    print("\n🔁 Do you want to run another keyword analysis? [y/n]")
+    again = ask_user_choice("> ", ["y", "n"])
+    if again == "y":
+        return run_keyword_menu(config_data, paths, data)
+    else:
+        print("↩️ Returning to analysis menu.")
+        return
+
+def generate_keywords(
+    target_figure: str | None,
+    reference_books: list[str] | None,
+    unit: str,
+    threshold: float,
+    target_json: str,
+    output_path: str
+):
+    """
+    Calculates key terms (designations, epithets or both) for a figure or full work
+    compared to a reference corpus. Saves results as CSV (only values above threshold).
+    """
+    target_entries = safe_read_json(target_json, default=[])
+
+    # Filter target corpus
+    if target_figure:
+        target_entries = [e for e in target_entries if e.get("Benannte Figur") == target_figure]
+
+    target_tokens = extract_tokens(target_entries, unit)
+
+    # Load reference corpus
+    reference_entries = []
+
+    if reference_books:
+        for book in reference_books:
+            path = os.path.join("data", f"categorization_{book}.json")
+            reference_entries += safe_read_json(path, default=[])
+    else:
+        # fallback: all entries except target_figure
+        reference_entries = [
+            e for e in safe_read_json(target_json, default=[])
+            if not target_figure or e.get("Benannte Figur") != target_figure
+        ]
+
+    reference_tokens = extract_tokens(reference_entries, unit)
+
+    # Count occurrences
+    target_counts = Counter(target_tokens)
+    reference_counts = Counter(reference_tokens)
+
+    results = []
+    for token, count_t in target_counts.items():
+        count_r = reference_counts.get(token, 0)
+
+        # basic smoothing
+        if count_t == 0 and count_r == 0:
+            continue
+
+        # log-likelihood / log ratio
+        if count_t + count_r == 0:
+            continue
+        p = (count_t + count_r) / (sum(target_counts.values()) + sum(reference_counts.values()))
+        expected_t = p * sum(target_counts.values())
+        expected_r = p * sum(reference_counts.values())
+
+        if expected_t > 0 and count_t > 0:
+            log_t = count_t * math.log2(count_t / expected_t)
+        else:
+            log_t = 0
+
+        if expected_r > 0 and count_r > 0:
+            log_r = count_r * math.log2(count_r / expected_r)
+        else:
+            log_r = 0
+
+        keyness = 2 * (log_t + log_r)
+
+        if keyness >= threshold:
+            results.append((token, count_t, count_r, round(keyness, 2)))
+
+    # Sort descending
+    results.sort(key=lambda x: (-x[3], x[0]))
+
+    # Write CSV
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, "w", encoding="utf-8", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Wort", "Zielanzahl", "Referenzanzahl", "Keyness"])
+        for row in results:
+            writer.writerow(row)
+
+
+def extract_tokens(entries: list[dict], unit: str) -> list[str]:
+    """
+    Extracts all relevant tokens (Bezeichnungen, Epitheta, or both) from a list of entries.
+
+    :param entries: list of JSON objects
+    :param unit: "bezeichnung", "epitheta", or "combined"
+    :return: flat list of strings
+    """
+    tokens = []
+
+    for entry in entries:
+        if unit in ("bezeichnung", "combined"):
+            for i in range(1, 5):
+                val = entry.get(f"Bezeichnung {i}")
+                if isinstance(val, str) and val.strip():
+                    tokens.append(val.strip())
+
+        if unit in ("epitheta", "combined"):
+            for i in range(1, 6):
+                val = entry.get(f"Epitheta {i}")
+                if isinstance(val, str) and val.strip():
+                    tokens.append(val.strip())
+
+    return tokens
 
 def export_all_data_to_new_excel(book_name, paths, options):
     """
