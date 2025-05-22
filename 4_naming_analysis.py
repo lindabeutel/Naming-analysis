@@ -1306,7 +1306,7 @@ def save_lemma_categories(data, path="lemma_categories.json"):
     sorted_data = dict(sorted(existing.items()))
     safe_write_json(sorted_data, path, merge=False)
 
-def run_analysis_menu(config_data, paths, data):
+def run_analysis_menu(config_data, paths, data, book_name):
     while True:
         print("📊 Which type of analysis do you want to perform?")
         print("[1] Wordlist")
@@ -1317,23 +1317,23 @@ def run_analysis_menu(config_data, paths, data):
         choice = ask_user_choice("> ", ["1", "2", "3", "4"])
 
         if choice == "1":
-            run_wordlist_menu(config_data, paths)
+            run_wordlist_menu(paths, book_name)
         elif choice == "2":
-            run_keyword_menu(config_data, paths, data)
+            run_keyword_menu(config_data, paths, data, book_name)
         elif choice == "3":
-            run_collocation_menu(config_data, paths)
+            run_collocation_menu(config_data, paths, book_name)
         elif choice == "4":
             print("📦 Analysis completed.")
             break
 
-def run_wordlist_menu(config_data, paths):
+def run_wordlist_menu(paths, book_name):
     """
     Interactive menu for generating wordlists:
     - by column
     - by figure (Bezeichnungen, Epitheta, combined)
     Results are saved as CSV files.
     """
-    book_name = config_data.get("book_name") or paths["categorization_json"].split("_")[1]
+
     json_path = paths["categorization_json"]
     output_dir = os.path.join("data", book_name, "analysis")
     os.makedirs(output_dir, exist_ok=True)
@@ -1535,12 +1535,12 @@ def generate_combined_bez_epi(figure_name: str, json_path: str, output_path: str
 
     print(f"✅ Combined wordlist for '{resolved_name}' written to: {output_path}")
 
-def run_keyword_menu(config_data, paths, data):
+def run_keyword_menu(config_data, paths, data, book_name):
     """
     Interactive menu for configuring and running a keyword analysis.
     Collects target, reference, unit and threshold, then calls generate_keywords().
     """
-    book_name = config_data.get("book_name") or paths["categorization_json"].split("_")[1]
+
     target_json = paths["categorization_json"]
     output_dir = os.path.join("data", book_name, "analysis")
     os.makedirs(output_dir, exist_ok=True)
@@ -1619,7 +1619,7 @@ def run_keyword_menu(config_data, paths, data):
     print("\n🔁 Do you want to run another keyword analysis? [y/n]")
     again = ask_user_choice("> ", ["y", "n"])
     if again == "y":
-        return run_keyword_menu(config_data, paths, data)
+        return run_keyword_menu(config_data, paths, data, book_name)
     else:
         print("↩️ Returning to analysis menu.")
         return None
@@ -1731,13 +1731,13 @@ def extract_tokens(entries: list[dict], unit: str) -> list[str]:
 
     return tokens
 
-def run_collocation_menu(config_data, paths):
+def run_collocation_menu(config_data, paths, book_name):
     """
     Interactive menu to search for collocation contexts of a specific type
     (designation or epithet), optionally restricted to a figure.
     Results can be shown in the console or saved as CSV.
     """
-    book_name = config_data.get("book_name") or paths["categorization_json"].split("_")[1]
+
     categorization_path = paths["categorization_json"]
 
     print("\n📌 Do you want to analyze the whole work or only a specific figure?")
@@ -2150,7 +2150,7 @@ def main():
     mode = config_data.get("modus", "collect")
 
     if mode == "analyze":
-        run_analysis_menu(config_data, paths, data)
+        run_analysis_menu(config_data, paths, data, book_name)
         return  # skip rest of collection logic
 
     # 🔹 6. User-controlled analysis paths
@@ -2218,7 +2218,7 @@ def main():
     # 🔹 10. Optional analysis after data collection
     analyze_after = ask_user_choice("Do you want to run an analysis now? (y/n): ", ["y", "n"])
     if analyze_after == "y":
-        run_analysis_menu(config_data, paths, data)
+        run_analysis_menu(config_data, paths, data, book_name)
 
     # 🔹 11. Optional export
     export = ask_user_choice("Do you want to export all results? (y/n): ", ["y", "n"]) == "y"
