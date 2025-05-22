@@ -1361,7 +1361,7 @@ def run_wordlist_menu(config_data, paths):
                 print("⚠️ Invalid input. Please enter one of: Benannte Figur, Bezeichnung, Epitheta")
                 column_input = input("> ").strip()
 
-            filename = f"wordlist_{column_input}.csv".replace(" ", "_")
+            filename = f"wordlist_{column_input}_{book_name}.csv".replace(" ", "_")
             output_path = os.path.join(output_dir, filename)
             generate_wordlist_by_column(column_input, json_path, output_path)
 
@@ -1591,7 +1591,7 @@ def run_keyword_menu(config_data, paths, data):
 
     # Prepare output filename
     target_label = target.replace(" ", "_")
-    output_file = f"keywords_{unit}_{target_label}.csv"
+    output_file = f"keywords_{unit}_{target_label}_{book_name}.csv"
     output_path = os.path.join(output_dir, output_file)
 
     # Call the actual keyword function
@@ -1769,7 +1769,7 @@ def run_collocation_menu(config_data, paths):
         fig_label = only_figure.replace(" ", "_") if only_figure else "whole_work"
         output_dir = os.path.join("data", book_name, "analysis")
         os.makedirs(output_dir, exist_ok=True)
-        filename = f"collocations_{fig_label}_{type_label}.csv"
+        filename = f"collocations_{fig_label}_{type_label}_{book_name}.csv"
         output_path = os.path.join(output_dir, filename)
     else:
         output_path = None
