@@ -509,7 +509,8 @@
   ],
   "Evander": [
     "aevander",
-    "evander"
+    "evander",
+    "evanders"
   ],
   "Falbin": [
     "falbinen"
@@ -581,6 +582,9 @@
     "genelunen",
     "genelunes",
     "genelûn"
+  ],
+  "genendec": [
+    "ginendige"
   ],
   "genôz": [
     "genoz"
@@ -810,6 +814,7 @@
     "ich",
     "ir",
     "iwer",
+    "iwerm",
     "iwern",
     "iwers",
     "mime",
@@ -902,6 +907,7 @@
     "ivnge"
   ],
   "junchêrre": [
+    "iunchherre",
     "ivncherre"
   ],
   "junclich": [
@@ -911,7 +917,8 @@
     "ivnchfrowe"
   ],
   "jungelinc": [
-    "ivngelinch"
+    "ivngelinch",
+    "ivngeline"
   ],
   "Juno": [
     "ivno",
@@ -1000,6 +1007,7 @@
   ],
   "künic": [
     "chunc",
+    "chunic",
     "chunich",
     "chunige",
     "chuniges",
@@ -1060,6 +1068,7 @@
     "lausu"
   ],
   "Lavinia": [
+    "lauinia",
     "lavine",
     "lavinen"
   ],
@@ -1094,10 +1103,14 @@
     "ludewigin"
   ],
   "lustsam": [
-    "lussam"
+    "lussam",
+    "lussame"
   ],
   "Luzifer": [
     "luciferen"
+  ],
+  "Lycomide": [
+    "licoemite"
   ],
   "lêraere": [
     "lerare"
@@ -1253,7 +1266,8 @@
     "muralan"
   ],
   "mâc": [
-    "mac"
+    "mac",
+    "mage"
   ],
   "Naimes": [
     "naimes"
@@ -1338,7 +1352,8 @@
     "paliganes"
   ],
   "Pallas": [
-    "pallas"
+    "pallas",
+    "pallase"
   ],
   "Pandarus": [
     "pandarus"
@@ -1740,6 +1755,7 @@
   "Turnus": [
     "turnis",
     "turno",
+    "turnum",
     "turnus",
     "turnuse",
     "turnuses",
@@ -1772,6 +1788,9 @@
   "Ulixes": [
     "vlixes"
   ],
+  "unbescholten": [
+    "vmbescholten"
+  ],
   "unde": [
     "un",
     "und",
@@ -1781,6 +1800,9 @@
   ],
   "under": [
     "unter"
+  ],
+  "ungelückec": [
+    "vngilucher"
   ],
   "ungetriuwe": [
     "ungetruwe",
@@ -1908,6 +1930,7 @@
   "vrum": [
     "frumige",
     "frumigen",
+    "fruomige",
     "fruomigen"
   ],
   "Vulcanus": [
