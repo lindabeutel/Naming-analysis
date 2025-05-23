@@ -1459,10 +1459,6 @@ def resolve_figure_name(name: str, entries: list[dict]) -> str | None:
         return None
 
 def ask_valid_figure_name(json_path: str) -> str | None:
-    """
-    Repeatedly asks for a valid figure name and resolves it against the entries
-    from the given categorization JSON path using resolve_figure_name().
-    """
     entries = safe_read_json(json_path, default=[])
 
     while True:
@@ -1476,6 +1472,9 @@ def ask_valid_figure_name(json_path: str) -> str | None:
             return resolved
 
         print("⚠️ No matching figure found. Please try again.")
+
+    return None  # ← für statische Typprüfung, wird nie erreicht
+
 
 
 def generate_bezeichnungen_for_figure(figure_name: str, json_path: str, output_path: str):
@@ -1583,7 +1582,7 @@ def run_keyword_menu(config_data, paths, data, book_name):
     if target_choice == "2":
         target = ask_valid_figure_name(target_json)
         if target is None:
-            return
+            return None
         target_type = "figure"
 
     else:
