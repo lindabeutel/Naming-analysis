@@ -14,6 +14,9 @@
     "alroten",
     "alterot"
   ],
+  "admirât": [
+    "admirate"
+  ],
   "Adrastus": [
     "adorastvs"
   ],
@@ -34,6 +37,12 @@
   ],
   "Ajax": [
     "aiax"
+  ],
+  "al": [
+    "al",
+    "aller",
+    "allir",
+    "elliu"
   ],
   "Albonie": [
     "albonie"
@@ -60,11 +69,23 @@
   "Algarich": [
     "algarich"
   ],
+  "algewaltec": [
+    "alwaltigen"
+  ],
+  "allerliebest": [
+    "allerlibistin"
+  ],
   "Almeria": [
     "almerie"
   ],
   "Alrich": [
     "alrich"
+  ],
+  "alt": [
+    "alt",
+    "alte",
+    "alten",
+    "alter"
   ],
   "Amarezur": [
     "amarezur"
@@ -88,6 +109,9 @@
   "Anchises": [
     "anchisem",
     "anchises"
+  ],
+  "ander": [
+    "ander"
   ],
   "Anna": [
     "anna",
@@ -130,11 +154,25 @@
     "aragnes",
     "aranien"
   ],
+  "arbeit": [
+    "arbeit"
+  ],
+  "arc": [
+    "arge"
+  ],
   "Argun": [
     "argun"
   ],
+  "arm": [
+    "arme",
+    "armen",
+    "armez"
+  ],
   "Arthan": [
     "arthan"
+  ],
+  "as": [
+    "as"
   ],
   "Ascanius": [
     "ascanivs",
@@ -142,7 +180,9 @@
     "aschanio",
     "aschanius",
     "aschanivm",
-    "aschanivs"
+    "aschanivs",
+    "aschnivs",
+    "asschanius"
   ],
   "Aschalpems": [
     "aschalbaies"
@@ -153,7 +193,8 @@
   "Aventinus": [
     "aventine",
     "aventinus",
-    "aventius"
+    "aventius",
+    "euentius"
   ],
   "Avon": [
     "aiuone"
@@ -164,8 +205,17 @@
   "Baldewîn": [
     "baldewin"
   ],
+  "balt": [
+    "palt"
+  ],
   "Balvier": [
     "paluir"
+  ],
+  "bar": [
+    "barn"
+  ],
+  "bart": [
+    "barte"
   ],
   "Basanzi": [
     "pasanzi"
@@ -175,6 +225,9 @@
   ],
   "Basken": [
     "wasconie"
+  ],
+  "beierisch": [
+    "baigerisken"
   ],
   "Beiern": [
     "baieren",
@@ -189,14 +242,35 @@
     "peringeren",
     "pernger"
   ],
+  "beste": [
+    "besten"
+  ],
   "Binabel": [
     "binabel"
+  ],
+  "bischof": [
+    "biscof",
+    "biscofes",
+    "biscoph",
+    "biscophsce"
+  ],
+  "Bitias": [
+    "becias"
   ],
   "Blandscandîz": [
     "blanscandiz"
   ],
   "Blasius": [
     "plasien"
+  ],
+  "bluot": [
+    "bluoet"
+  ],
+  "boese": [
+    "boser"
+  ],
+  "bote": [
+    "bote"
   ],
   "Brechmundâ": [
     "brachmunt",
@@ -207,6 +281,19 @@
   ],
   "Bretagne": [
     "brittannia"
+  ],
+  "britten": [
+    "britten"
+  ],
+  "bruoder": [
+    "broder",
+    "bruder",
+    "bruoder",
+    "brvoder",
+    "pruder"
+  ],
+  "bíderbe": [
+    "biderbe"
   ],
   "Cacus": [
     "caccus"
@@ -241,7 +328,8 @@
     "clariens"
   ],
   "Claudius": [
-    "claudius"
+    "claudius",
+    "claudivs"
   ],
   "Cupido": [
     "cupido",
@@ -272,6 +360,23 @@
   "Denis": [
     "dyonisien"
   ],
+  "der": [
+    "dem",
+    "deme",
+    "den",
+    "der",
+    "des",
+    "di",
+    "die",
+    "dirre",
+    "disem",
+    "diu",
+    "div",
+    "ter"
+  ],
+  "deus": [
+    "deo"
+  ],
   "Diana": [
     "dianen"
   ],
@@ -287,8 +392,17 @@
     "diepolt",
     "dipolden"
   ],
+  "dienest": [
+    "dinist"
+  ],
+  "dienestman": [
+    "dinistman"
+  ],
   "Dierrîch": [
     "dierrich"
+  ],
+  "dinc": [
+    "dinge"
   ],
   "Dionisius": [
     "dionisien"
@@ -296,12 +410,55 @@
   "Dionysius": [
     "dionisii"
   ],
+  "dritte": [
+    "dritte",
+    "dritten"
+  ],
+  "drî": [
+    "dri",
+    "drin"
+  ],
+  "durch": [
+    "durch"
+  ],
+  "dëgen": [
+    "degen"
+  ],
+  "e": [
+    "e"
+  ],
   "Ebelin": [
     "ebelinen"
+  ],
+  "edel": [
+    "adel",
+    "edele",
+    "edelen",
+    "edeler",
+    "edil",
+    "edile",
+    "edilen",
+    "ediln"
+  ],
+  "egeslich": [
+    "egislichen"
+  ],
+  "ein": [
+    "ain",
+    "aine",
+    "ainem",
+    "ein",
+    "eine",
+    "einen",
+    "einer",
+    "eines"
   ],
   "Ekerîch": [
     "ekerich",
     "ekerichen"
+  ],
+  "ellende": [
+    "ellender"
   ],
   "Eneas": [
     "enea",
@@ -321,6 +478,15 @@
     "engelrirs",
     "engelris",
     "englirs"
+  ],
+  "entrinnen": [
+    "entrunner"
+  ],
+  "erweln": [
+    "erwelten"
+  ],
+  "erzebischof": [
+    "erzebiscof"
   ],
   "Eschermunt": [
     "eschermunt"
@@ -362,918 +528,22 @@
   "Gabriel": [
     "gabriele"
   ],
+  "ganz": [
+    "ganzer"
+  ],
   "Garmes": [
     "garmes"
   ],
   "Garpîn": [
     "garpin"
   ],
-  "Gebewîn": [
-    "gebewin",
-    "gebewinen"
-  ],
-  "Geneasin": [
-    "geneasin"
-  ],
-  "Genelûn": [
-    "genelun",
-    "genelune",
-    "genelunen",
-    "genelunes",
-    "genelûn"
-  ],
-  "Gergers": [
-    "egeriers",
-    "egeries",
-    "egeris",
-    "gergers",
-    "gerges"
-  ],
-  "Gergis": [
-    "gergirs",
-    "gergis",
-    "gernis",
-    "gernises"
-  ],
-  "Gerglant": [
-    "gerglant"
-  ],
-  "Gerhart": [
-    "gerhart",
-    "gerharten"
-  ],
-  "Gersîz": [
-    "gersiz"
-  ],
-  "Gideon": [
-    "gedeon",
-    "gedeonen"
-  ],
-  "Glibon": [
-    "glibon"
-  ],
-  "Golitath": [
-    "golie"
-  ],
-  "Gotefrit": [
-    "gotefrit"
-  ],
-  "Grandon": [
-    "grandon"
-  ],
-  "Gwimut": [
-    "gwimuten"
-  ],
-  "Haimunt": [
-    "haimunt"
-  ],
-  "Hatte": [
-    "atto",
-    "hatte",
-    "hatten"
-  ],
-  "Hector": [
-    "hector"
-  ],
-  "Hecuba": [
-    "ecuba"
-  ],
-  "Heinrich": [
-    "hainriche",
-    "hainrichen",
-    "heinrich"
-  ],
-  "Helena": [
-    "elenam"
-  ],
-  "Hercules": [
-    "erchules",
-    "ercules",
-    "hercules"
-  ],
-  "Herman": [
-    "herman"
-  ],
-  "Herodes": [
-    "herodes"
-  ],
-  "Hillung": [
-    "hillunc"
-  ],
-  "Horre": [
-    "horre"
-  ],
-  "Iclarions": [
-    "iclarions"
-  ],
-  "Ilaz": [
-    "ilaz"
-  ],
-  "Ilmar": [
-    "ilmar"
-  ],
-  "Ingram": [
-    "ingram"
-  ],
-  "Ire": [
-    "iren"
-  ],
-  "Ivo": [
-    "iue",
-    "iuen",
-    "iuo"
-  ],
-  "Jocerans": [
-    "iocerans"
-  ],
-  "Johannes": [
-    "iohannen",
-    "iohannes",
-    "johannen"
-  ],
-  "Joleun": [
-    "ioleun"
-  ],
-  "Jomel": [
-    "iomel"
-  ],
-  "Jonas": [
-    "jonam"
-  ],
-  "Jorfalir": [
-    "iorfalir"
-  ],
-  "Josias": [
-    "iosias"
-  ],
-  "Josua": [
-    "iosuê"
-  ],
-  "Judas": [
-    "iudas",
-    "judas"
-  ],
-  "Juno": [
-    "ivno",
-    "ivnonem"
-  ],
-  "Jupiter": [
-    "jouinus"
-  ],
-  "Justîn": [
-    "iustinen"
-  ],
-  "Kanabeus": [
-    "chanabeus"
-  ],
-  "Kappadokien": [
-    "capadocia"
-  ],
-  "Karl": [
-    "karelen",
-    "karl",
-    "karle",
-    "karlen",
-    "karles",
-    "karln"
-  ],
-  "Karlinge": [
-    "karlinge"
-  ],
-  "Kartan": [
-    "chartan"
-  ],
-  "Konrad": [
-    "chunrat"
-  ],
-  "Krieche": [
-    "crieche"
-  ],
-  "Krist": [
-    "christ",
-    "christes",
-    "crist",
-    "criste",
-    "cristen",
-    "cristes",
-    "krist"
-  ],
-  "Latinus": [
-    "latin",
-    "latinum",
-    "latinus",
-    "latinvs"
-  ],
-  "Laurentius": [
-    "laurentien"
-  ],
-  "Lausus": [
-    "lausu"
-  ],
-  "Lavinia": [
-    "lavine",
-    "lavinen"
-  ],
-  "Ludewîc": [
-    "ludewic",
-    "ludewige",
-    "ludewigin"
-  ],
-  "Luzifer": [
-    "luciferen"
-  ],
-  "Madelgêr": [
-    "madelger"
-  ],
-  "Maglirte": [
-    "maglirte"
-  ],
-  "Mahomet": [
-    "machmet",
-    "machmeten",
-    "machmetes",
-    "mahmet",
-    "mahmete",
-    "mahmeten"
-  ],
-  "Malbrant": [
-    "malbrant"
-  ],
-  "Malprimes": [
-    "malprimes"
-  ],
-  "Malprimis": [
-    "malprimis"
-  ],
-  "Malsarôn": [
-    "malsaron"
-  ],
-  "Maltrens": [
-    "maltrens"
-  ],
-  "Mantel": [
-    "mantel"
-  ],
-  "Marcelle": [
-    "marcellen"
-  ],
-  "Margarîz": [
-    "margariz"
-  ],
-  "Maria": [
-    "marie",
-    "marien"
-  ],
-  "Mars": [
-    "mars"
-  ],
-  "Marsilie": [
-    "marsilie",
-    "marsilien",
-    "marsilies",
-    "marssilie",
-    "marssilien",
-    "marssilies"
-  ],
-  "Martian": [
-    "martian"
-  ],
-  "Matheus": [
-    "matheus"
-  ],
-  "Maximîn": [
-    "maximin"
-  ],
-  "Menelaus": [
-    "meleavs",
-    "menelao",
-    "menelaus",
-    "menelavs",
-    "menlai"
-  ],
-  "Messapus": [
-    "mesapus",
-    "messapus"
-  ],
-  "Mezentius": [
-    "mesentivs",
-    "mesenzio",
-    "mesenzivs"
-  ],
-  "Michael": [
-    "michahele",
-    "michehelis"
-  ],
-  "Michaeli": [
-    "michelis"
-  ],
-  "Milun": [
-    "milonen",
-    "milun"
-  ],
-  "Minos": [
-    "minos"
-  ],
-  "Muralan": [
-    "muralan"
-  ],
-  "Naimes": [
-    "naimes"
-  ],
-  "Neptun": [
-    "neptunus"
-  ],
-  "Nerpa": [
-    "nerpa"
-  ],
-  "Nevelun": [
-    "neuelun"
-  ],
-  "Ninive": [
-    "niniue"
-  ],
-  "Nisus": [
-    "nise",
-    "nisen",
-    "nisus",
-    "nisvs"
-  ],
-  "Normandie": [
-    "normandîe"
-  ],
-  "Nêre": [
-    "neren"
-  ],
-  "Oigir": [
-    "oigir"
-  ],
-  "Oliboris": [
-    "oliboris"
-  ],
-  "Olivier": [
-    "oliuir",
-    "oliuire",
-    "oliuiren",
-    "oliuirin"
-  ],
-  "Orphalis": [
-    "orphalis"
-  ],
-  "Orpheus": [
-    "orpheus"
-  ],
-  "Orte": [
-    "orten"
-  ],
-  "Otnant": [
-    "otnant"
-  ],
-  "Otto": [
-    "otten",
-    "otto"
-  ],
-  "Paligân": [
-    "paligan",
-    "paliganen",
-    "paliganes"
-  ],
-  "Pallas": [
-    "pallas"
-  ],
-  "Pande": [
-    "pande"
-  ],
-  "Pandolt": [
-    "pandolt"
-  ],
-  "Parguel": [
-    "parguel"
-  ],
-  "Paris": [
-    "paris",
-    "parise"
-  ],
-  "Patronopeus": [
-    "patronopeivs"
-  ],
-  "Pegôn": [
-    "pegon",
-    "pegonen"
-  ],
-  "Pelmo": [
-    "pilme"
-  ],
-  "Petrus": [
-    "peter",
-    "petern",
-    "petres"
-  ],
-  "Pettau": [
-    "betwoe"
-  ],
-  "Pharao": [
-    "pharaonem"
-  ],
-  "Philon": [
-    "philonin"
-  ],
-  "Phocus": [
-    "phocus"
-  ],
-  "Phoebus": [
-    "phebus"
-  ],
-  "Pillung": [
-    "pillunc"
-  ],
-  "Pipin": [
-    "pipines"
-  ],
-  "Plangirz": [
-    "plangirz"
-  ],
-  "Pluto": [
-    "pluto"
-  ],
-  "Polynices": [
-    "pollinices"
-  ],
-  "Priamur": [
-    "priamur"
-  ],
-  "Priamus": [
-    "priam",
-    "priamo",
-    "priamus",
-    "priamvs"
-  ],
-  "Prosperina": [
-    "prosperine"
-  ],
-  "Prothesilaus": [
-    "protesilavs"
-  ],
-  "Prutan": [
-    "prutan"
-  ],
-  "Raphael": [
-    "raphahele"
-  ],
-  "Rapoto": [
-    "rapoto"
-  ],
-  "Regenbalt": [
-    "regenbalt"
-  ],
-  "Regenfrit": [
-    "regenfrit"
-  ],
-  "Reims": [
-    "raines",
-    "remis"
-  ],
-  "Reimunt": [
-    "reimunt"
-  ],
-  "Rhadamanthus": [
-    "radamant",
-    "radamanthus",
-    "radamantus"
-  ],
-  "Rhamnes": [
-    "anes"
-  ],
-  "Richart": [
-    "richart"
-  ],
-  "Ritschart": [
-    "ritschart"
-  ],
-  "Romanus": [
-    "romane"
-  ],
-  "Romulus": [
-    "romulus"
-  ],
-  "Roslin": [
-    "roslin",
-    "rosselinen"
-  ],
-  "Ruolant": [
-    "rolanden",
-    "rolandes",
-    "rolant",
-    "rolante",
-    "rolanten",
-    "rolantes",
-    "rovlande",
-    "rovlanden",
-    "rovlant",
-    "rovlante",
-    "rovlanten",
-    "rovlantes",
-    "ruolant"
-  ],
-  "Rôm": [
-    "rome"
-  ],
-  "Rômaere": [
-    "romere"
-  ],
-  "Salomon": [
-    "salomon"
-  ],
-  "Samsôn": [
-    "sampson",
-    "samson"
-  ],
-  "Saragossa": [
-    "sarraguz"
-  ],
-  "Saturn": [
-    "saturnus"
-  ],
-  "Saul": [
-    "saulen"
-  ],
-  "Scarpulôn": [
-    "scarpulon"
-  ],
-  "Sevilla": [
-    "sibiliae"
-  ],
-  "Sibylle": [
-    "sebillen",
-    "sibille",
-    "sibillen",
-    "sybille",
-    "sybillen"
-  ],
-  "Sigebant": [
-    "sigebant"
-  ],
-  "Sigelot": [
-    "sigeloten"
-  ],
-  "Silviane": [
-    "silviane"
-  ],
-  "Silvius": [
-    "siluio",
-    "silvivs",
-    "sylvivs"
-  ],
-  "Sinon": [
-    "sinon",
-    "synon"
-  ],
-  "Spanien": [
-    "yspanie"
-  ],
-  "Spemvalrîz": [
-    "spemualriz"
-  ],
-  "Stramariz": [
-    "stalmariz",
-    "stramariz"
-  ],
-  "Sutri": [
-    "sutria"
-  ],
-  "Sychaeus": [
-    "sicheo",
-    "sycheus"
-  ],
-  "Tantalus": [
-    "thalantus"
-  ],
-  "Targîs": [
-    "targis"
-  ],
-  "Tenemarke": [
-    "tenemarche"
-  ],
-  "Tervagant": [
-    "teruagant"
-  ],
-  "Thibors": [
-    "thibors"
-  ],
-  "Tirrich": [
-    "tirrich",
-    "tirriche"
-  ],
-  "Tisiphone": [
-    "tifone"
-  ],
-  "Tityos": [
-    "ticivs"
-  ],
-  "Torke": [
-    "torchen"
-  ],
-  "Tortan": [
-    "tortan"
-  ],
-  "Tortona": [
-    "tortuone"
-  ],
-  "Tortosa": [
-    "tortulose"
-  ],
-  "Troiaere": [
-    "troian",
-    "troiare"
-  ],
-  "Troilus": [
-    "troilus"
-  ],
-  "Turnus": [
-    "turnis",
-    "turno",
-    "turnus",
-    "turnuse",
-    "turnuses",
-    "turnvs",
-    "tvrnus",
-    "tvrnuse",
-    "tvrnvs"
-  ],
-  "Turpîn": [
-    "turpin",
-    "turpinen",
-    "turpines"
-  ],
-  "Tydeus": [
-    "tydeus"
-  ],
-  "Tydides": [
-    "tytides"
-  ],
-  "Tyrreus": [
-    "ciro",
-    "cirus",
-    "cyreus",
-    "cyrus",
-    "zirus"
-  ],
-  "Ulixes": [
-    "vlixes"
-  ],
-  "Urtanne": [
-    "urtannen"
-  ],
-  "Valdebrûn": [
-    "ualdebrun",
-    "ualdeprun"
-  ],
-  "Valterne": [
-    "ualeterne"
-  ],
-  "Valtia": [
-    "ualtia"
-  ],
-  "Vastmar": [
-    "uastmar"
-  ],
-  "Venus": [
-    "uenus",
-    "veneri",
-    "venerm",
-    "venus",
-    "venuse",
-    "venvs",
-    "venvse",
-    "wenuse"
-  ],
-  "Vergil": [
-    "uirgilius",
-    "virgilius",
-    "virgilivs"
-  ],
-  "Viana": [
-    "uigennen"
-  ],
-  "Volcâne": [
-    "volchane"
-  ],
-  "Volzan": [
-    "volzam"
-  ],
-  "Vulcanus": [
-    "fulchane",
-    "wlchanus",
-    "wolchan",
-    "wolchanum"
-  ],
-  "Waldram": [
-    "waldram"
-  ],
-  "Walther": [
-    "walter",
-    "walthere",
-    "waltheren"
-  ],
-  "Wate": [
-    "waten"
-  ],
-  "Wernes": [
-    "wernes"
-  ],
-  "Wido": [
-    "wido"
-  ],
-  "Wineman": [
-    "winemannen"
-  ],
-  "Witel": [
-    "witel"
-  ],
-  "Witrant": [
-    "witrant"
-  ],
-  "Wlter": [
-    "wlter"
-  ],
-  "Ylionix": [
-    "ylionix"
-  ],
-  "Ypomedon": [
-    "ypomedon"
-  ],
-  "Zammen": [
-    "zamne"
-  ],
-  "Zernubele": [
-    "cernubiles",
-    "cornubiles",
-    "zernubele"
-  ],
-  "admirât": [
-    "admirate"
-  ],
-  "al": [
-    "al",
-    "aller",
-    "allir",
-    "elliu"
-  ],
-  "algewaltec": [
-    "alwaltigen"
-  ],
-  "allerliebest": [
-    "allerlibistin"
-  ],
-  "alt": [
-    "alt",
-    "alte",
-    "alten",
-    "alter"
-  ],
-  "ander": [
-    "ander"
-  ],
-  "arbeit": [
-    "arbeit"
-  ],
-  "arc": [
-    "arge"
-  ],
-  "arm": [
-    "arme",
-    "armen",
-    "armez"
-  ],
-  "as": [
-    "as"
-  ],
-  "balt": [
-    "palt"
-  ],
-  "bar": [
-    "barn"
-  ],
-  "bart": [
-    "barte"
-  ],
-  "beierisch": [
-    "baigerisken"
-  ],
-  "beste": [
-    "besten"
-  ],
-  "bischof": [
-    "biscof",
-    "biscofes",
-    "biscoph",
-    "biscophsce"
-  ],
-  "bluot": [
-    "bluoet"
-  ],
-  "boese": [
-    "boser"
-  ],
-  "bote": [
-    "bote"
-  ],
-  "britten": [
-    "britten"
-  ],
-  "bruoder": [
-    "broder",
-    "bruder",
-    "bruoder",
-    "brvoder",
-    "pruder"
-  ],
-  "bíderbe": [
-    "biderbe"
-  ],
-  "der": [
-    "dem",
-    "deme",
-    "den",
-    "der",
-    "des",
-    "di",
-    "die",
-    "dirre",
-    "disem",
-    "diu",
-    "div",
-    "ter"
-  ],
-  "deus": [
-    "deo"
-  ],
-  "dienest": [
-    "dinist"
-  ],
-  "dienestman": [
-    "dinistman"
-  ],
-  "dinc": [
-    "dinge"
-  ],
-  "dritte": [
-    "dritte",
-    "dritten"
-  ],
-  "drî": [
-    "dri",
-    "drin"
-  ],
-  "durch": [
-    "durch"
-  ],
-  "dëgen": [
-    "degen"
-  ],
-  "e": [
-    "e"
-  ],
-  "edel": [
-    "adel",
-    "edele",
-    "edelen",
-    "edeler",
-    "edil",
-    "edile",
-    "edilen",
-    "ediln"
-  ],
-  "egeslich": [
-    "egislichen"
-  ],
-  "ein": [
-    "ain",
-    "aine",
-    "ainem",
-    "ein",
-    "eine",
-    "einen",
-    "einer",
-    "eines"
-  ],
-  "ellende": [
-    "ellender"
-  ],
-  "entrinnen": [
-    "entrunner"
-  ],
-  "erweln": [
-    "erwelten"
-  ],
-  "erzebischof": [
-    "erzebiscof"
-  ],
-  "ganz": [
-    "ganzer"
-  ],
   "gast": [
     "gast",
     "gaste"
+  ],
+  "Gebewîn": [
+    "gebewin",
+    "gebewinen"
   ],
   "gebërn": [
     "geborn"
@@ -1302,8 +572,41 @@
     "genadige",
     "gnadeclicher"
   ],
+  "Geneasin": [
+    "geneasin"
+  ],
+  "Genelûn": [
+    "genelun",
+    "genelune",
+    "genelunen",
+    "genelunes",
+    "genelûn"
+  ],
   "genôz": [
     "genoz"
+  ],
+  "Gergers": [
+    "egeriers",
+    "egeries",
+    "egeris",
+    "gergers",
+    "gerges"
+  ],
+  "Gergis": [
+    "gergirs",
+    "gergis",
+    "gernis",
+    "gernises"
+  ],
+  "Gerglant": [
+    "gerglant"
+  ],
+  "Gerhart": [
+    "gerhart",
+    "gerharten"
+  ],
+  "Gersîz": [
+    "gersiz"
   ],
   "geselle": [
     "geselle",
@@ -1332,8 +635,18 @@
   "gezogen": [
     "gizogine"
   ],
+  "Gideon": [
+    "gedeon",
+    "gedeonen"
+  ],
   "gimme": [
     "gimme"
+  ],
+  "Glibon": [
+    "glibon"
+  ],
+  "Golitath": [
+    "golie"
   ],
   "got": [
     "gode",
@@ -1343,8 +656,14 @@
     "zegote",
     "zegotes"
   ],
+  "Gotefrit": [
+    "gotefrit"
+  ],
   "gotinne": [
     "gotinne"
+  ],
+  "Grandon": [
+    "grandon"
   ],
   "grimmec": [
     "grimme",
@@ -1363,8 +682,26 @@
     "gute",
     "guten"
   ],
+  "Gwimut": [
+    "gwimuten"
+  ],
+  "Haimunt": [
+    "haimunt"
+  ],
   "harpfaere": [
     "harphaere"
+  ],
+  "Hatte": [
+    "atto",
+    "hatte",
+    "hatten"
+  ],
+  "Hector": [
+    "ector",
+    "hector"
+  ],
+  "Hecuba": [
+    "ecuba"
   ],
   "heiden": [
     "haiden",
@@ -1384,6 +721,18 @@
     "heiliger",
     "heiligin"
   ],
+  "Heinrich": [
+    "hainriche",
+    "hainrichen",
+    "heinrich"
+  ],
+  "Helena": [
+    "elenam"
+  ],
+  "Helenor": [
+    "elenor",
+    "helenor"
+  ],
   "helle": [
     "helle"
   ],
@@ -1393,13 +742,27 @@
     "helide",
     "helt"
   ],
+  "Hercules": [
+    "erchules",
+    "ercules",
+    "hercules"
+  ],
   "hergeselle": [
     "hergeselle"
+  ],
+  "Herman": [
+    "herman"
+  ],
+  "Herodes": [
+    "herodes"
   ],
   "herzoge": [
     "herzoge",
     "herzogen",
     "herzogin"
+  ],
+  "Hillung": [
+    "hillunc"
   ],
   "himel": [
     "hiemele",
@@ -1412,6 +775,9 @@
     "himilischen",
     "himilischer",
     "himiliske"
+  ],
+  "Horre": [
+    "horre"
   ],
   "houbet": [
     "houbet"
@@ -1478,8 +844,58 @@
     "vnser",
     "zemines"
   ],
+  "Iclarions": [
+    "iclarions"
+  ],
+  "Ilaz": [
+    "ilaz"
+  ],
+  "Ilmar": [
+    "ilmar"
+  ],
   "in": [
     "in"
+  ],
+  "Ingram": [
+    "ingram"
+  ],
+  "Ire": [
+    "iren"
+  ],
+  "Ivo": [
+    "iue",
+    "iuen",
+    "iuo"
+  ],
+  "Jocerans": [
+    "iocerans"
+  ],
+  "Johannes": [
+    "iohannen",
+    "iohannes",
+    "johannen"
+  ],
+  "Joleun": [
+    "ioleun"
+  ],
+  "Jomel": [
+    "iomel"
+  ],
+  "Jonas": [
+    "jonam"
+  ],
+  "Jorfalir": [
+    "iorfalir"
+  ],
+  "Josias": [
+    "iosias"
+  ],
+  "Josua": [
+    "iosuê"
+  ],
+  "Judas": [
+    "iudas",
+    "judas"
   ],
   "junc": [
     "iunge",
@@ -1496,6 +912,36 @@
   ],
   "jungelinc": [
     "ivngelinch"
+  ],
+  "Juno": [
+    "ivno",
+    "ivnonem"
+  ],
+  "Jupiter": [
+    "jouinus"
+  ],
+  "Justîn": [
+    "iustinen"
+  ],
+  "Kanabeus": [
+    "chanabeus"
+  ],
+  "Kappadokien": [
+    "capadocia"
+  ],
+  "Karl": [
+    "karelen",
+    "karl",
+    "karle",
+    "karlen",
+    "karles",
+    "karln"
+  ],
+  "Karlinge": [
+    "karlinge"
+  ],
+  "Kartan": [
+    "chartan"
   ],
   "keiser": [
     "chaiser",
@@ -1523,6 +969,21 @@
   ],
   "knëht": [
     "knecht"
+  ],
+  "Konrad": [
+    "chunrat"
+  ],
+  "Krieche": [
+    "crieche"
+  ],
+  "Krist": [
+    "christ",
+    "christes",
+    "crist",
+    "criste",
+    "cristen",
+    "cristes",
+    "krist"
   ],
   "kristenheit": [
     "cristinheit"
@@ -1585,8 +1046,29 @@
   "lant": [
     "lande"
   ],
+  "Latinus": [
+    "latin",
+    "latinum",
+    "latinus",
+    "latinvs"
+  ],
+  "Laurentius": [
+    "laurentien"
+  ],
+  "Lausus": [
+    "laus",
+    "lausu"
+  ],
+  "Lavinia": [
+    "lavine",
+    "lavinen"
+  ],
   "leidec": [
     "leiden"
+  ],
+  "Licus": [
+    "liche",
+    "licus"
   ],
   "liep": [
     "liben",
@@ -1606,8 +1088,16 @@
   "lobebaere": [
     "lobebare"
   ],
+  "Ludewîc": [
+    "ludewic",
+    "ludewige",
+    "ludewigin"
+  ],
   "lustsam": [
     "lussam"
+  ],
+  "Luzifer": [
+    "luciferen"
   ],
   "lêraere": [
     "lerare"
@@ -1617,6 +1107,9 @@
   ],
   "lützel": [
     "luozele"
+  ],
+  "Madelgêr": [
+    "madelger"
   ],
   "maere": [
     "maere",
@@ -1630,16 +1123,75 @@
     "magit",
     "megede"
   ],
+  "Maglirte": [
+    "maglirte"
+  ],
+  "Mahomet": [
+    "machmet",
+    "machmeten",
+    "machmetes",
+    "mahmet",
+    "mahmete",
+    "mahmeten"
+  ],
+  "Malbrant": [
+    "malbrant"
+  ],
+  "Malprimes": [
+    "malprimes"
+  ],
+  "Malprimis": [
+    "malprimis"
+  ],
+  "Malsarôn": [
+    "malsaron"
+  ],
+  "Maltrens": [
+    "maltrens"
+  ],
   "man": [
     "man",
     "mann",
     "manne",
     "mannes"
   ],
+  "Mantel": [
+    "mantel"
+  ],
+  "Marcelle": [
+    "marcellen"
+  ],
   "marcgrâve": [
     "marcgraue",
     "marcgrauen",
     "marchgraue"
+  ],
+  "Margarîz": [
+    "margariz"
+  ],
+  "Maria": [
+    "marie",
+    "marien"
+  ],
+  "Mars": [
+    "mars"
+  ],
+  "Marsilie": [
+    "marsilie",
+    "marsilien",
+    "marsilies",
+    "marssilie",
+    "marssilien",
+    "marssilies"
+  ],
+  "Martian": [
+    "martian"
+  ],
+  "Matheus": [
+    "matheus"
+  ],
+  "Maximîn": [
+    "maximin"
   ],
   "meister": [
     "meister",
@@ -1648,12 +1200,43 @@
   "meisterschaft": [
     "meisterschefte"
   ],
+  "Menelaus": [
+    "meleavs",
+    "menelao",
+    "menelaus",
+    "menelavs",
+    "menlai"
+  ],
+  "Messapus": [
+    "mesapus",
+    "messapus"
+  ],
+  "Mezentius": [
+    "mesentivs",
+    "mesenzio",
+    "mesenzivs",
+    "mezentius"
+  ],
+  "Michael": [
+    "michahele",
+    "michehelis"
+  ],
+  "Michaeli": [
+    "michelis"
+  ],
   "milte": [
     "milde",
     "milte"
   ],
+  "Milun": [
+    "milonen",
+    "milun"
+  ],
   "minne": [
     "minne"
+  ],
+  "Minos": [
+    "minos"
   ],
   "mit": [
     "mit"
@@ -1666,8 +1249,14 @@
     "muter",
     "mvoter"
   ],
+  "Muralan": [
+    "muralan"
+  ],
   "mâc": [
     "mac"
+  ],
+  "Naimes": [
+    "naimes"
   ],
   "name": [
     "namen"
@@ -1675,8 +1264,33 @@
   "ne": [
     "ne"
   ],
+  "Neptun": [
+    "neptunus"
+  ],
+  "Nerpa": [
+    "nerpa"
+  ],
+  "Nevelun": [
+    "neuelun"
+  ],
+  "Ninive": [
+    "niniue"
+  ],
+  "Nisus": [
+    "nise",
+    "nisen",
+    "niso",
+    "nisus",
+    "nisvs"
+  ],
+  "Normandie": [
+    "normandîe"
+  ],
   "nâhe": [
     "nahister"
+  ],
+  "Nêre": [
+    "neren"
   ],
   "nëve": [
     "neue",
@@ -1690,32 +1304,208 @@
     "oeheim",
     "ohaim"
   ],
+  "Oigir": [
+    "oigir"
+  ],
+  "Oliboris": [
+    "oliboris"
+  ],
+  "Olivier": [
+    "oliuir",
+    "oliuire",
+    "oliuiren",
+    "oliuirin"
+  ],
+  "Orphalis": [
+    "orphalis"
+  ],
+  "Orpheus": [
+    "orpheus"
+  ],
+  "Orte": [
+    "orten"
+  ],
+  "Otnant": [
+    "otnant"
+  ],
+  "Otto": [
+    "otten",
+    "otto"
+  ],
+  "Paligân": [
+    "paligan",
+    "paliganen",
+    "paliganes"
+  ],
+  "Pallas": [
+    "pallas"
+  ],
+  "Pandarus": [
+    "pandarus"
+  ],
+  "Pande": [
+    "pande"
+  ],
+  "Pandolt": [
+    "pandolt"
+  ],
+  "Parguel": [
+    "parguel"
+  ],
+  "Paris": [
+    "paris",
+    "parise"
+  ],
+  "Patronopeus": [
+    "patronopeivs"
+  ],
+  "Pegôn": [
+    "pegon",
+    "pegonen"
+  ],
+  "Pelmo": [
+    "pilme"
+  ],
+  "Petrus": [
+    "peter",
+    "petern",
+    "petres"
+  ],
+  "Pettau": [
+    "betwoe"
+  ],
   "phaffe": [
     "phaffe"
+  ],
+  "Pharao": [
+    "pharaonem"
+  ],
+  "Philon": [
+    "philonin"
+  ],
+  "Phocus": [
+    "phocus"
+  ],
+  "Phoebus": [
+    "phebus"
+  ],
+  "Pillung": [
+    "pillunc"
+  ],
+  "Pipin": [
+    "pipines"
+  ],
+  "Plangirz": [
+    "plangirz"
+  ],
+  "Pluto": [
+    "pluto"
+  ],
+  "Polynices": [
+    "pollinices"
   ],
   "portenaere": [
     "portinaere"
   ],
+  "Priamur": [
+    "priamur"
+  ],
+  "Priamus": [
+    "priam",
+    "priamo",
+    "priamus",
+    "priamvs"
+  ],
   "prophêtisse": [
     "prophetisse"
+  ],
+  "Prosperina": [
+    "prosperine"
+  ],
+  "Prothesilaus": [
+    "protesilavs"
+  ],
+  "Prutan": [
+    "prutan"
   ],
   "psalmista": [
     "psalmista"
   ],
+  "Raphael": [
+    "raphahele"
+  ],
+  "Rapoto": [
+    "rapoto"
+  ],
+  "Regenbalt": [
+    "regenbalt"
+  ],
+  "Regenfrit": [
+    "regenfrit"
+  ],
   "regenhêrre": [
     "regenheres"
+  ],
+  "Reims": [
+    "raines",
+    "remis"
+  ],
+  "Reimunt": [
+    "reimunt"
   ],
   "reinec": [
     "rainer"
   ],
+  "Rhadamanthus": [
+    "radamant",
+    "radamanthus",
+    "radamantus"
+  ],
+  "Rhamnes": [
+    "anes"
+  ],
+  "Richart": [
+    "richart"
+  ],
   "rihtaere": [
     "richtare"
+  ],
+  "rise": [
+    "rise"
+  ],
+  "Ritschart": [
+    "ritschart"
   ],
   "roemesch": [
     "roemische",
     "romische",
     "romischeme",
     "romischen"
+  ],
+  "Romanus": [
+    "romane"
+  ],
+  "Romulus": [
+    "romulus"
+  ],
+  "Roslin": [
+    "roslin",
+    "rosselinen"
+  ],
+  "Ruolant": [
+    "rolanden",
+    "rolandes",
+    "rolant",
+    "rolante",
+    "rolanten",
+    "rolantes",
+    "rovlande",
+    "rovlanden",
+    "rovlant",
+    "rovlante",
+    "rovlanten",
+    "rovlantes",
+    "ruolant"
   ],
   "râtgëbe": [
     "ratgebe"
@@ -1735,14 +1525,39 @@
   "rîtaere": [
     "riter"
   ],
+  "Rôm": [
+    "rome"
+  ],
+  "Rômaere": [
+    "romere"
+  ],
   "saelec": [
     "salige"
+  ],
+  "Salomon": [
+    "salomon"
+  ],
+  "Samsôn": [
+    "sampson",
+    "samson"
   ],
   "sancte": [
     "sancte",
     "sante",
     "sent",
     "sente"
+  ],
+  "Saragossa": [
+    "sarraguz"
+  ],
+  "Saturn": [
+    "saturnus"
+  ],
+  "Saul": [
+    "saulen"
+  ],
+  "Scarpulôn": [
+    "scarpulon"
   ],
   "schalc": [
     "scalc",
@@ -1759,8 +1574,36 @@
     "schone",
     "scone"
   ],
+  "Sevilla": [
+    "sibiliae"
+  ],
+  "Sibylle": [
+    "sebillen",
+    "sibille",
+    "sibillen",
+    "sybille",
+    "sybillen"
+  ],
   "sieden": [
     "soteniu"
+  ],
+  "Sigebant": [
+    "sigebant"
+  ],
+  "Sigelot": [
+    "sigeloten"
+  ],
+  "Silviane": [
+    "silviane"
+  ],
+  "Silvius": [
+    "siluio",
+    "silvivs",
+    "sylvivs"
+  ],
+  "Sinon": [
+    "sinon",
+    "synon"
   ],
   "smidegot": [
     "smidegote"
@@ -1769,12 +1612,22 @@
     "snel",
     "snellen"
   ],
+  "Spanien": [
+    "yspanie"
+  ],
+  "Spemvalrîz": [
+    "spemualriz"
+  ],
   "starc": [
     "starche",
     "starcher"
   ],
   "stiefvater": [
     "stiefuater"
+  ],
+  "Stramariz": [
+    "stalmariz",
+    "stramariz"
   ],
   "sun": [
     "sun",
@@ -1783,8 +1636,15 @@
     "suone",
     "svn"
   ],
+  "Sutri": [
+    "sutria"
+  ],
   "swëster": [
     "swester"
+  ],
+  "Sychaeus": [
+    "sicheo",
+    "sycheus"
   ],
   "sëlbic": [
     "selben"
@@ -1795,6 +1655,31 @@
   "sîn": [
     "bin",
     "pin"
+  ],
+  "Tantalus": [
+    "thalantus"
+  ],
+  "Targîs": [
+    "targis"
+  ],
+  "Tenemarke": [
+    "tenemarche"
+  ],
+  "Tervagant": [
+    "teruagant"
+  ],
+  "Thibors": [
+    "thibors"
+  ],
+  "Tirrich": [
+    "tirrich",
+    "tirriche"
+  ],
+  "Tisiphone": [
+    "tifone"
+  ],
+  "Tityos": [
+    "ticivs"
   ],
   "tiure": [
     "tiuerliche",
@@ -1822,8 +1707,27 @@
   "tohter": [
     "tohter"
   ],
+  "Torke": [
+    "torchen"
+  ],
+  "Tortan": [
+    "tortan"
+  ],
+  "Tortona": [
+    "tortuone"
+  ],
+  "Tortosa": [
+    "tortulose"
+  ],
   "torwart": [
     "torwarte"
+  ],
+  "Troiaere": [
+    "troian",
+    "troiare"
+  ],
+  "Troilus": [
+    "troilus"
   ],
   "truhtîn": [
     "trechtin",
@@ -1833,8 +1737,40 @@
   "tugent": [
     "tugente"
   ],
+  "Turnus": [
+    "turnis",
+    "turno",
+    "turnus",
+    "turnuse",
+    "turnuses",
+    "turnvs",
+    "tvrnus",
+    "tvrnuse",
+    "tvrnvs"
+  ],
+  "Turpîn": [
+    "turpin",
+    "turpinen",
+    "turpines"
+  ],
+  "Tydeus": [
+    "tydeus"
+  ],
+  "Tydides": [
+    "tytides"
+  ],
+  "Tyrreus": [
+    "ciro",
+    "cirus",
+    "cyreus",
+    "cyrus",
+    "zirus"
+  ],
   "tân": [
     "tanen"
+  ],
+  "Ulixes": [
+    "vlixes"
   ],
   "unde": [
     "un",
@@ -1855,8 +1791,24 @@
   "urkünde": [
     "urchunde"
   ],
+  "Urtanne": [
+    "urtannen"
+  ],
+  "Valdebrûn": [
+    "ualdebrun",
+    "ualdeprun"
+  ],
+  "Valterne": [
+    "ualeterne"
+  ],
+  "Valtia": [
+    "ualtia"
+  ],
   "vartgenôz": [
     "vartginoz"
+  ],
+  "Vastmar": [
+    "uastmar"
   ],
   "vater": [
     "uater",
@@ -1868,9 +1820,24 @@
   "venre": [
     "uanere"
   ],
+  "Venus": [
+    "uenus",
+    "veneri",
+    "venerm",
+    "venus",
+    "venuse",
+    "venvs",
+    "venvse",
+    "wenuse"
+  ],
   "ver": [
     "verge",
     "vern"
+  ],
+  "Vergil": [
+    "uirgilius",
+    "virgilius",
+    "virgilivs"
   ],
   "verlorn": [
     "verlorne"
@@ -1887,6 +1854,9 @@
   "veste": [
     "ueste"
   ],
+  "Viana": [
+    "uigennen"
+  ],
   "vil": [
     "uil",
     "viln"
@@ -1898,6 +1868,13 @@
     "uoget",
     "uogete",
     "voget"
+  ],
+  "Volcâne": [
+    "volchane"
+  ],
+  "Volzan": [
+    "volkam",
+    "volzam"
   ],
   "von": [
     "uon",
@@ -1933,6 +1910,12 @@
     "frumigen",
     "fruomigen"
   ],
+  "Vulcanus": [
+    "fulchane",
+    "wlchanus",
+    "wolchan",
+    "wolchanum"
+  ],
   "vâlant": [
     "ualant",
     "ualantes"
@@ -1945,11 +1928,19 @@
   "vürste": [
     "furste"
   ],
+  "Waldram": [
+    "waldram"
+  ],
   "walten": [
     "waltet"
   ],
   "waltendic": [
     "waltente"
+  ],
+  "Walther": [
+    "walter",
+    "walthere",
+    "waltheren"
   ],
   "warc": [
     "warch"
@@ -1957,13 +1948,22 @@
   "warte": [
     "warte"
   ],
+  "Wate": [
+    "waten"
+  ],
   "weise": [
     "waisen",
     "weise",
     "weisen"
   ],
+  "Wernes": [
+    "wernes"
+  ],
   "wider": [
     "wirdir"
+  ],
+  "Wido": [
+    "wido"
   ],
   "wilde": [
     "wilde"
@@ -1971,6 +1971,9 @@
   "wine": [
     "winege",
     "winie"
+  ],
+  "Wineman": [
+    "winemannen"
   ],
   "winnec": [
     "winigin"
@@ -1981,9 +1984,18 @@
   "wirt": [
     "wirt"
   ],
+  "Witel": [
+    "witel"
+  ],
   "witewe": [
     "witewen",
     "witwen"
+  ],
+  "Witrant": [
+    "witrant"
+  ],
+  "Wlter": [
+    "wlter"
   ],
   "wol": [
     "wol"
@@ -2024,6 +2036,20 @@
   "wîssage": [
     "wissage",
     "wissagen"
+  ],
+  "Ylionix": [
+    "ylionix"
+  ],
+  "Ypomedon": [
+    "ypomedon"
+  ],
+  "Zammen": [
+    "zamne"
+  ],
+  "Zernubele": [
+    "cernubiles",
+    "cornubiles",
+    "zernubele"
   ],
   "ziere": [
     "ziren"

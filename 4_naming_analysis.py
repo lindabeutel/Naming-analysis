@@ -2258,12 +2258,7 @@ def main():
         perform_categorization=do_categorization
     )
 
-    # 🔹 10. Optional analysis after data collection
-    analyze_after = ask_user_choice("Do you want to run an analysis now? (y/n): ", ["y", "n"])
-    if analyze_after == "y":
-        run_analysis_menu(config_data, paths, data, book_name)
-
-    # 🔹 11. Optional export
+    # 🔹 10. Optional export
     export = ask_user_choice("Do you want to export all results? (y/n): ", ["y", "n"]) == "y"
     if export:
         paths["original_excel"] = data["excel_path"]
@@ -2273,6 +2268,11 @@ def main():
             "kategorisierung": do_categorization
         }
         export_all_data_to_new_excel(book_name, paths, options)
+
+    # 🔹 11. Optional analysis after data collection
+    analyze_after = ask_user_choice("Do you want to run an analysis now? (y/n): ", ["y", "n"])
+    if analyze_after == "y":
+        run_analysis_menu(config_data, paths, data, book_name)
 
 
 if __name__ == "__main__":
