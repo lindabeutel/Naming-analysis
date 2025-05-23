@@ -86,6 +86,7 @@
     "amurafel"
   ],
   "Anchises": [
+    "anchisem",
     "anchises"
   ],
   "Anna": [
@@ -125,6 +126,10 @@
     "appollo",
     "appollon"
   ],
+  "Arachne": [
+    "aragnes",
+    "aranien"
+  ],
   "Argun": [
     "argun"
   ],
@@ -136,6 +141,7 @@
     "aschanie",
     "aschanio",
     "aschanius",
+    "aschanivm",
     "aschanivs"
   ],
   "Aschalpems": [
@@ -201,6 +207,9 @@
   ],
   "Bretagne": [
     "brittannia"
+  ],
+  "Cacus": [
+    "caccus"
   ],
   "Camilla": [
     "camille",
@@ -296,6 +305,7 @@
   ],
   "Eneas": [
     "enea",
+    "eneade",
     "eneam",
     "eneas",
     "enease",
@@ -323,6 +333,17 @@
   ],
   "Estropiz": [
     "estropiz"
+  ],
+  "Eurialus": [
+    "eurialus",
+    "eurialvs",
+    "evriale",
+    "evrialus",
+    "evrvialus"
+  ],
+  "Evander": [
+    "aevander",
+    "evander"
   ],
   "Falbin": [
     "falbinen"
@@ -426,6 +447,7 @@
     "elenam"
   ],
   "Hercules": [
+    "erchules",
     "ercules",
     "hercules"
   ],
@@ -670,6 +692,12 @@
   "Ninive": [
     "niniue"
   ],
+  "Nisus": [
+    "nise",
+    "nisen",
+    "nisus",
+    "nisvs"
+  ],
   "Normandie": [
     "normandîe"
   ],
@@ -811,6 +839,9 @@
     "radamant",
     "radamanthus",
     "radamantus"
+  ],
+  "Rhamnes": [
+    "anes"
   ],
   "Richart": [
     "richart"
@@ -963,6 +994,7 @@
     "turnus",
     "turnuse",
     "turnuses",
+    "turnvs",
     "tvrnus",
     "tvrnuse",
     "tvrnvs"
@@ -1009,7 +1041,10 @@
     "veneri",
     "venerm",
     "venus",
-    "venvs"
+    "venuse",
+    "venvs",
+    "venvse",
+    "wenuse"
   ],
   "Vergil": [
     "uirgilius",
@@ -1022,8 +1057,14 @@
   "Volcâne": [
     "volchane"
   ],
+  "Volzan": [
+    "volzam"
+  ],
   "Vulcanus": [
-    "fulchane"
+    "fulchane",
+    "wlchanus",
+    "wolchan",
+    "wolchanum"
   ],
   "Waldram": [
     "waldram"
@@ -1254,6 +1295,7 @@
     "glouben"
   ],
   "gemeit": [
+    "gimeit",
     "gmeite"
   ],
   "genaedec": [
@@ -1266,7 +1308,8 @@
   "geselle": [
     "geselle",
     "gesellen",
-    "giselle"
+    "giselle",
+    "gisellen"
   ],
   "gespraeche": [
     "gisprache"
@@ -1285,6 +1328,9 @@
   ],
   "getân": [
     "gitane"
+  ],
+  "gezogen": [
+    "gizogine"
   ],
   "gimme": [
     "gimme"
@@ -1314,6 +1360,7 @@
   "guot": [
     "guot",
     "guote",
+    "gute",
     "guten"
   ],
   "harpfaere": [
@@ -1343,6 +1390,7 @@
   "helt": [
     "helde",
     "helede",
+    "helide",
     "helt"
   ],
   "hergeselle": [
@@ -1397,6 +1445,8 @@
     "ir",
     "iwer",
     "iwern",
+    "iwers",
+    "mime",
     "min",
     "mine",
     "minem",
@@ -1434,6 +1484,9 @@
   "junc": [
     "iunge",
     "ivnge"
+  ],
+  "junchêrre": [
+    "ivncherre"
   ],
   "junclich": [
     "ivngelich"
@@ -1481,7 +1534,8 @@
     "chune",
     "chunen",
     "chunisten",
-    "chuone"
+    "chuone",
+    "kuone"
   ],
   "künic": [
     "chunc",
@@ -1548,6 +1602,9 @@
     "liebiste",
     "liebiu",
     "liebiv"
+  ],
+  "lobebaere": [
+    "lobebare"
   ],
   "lustsam": [
     "lussam"
@@ -1678,6 +1735,9 @@
   "rîtaere": [
     "riter"
   ],
+  "saelec": [
+    "salige"
+  ],
   "sancte": [
     "sancte",
     "sante",
@@ -1691,6 +1751,9 @@
   "schepfaere": [
     "schephare",
     "schephere"
+  ],
+  "schifmüede": [
+    "schefmuode"
   ],
   "schoene": [
     "schone",
@@ -1715,6 +1778,7 @@
   ],
   "sun": [
     "sun",
+    "sune",
     "sunes",
     "suone",
     "svn"
@@ -1776,7 +1840,8 @@
     "un",
     "und",
     "unde",
-    "unt"
+    "unt",
+    "vnd"
   ],
   "under": [
     "unter"
@@ -1784,6 +1849,7 @@
   "ungetriuwe": [
     "ungetruwe",
     "ungetruwen",
+    "ungitriwe",
     "vngetriwe"
   ],
   "urkünde": [
@@ -1793,7 +1859,8 @@
     "vartginoz"
   ],
   "vater": [
-    "uater"
+    "uater",
+    "vaters"
   ],
   "veige": [
     "uaiger"
@@ -1862,7 +1929,9 @@
     "vrowen"
   ],
   "vrum": [
-    "frumige"
+    "frumige",
+    "frumigen",
+    "fruomigen"
   ],
   "vâlant": [
     "ualant",
@@ -1934,6 +2003,9 @@
     "warer",
     "wâren"
   ],
+  "wîc": [
+    "wiges"
+  ],
   "wîgant": [
     "wigant",
     "wigante"
@@ -1950,6 +2022,7 @@
     "wisen"
   ],
   "wîssage": [
+    "wissage",
     "wissagen"
   ],
   "ziere": [

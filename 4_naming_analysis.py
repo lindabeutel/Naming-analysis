@@ -1056,7 +1056,7 @@ def load_ignored_lemmas(path="ignored_lemmas.json"):
     data = safe_read_json(path, default=[])
     return set(data) if isinstance(data, list) else set(data.keys())
 
-def load_lemma_categories(path="lemma_categories.json"):
+def load_lemma_categories(path="data/lemma_categories.json"):
     return safe_read_json(path, default={})
 
 def load_json_annotations(path):
@@ -1293,14 +1293,14 @@ def load_lemma_normalization(path="lemma_normalization.json"):
 def save_lemma_normalization(data, path="lemma_normalization.json"):
     sorted_data = {
         lemma: sorted(set(variants))
-        for lemma, variants in sorted(data.items())
+        for lemma, variants in sorted(data.items(), key=lambda x: x[0].lower())
     }
     safe_write_json(sorted_data, path, merge=False)
 
 def save_ignored_lemmas(data, path="ignored_lemmas.json"):
     safe_write_json(data, path, sort_keys=True, merge=True)
 
-def save_lemma_categories(data, path="lemma_categories.json"):
+def save_lemma_categories(data, path="data/lemma_categories.json"):
     existing = safe_read_json(path, default={})
     existing.update(data)
     sorted_data = dict(sorted(existing.items()))
