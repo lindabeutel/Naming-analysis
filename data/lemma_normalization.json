@@ -168,6 +168,9 @@
     "armen",
     "armez"
   ],
+  "Arruns": [
+    "arras"
+  ],
   "Arthan": [
     "arthan"
   ],
@@ -194,6 +197,7 @@
     "aventine",
     "aventinus",
     "aventius",
+    "aventivs",
     "euentius"
   ],
   "Avon": [
@@ -206,6 +210,7 @@
     "baldewin"
   ],
   "balt": [
+    "balden",
     "palt"
   ],
   "Balvier": [
@@ -244,6 +249,9 @@
   ],
   "beste": [
     "besten"
+  ],
+  "bilde": [
+    "bilde"
   ],
   "Binabel": [
     "binabel"
@@ -300,10 +308,17 @@
   ],
   "Camilla": [
     "camille",
-    "chamille"
+    "chamille",
+    "chamillen",
+    "kchamille",
+    "khamille"
   ],
   "Capaneus": [
     "chanepevs"
+  ],
+  "Carpide": [
+    "carpide",
+    "carpite"
   ],
   "Cerberus": [
     "zerebum",
@@ -312,6 +327,9 @@
   "Charon": [
     "charo",
     "karo"
+  ],
+  "Chloreus": [
+    "chores"
   ],
   "Ciciron": [
     "ciciron",
@@ -350,6 +368,9 @@
   "Dardanus": [
     "dardanus"
   ],
+  "Daunus": [
+    "dampnus"
+  ],
   "David": [
     "dauid",
     "dauite"
@@ -361,6 +382,7 @@
     "dyonisien"
   ],
   "der": [
+    "das",
     "dem",
     "deme",
     "den",
@@ -410,6 +432,10 @@
   "Dionysius": [
     "dionisii"
   ],
+  "Drances": [
+    "drances",
+    "trances"
+  ],
   "dritte": [
     "dritte",
     "dritten"
@@ -449,6 +475,7 @@
     "ainem",
     "ein",
     "eine",
+    "einem",
     "einen",
     "einer",
     "eines"
@@ -467,7 +494,8 @@
     "eneas",
     "enease",
     "eneasen",
-    "eneases"
+    "eneases",
+    "enee"
   ],
   "Engel": [
     "engel"
@@ -520,11 +548,17 @@
     "falsarones",
     "valsaron"
   ],
+  "Flemin": [
+    "flemin"
+  ],
   "Fortuna": [
     "fvrtuna"
   ],
   "Franke": [
     "francke"
+  ],
+  "Friedrich": [
+    "friedrich"
   ],
   "Gabriel": [
     "gabriele"
@@ -547,7 +581,8 @@
     "gebewinen"
   ],
   "gebërn": [
-    "geborn"
+    "geborn",
+    "giborne"
   ],
   "gegen": [
     "gegin"
@@ -633,6 +668,9 @@
   "getriuwe": [
     "getruwer"
   ],
+  "getuon": [
+    "gitan"
+  ],
   "getân": [
     "gitane"
   ],
@@ -688,6 +726,9 @@
   ],
   "Gwimut": [
     "gwimuten"
+  ],
+  "h": [
+    "h"
   ],
   "Haimunt": [
     "haimunt"
@@ -760,6 +801,9 @@
   "Herodes": [
     "herodes"
   ],
+  "herte": [
+    "harte"
+  ],
   "herzoge": [
     "herzoge",
     "herzogen",
@@ -780,6 +824,9 @@
     "himilischer",
     "himiliske"
   ],
+  "holt": [
+    "holden"
+  ],
   "Horre": [
     "horre"
   ],
@@ -794,13 +841,20 @@
     "herlichen"
   ],
   "hêrre": [
+    "erre",
     "her",
     "herre",
     "herren",
     "herrin"
   ],
+  "hërze": [
+    "herze"
+  ],
   "hërzelôs": [
     "herzeloser"
+  ],
+  "hövesch": [
+    "hobesch"
   ],
   "ich": [
     "din",
@@ -904,7 +958,8 @@
   ],
   "junc": [
     "iunge",
-    "ivnge"
+    "ivnge",
+    "ivngen"
   ],
   "junchêrre": [
     "iunchherre",
@@ -1003,6 +1058,7 @@
     "chunen",
     "chunisten",
     "chuone",
+    "chuonen",
     "kuone"
   ],
   "künic": [
@@ -1037,6 +1093,7 @@
     "chungelin"
   ],
   "küniginne": [
+    "chunigin",
     "chuniginne",
     "chuonigin",
     "chuoniginne",
@@ -1054,6 +1111,9 @@
   "lant": [
     "lande"
   ],
+  "Larein": [
+    "lareine"
+  ],
   "Latinus": [
     "latin",
     "latinum",
@@ -1065,7 +1125,9 @@
   ],
   "Lausus": [
     "laus",
-    "lausu"
+    "lausu",
+    "lausum",
+    "lausus"
   ],
   "Lavinia": [
     "lauinia",
@@ -1095,7 +1157,8 @@
     "liebiv"
   ],
   "lobebaere": [
-    "lobebare"
+    "lobebare",
+    "lobibare"
   ],
   "Ludewîc": [
     "ludewic",
@@ -1221,12 +1284,14 @@
     "menlai"
   ],
   "Messapus": [
+    "mesapum",
     "mesapus",
     "messapus"
   ],
   "Mezentius": [
     "mesentivs",
     "mesenzio",
+    "mesenzius",
     "mesenzivs",
     "mezentius"
   ],
@@ -1318,6 +1383,9 @@
     "oeheim",
     "ohaim"
   ],
+  "offenbaere": [
+    "offenbaeren"
+  ],
   "Oigir": [
     "oigir"
   ],
@@ -1329,6 +1397,9 @@
     "oliuire",
     "oliuiren",
     "oliuirin"
+  ],
+  "Oriolus": [
+    "oriolus"
   ],
   "Orphalis": [
     "orphalis"
@@ -1352,8 +1423,12 @@
     "paliganes"
   ],
   "Pallas": [
+    "paladem",
+    "palladem",
+    "pallantem",
     "pallas",
-    "pallase"
+    "pallase",
+    "pallasisi"
   ],
   "Pandarus": [
     "pandarus"
@@ -1431,6 +1506,9 @@
     "priamus",
     "priamvs"
   ],
+  "priester": [
+    "priester"
+  ],
   "prophêtisse": [
     "prophetisse"
   ],
@@ -1467,6 +1545,9 @@
   ],
   "Reimunt": [
     "reimunt"
+  ],
+  "reine": [
+    "reiner"
   ],
   "reinec": [
     "rainer"
@@ -1531,6 +1612,7 @@
     "rehte"
   ],
   "rîche": [
+    "reiche",
     "rich",
     "riche",
     "richen",
@@ -1538,7 +1620,9 @@
     "rike"
   ],
   "rîtaere": [
-    "riter"
+    "reter",
+    "riter",
+    "ritter"
   ],
   "Rôm": [
     "rome"
@@ -1587,7 +1671,8 @@
   ],
   "schoene": [
     "schone",
-    "scone"
+    "scone",
+    "scooner"
   ],
   "Sevilla": [
     "sibiliae"
@@ -1674,6 +1759,13 @@
   "Tantalus": [
     "thalantus"
   ],
+  "Tarcun": [
+    "darchun",
+    "darcon",
+    "darcone",
+    "tarchon",
+    "tarcun"
+  ],
   "Targîs": [
     "targis"
   ],
@@ -1720,7 +1812,8 @@
     "tuvil"
   ],
   "tohter": [
-    "tohter"
+    "tohter",
+    "tohtre"
   ],
   "Torke": [
     "torchen"
@@ -1739,6 +1832,7 @@
   ],
   "Troiaere": [
     "troian",
+    "troiane",
     "troiare"
   ],
   "Troilus": [
@@ -1748,6 +1842,9 @@
     "trechtin",
     "trechtines",
     "trechtinis"
+  ],
+  "trût": [
+    "truot"
   ],
   "tugent": [
     "tugente"
@@ -1808,7 +1905,8 @@
     "ungetruwe",
     "ungetruwen",
     "ungitriwe",
-    "vngetriwe"
+    "vngetriwe",
+    "vngitriwe"
   ],
   "urkünde": [
     "urchunde"
@@ -1912,6 +2010,7 @@
     "frunt"
   ],
   "vrouwe": [
+    "frawe",
     "fron",
     "froowe",
     "frouwe",
@@ -1933,6 +2032,9 @@
     "fruomige",
     "fruomigen"
   ],
+  "vrî": [
+    "friez"
+  ],
   "Vulcanus": [
     "fulchane",
     "wlchanus",
@@ -1942,6 +2044,9 @@
   "vâlant": [
     "ualant",
     "ualantes"
+  ],
+  "vëhtgenôz": [
+    "vehtginoz"
   ],
   "vîant": [
     "uiandes",
@@ -2023,7 +2128,11 @@
   "wol": [
     "wol"
   ],
+  "wolgeborn": [
+    "wolgiborne"
+  ],
   "wolgetân": [
+    "wolgitan",
     "wolgitane"
   ],
   "wunderküene": [
@@ -2037,6 +2146,10 @@
     "waren",
     "warer",
     "wâren"
+  ],
+  "wërt": [
+    "werde",
+    "werden"
   ],
   "wîc": [
     "wiges"
@@ -2091,6 +2204,9 @@
   ],
   "êwart": [
     "ewart"
+  ],
+  "êwe": [
+    "ewe"
   ],
   "êwic": [
     "ewigen"
