@@ -1401,7 +1401,7 @@ def run_analysis_menu(config_data, paths, data, book_name):
         elif choice == "2":
             run_keyword_menu(config_data, paths, data, book_name)
         elif choice == "3":
-            run_collocation_menu(config_data, paths, book_name)
+            run_collocation_menu(config_data, paths, data, book_name)
         elif choice == "4":
             print("📦 Analysis completed.")
             break
@@ -1834,7 +1834,7 @@ def extract_tokens(entries: list[dict], unit: str) -> list[str]:
 
     return tokens
 
-def run_collocation_menu(config_data, paths, book_name):
+def run_collocation_menu(config_data, paths, data, book_name):
     """
     Interactive menu to search for collocation contexts of a specific type
     (designation or epithet), optionally restricted to a figure.
@@ -1878,6 +1878,7 @@ def run_collocation_menu(config_data, paths, book_name):
 
         try:
             generate_collocations(
+                data=data,
                 type_value=type_value,
                 book_name=book_name,
                 config_data=config_data,
@@ -1894,6 +1895,7 @@ def run_collocation_menu(config_data, paths, book_name):
 
 
 def generate_collocations(
+    data: dict,
     type_value: str,
     book_name: str,
     config_data: dict,
@@ -1917,8 +1919,9 @@ def generate_collocations(
     # Load Excel with fallback and sheet/column check
     df = load_collocation_sheet(config_data, book_name)
     if df is None:
-        print("❌ Could not load the Excel sheet with 'Kollokationen'.")
-        return
+        print("⚠️ Could not load the Excel sheet with 'Kollokationen'.")
+        print("🔄 Falling back to TEI to reconstruct collocations.")
+        df = build_fallback_collocation_df_from_tei(data["xml"])
 
     results = []
 
@@ -2034,6 +2037,34 @@ def format_kwic(context: str, variants: list[str]) -> tuple[str, str, str]:
 
     # No variant matched
     return context.strip(), "", ""
+
+def build_fallback_collocation_df_from_tei(root_tei: Element) -> pd.DataFrame:
+    """
+    Constructs a DataFrame that simulates the Excel 'Kollokationen'-sheet,
+    using ±3 verse context from the TEI structure.
+    """
+    context_data = []
+    verses = root_tei.findall('.//tei:l', tei_ns)
+
+    for idx, line in enumerate(verses):
+        n_attr = line.get("n")
+        if not n_attr or not n_attr.isdigit():
+            continue
+        verse_num = int(n_attr)
+
+        # Kontext: Verse v-3 bis v+3
+        segment_texts = []
+        for offset in range(-3, 4):
+            target_idx = idx + offset
+            if 0 <= target_idx < len(verses):
+                target_line = verses[target_idx]
+                segs = [seg.text for seg in target_line.findall('.//tei:seg', tei_ns) if seg.text]
+                segment_texts.append(" ".join(segs))
+
+        full_context = " / ".join(segment_texts)
+        context_data.append({"Vers": verse_num, "Kollokationen": full_context})
+
+    return pd.DataFrame(context_data)
 
 def export_all_data_to_new_excel(book_name, paths, options):
     """
