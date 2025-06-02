@@ -620,7 +620,7 @@ def save_config(path, config_data):
     except Exception as e:
         print(f"❌ Failed to save config: {e}")
 
-def search_tei_with_dict(
+def run_data_collection(
     df,
     root,
     naming_dict,
@@ -634,31 +634,36 @@ def search_tei_with_dict(
     lemma_normalization=None,
     ignored_lemmas=None,
     lemma_categories=None,
-    categorized_entries=None):
-
+    categorized_entries=None
+):
     """
-    Iterates through the TEI text starting at the stored verse and performs the selected checks.
+    Runs the data collection process depending on active modes:
+    - If check_namings is True → TEI-based loop.
+    - If only collocations and/or categorization are active → Excel-based loop.
+    Returns updated (missing_namings, collocation_data, categorized_entries).
     """
 
     verse = root.findall('.//tei:l', tei_ns)
     if not verse:
         print("⚠️ No verses found.")
-        return missing_namings
+        return missing_namings, collocation_data, categorized_entries
 
-    start_index = next(
-        (i for i, line in enumerate(verse) if get_valid_verse_number(line.get("n")) > last_verse),
-        0
-    )
+    # --- TEI-based loop (only when check_namings is active)
+    if check_namings:
+        start_index = next(
+            (i for i, line in enumerate(verse) if get_valid_verse_number(line.get("n")) > last_verse),
+            0
+        )
 
-    print(f"🔁 Starting iteration from verse {int(verse[start_index].get('n'))} (Index {start_index})")
+        print(f"🔁 Starting TEI iteration from verse {int(verse[start_index].get('n'))} (Index {start_index})")
 
-    for line in verse[start_index:]:
-        verse_number = get_valid_verse_number(line.get("n"))
+        for line in verse[start_index:]:
+            verse_number = get_valid_verse_number(line.get("n"))
 
-        verse_text = ' '.join([seg.text for seg in line.findall(".//tei:seg", tei_ns) if seg.text])
-        normalized_verse = normalize_text(verse_text)
+            verse_text = ' '.join([seg.text for seg in line.findall(".//tei:seg", tei_ns) if seg.text])
+            normalized_verse = normalize_text(verse_text)
 
-        if check_namings:
+            # Naming detection
             missing_namings = check_and_extend_namings(
                 verse_number,
                 verse_text,
@@ -675,65 +680,140 @@ def search_tei_with_dict(
                 categorized_entries
             )
 
-        if perform_collocations:
-            check_and_add_collocations(
-                verse_number, df, collocation_data, root, paths
-            )
-        if perform_categorization:
+            # Collocations
+            if perform_collocations:
+                check_and_add_collocations(
+                    verse_number, df, collocation_data, root, paths
+                )
 
-            df_verse = df[(df["Vers"] >= verse_number) & (df["Vers"] < verse_number + 1)]
-            entries = df_verse.to_dict(orient="records")
+            # Categorization
+            if perform_categorization:
+                df_verse = df[(df["Vers"] >= verse_number) & (df["Vers"] < verse_number + 1)]
+                entries = df_verse.to_dict(orient="records")
 
-            for entry in entries:
-                source_text = normalize_text(get_first_valid_text(
-                    entry.get("Erzähler"),
-                    entry.get("Bezeichnung"),
-                    entry.get("Eigennennung")
-                ))
-                if not source_text:
-                    continue
-
-                skip = False
-                for e in categorized_entries:
-                    if int(e.get("Vers", -1)) != verse_number:
+                for entry in entries:
+                    source_text = normalize_text(get_first_valid_text(
+                        entry.get("Erzähler"),
+                        entry.get("Bezeichnung"),
+                        entry.get("Eigennennung")
+                    ))
+                    if not source_text:
                         continue
 
-                    target_text = normalize_text(get_first_valid_text(
-                        e.get("Erzähler"),
-                        e.get("Bezeichnung"),
-                        e.get("Eigennennung")
-                    ))
+                    skip = False
+                    for e in categorized_entries:
+                        if int(e.get("Vers", -1)) != verse_number:
+                            continue
 
-                    if source_text == target_text and normalize_text(e.get("Benannte Figur", "")) == normalize_text(
+                        target_text = normalize_text(get_first_valid_text(
+                            e.get("Erzähler"),
+                            e.get("Bezeichnung"),
+                            e.get("Eigennennung")
+                        ))
+
+                        if source_text == target_text and normalize_text(e.get("Benannte Figur", "")) == normalize_text(
                             entry.get("Benannte Figur", "")):
-                        if any(
+                            if any(
                                 str(e.get(k, "")).strip()
                                 for k in e.keys()
                                 if k.startswith("Bezeichnung") or k.startswith("Epitheta")
-                        ):
-                            skip = True
-                            break
+                            ):
+                                skip = True
+                                break
 
-                if skip:
-                    continue
+                    if skip:
+                        continue
 
-                annotated = lemmatize_and_categorize_entry(
-                    entry, lemma_normalization, paths, ignored_lemmas, lemma_categories
+                    annotated = lemmatize_and_categorize_entry(
+                        entry, lemma_normalization, paths, ignored_lemmas, lemma_categories
+                    )
+                    if annotated:
+                        categorized_entries.append(annotated)
+
+            # Save progress after each verse
+            save_progress(
+                missing_namings=missing_namings,
+                last_processed_verse=verse_number,
+                paths=paths,
+                check_namings=check_namings,
+                perform_collocations=perform_collocations,
+                perform_categorization=perform_categorization
+            )
+
+    # --- Excel-based loop (when only collocations and/or categorization are active)
+    elif perform_collocations or perform_categorization:
+        print("🔁 Starting EXCEL-based iteration over 'Vers' list.")
+
+        # Extract and sort valid verse numbers from Excel
+        vers_list = sorted(set(
+            v for v in df["Vers"] if str(v).strip().isdigit()
+        ))
+
+        for v in vers_list:
+            verse_number = get_valid_verse_number(v)
+
+            # Collocations
+            if perform_collocations:
+                check_and_add_collocations(
+                    verse_number, df, collocation_data, root, paths
                 )
-                if annotated:
-                    categorized_entries.append(annotated)
 
-        # Fortschritt speichern
-        save_progress(
-            missing_namings=missing_namings,
-            last_processed_verse=verse_number,
-            paths=paths,
-            check_namings=check_namings,
-            perform_collocations=perform_collocations,
-            perform_categorization=perform_categorization
-        )
+            # Categorization
+            if perform_categorization:
+                df_verse = df[(df["Vers"] >= verse_number) & (df["Vers"] < verse_number + 1)]
+                entries = df_verse.to_dict(orient="records")
 
-    return missing_namings
+                for entry in entries:
+                    source_text = normalize_text(get_first_valid_text(
+                        entry.get("Erzähler"),
+                        entry.get("Bezeichnung"),
+                        entry.get("Eigennennung")
+                    ))
+                    if not source_text:
+                        continue
+
+                    skip = False
+                    for e in categorized_entries:
+                        if int(e.get("Vers", -1)) != verse_number:
+                            continue
+
+                        target_text = normalize_text(get_first_valid_text(
+                            e.get("Erzähler"),
+                            e.get("Bezeichnung"),
+                            e.get("Eigennennung")
+                        ))
+
+                        if source_text == target_text and normalize_text(e.get("Benannte Figur", "")) == normalize_text(
+                            entry.get("Benannte Figur", "")):
+                            if any(
+                                str(e.get(k, "")).strip()
+                                for k in e.keys()
+                                if k.startswith("Bezeichnung") or k.startswith("Epitheta")
+                            ):
+                                skip = True
+                                break
+
+                    if skip:
+                        continue
+
+                    annotated = lemmatize_and_categorize_entry(
+                        entry, lemma_normalization, paths, ignored_lemmas, lemma_categories
+                    )
+                    if annotated:
+                        categorized_entries.append(annotated)
+
+            # Save progress after each verse
+            save_progress(
+                missing_namings=missing_namings,
+                last_processed_verse=verse_number,
+                paths=paths,
+                check_namings=check_namings,
+                perform_collocations=perform_collocations,
+                perform_categorization=perform_categorization
+            )
+
+    # Return updated data
+    return missing_namings, collocation_data, categorized_entries
 
 
 def check_and_extend_namings(
@@ -2225,7 +2305,7 @@ def main():
         active_last_verse = 0
 
     # 🔹 8. Process TEI and run requested analysis steps
-    missing_namings = search_tei_with_dict(
+    missing_namings, collocation_data, categorized_entries = run_data_collection(
         df=df,
         root=root,
         naming_dict=naming_dict,
