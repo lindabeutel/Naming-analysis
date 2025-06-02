@@ -139,7 +139,7 @@ def initialize_project():
 
     paths = {
         # Projektbezogene Dateien
-        "missing_namings_json": os.path.join(project_dir, f"missing_namings_{book_name}.json"),
+        "missing_naming_variants_json": os.path.join(project_dir, f"missing_naming_variants_{book_name}.json"),
         "progress_json": progress_path,
         "collocations_json": os.path.join(project_dir, f"collocations_{book_name}.json"),
         "categorization_json": os.path.join(project_dir, f"categorization_{book_name}.json"),
@@ -188,7 +188,7 @@ def initialize_files(paths):
         "categorization_last_verse": 0
     })
 
-    create_if_missing(paths["missing_namings_json"], [])
+    create_if_missing(paths["missing_naming_variants_json"], [])
     create_if_missing(paths["collocations_json"], [])
     create_if_missing(paths["categorization_json"], [])
 
@@ -387,7 +387,7 @@ def normalize_tei_text(root):
     return root
 
 def save_progress(
-    missing_namings,
+    missing_naming_variants,
     last_processed_verse,
     paths,
     previous_verse=None,
@@ -423,8 +423,8 @@ def save_progress(
 
         safe_write_json(progress_data, paths["progress_json"])
 
-    if previous_namings is None or sorted_entries(missing_namings) != sorted_entries(previous_namings):
-        safe_write_json(missing_namings, paths["missing_namings_json"], merge=True)
+    if previous_namings is None or sorted_entries(missing_naming_variants) != sorted_entries(previous_namings):
+        safe_write_json(missing_naming_variants, paths["missing_naming_variants_json"], merge=True)
 
     if collocation_data is not None:
         if previous_collocations is None or collocation_data != previous_collocations:
@@ -502,7 +502,7 @@ def load_or_extend_naming_dict():
 
         naming_dict["Included Books"].append(book_name)
         naming_dict["Namings"][book_name] = namings
-        print(f"✅ Book '{book_name}' added with {len(namings)} namings.")
+        print(f"✅ Book '{book_name}' added with {len(namings)} naming variants.")
 
         extend = ask_user_choice("Do you want to add another file? (y/n): ", ["y", "n"])
 
@@ -626,7 +626,7 @@ def run_data_collection(
     naming_dict,
     last_verse,
     paths,
-    missing_namings,
+    missing_naming_variants,
     collocation_data,
     check_namings=True,
     perform_collocations=False,
@@ -640,13 +640,13 @@ def run_data_collection(
     Runs the data collection process depending on active modes:
     - If check_namings is True → TEI-based loop.
     - If only collocations and/or categorization are active → Excel-based loop.
-    Returns updated (missing_namings, collocation_data, categorized_entries).
+    Returns updated (missing_naming_variants, collocation_data, categorized_entries).
     """
 
     verse = root.findall('.//tei:l', tei_ns)
     if not verse:
         print("⚠️ No verses found.")
-        return missing_namings, collocation_data, categorized_entries
+        return missing_naming_variants, collocation_data, categorized_entries
 
     # --- TEI-based loop (only when check_namings is active)
     if check_namings:
@@ -664,13 +664,13 @@ def run_data_collection(
             normalized_verse = normalize_text(verse_text)
 
             # Naming detection
-            missing_namings = check_and_extend_namings(
+            missing_naming_variants = check_and_extend_namings(
                 verse_number,
                 verse_text,
                 normalized_verse,
                 df,
                 naming_dict,
-                missing_namings,
+                missing_naming_variants,
                 root,
                 paths,
                 perform_categorization,
@@ -732,7 +732,7 @@ def run_data_collection(
 
             # Save progress after each verse
             save_progress(
-                missing_namings=missing_namings,
+                missing_naming_variants=missing_naming_variants,
                 last_processed_verse=verse_number,
                 paths=paths,
                 check_namings=check_namings,
@@ -804,7 +804,7 @@ def run_data_collection(
 
             # Save progress after each verse
             save_progress(
-                missing_namings=missing_namings,
+                missing_naming_variants=missing_naming_variants,
                 last_processed_verse=verse_number,
                 paths=paths,
                 check_namings=check_namings,
@@ -813,7 +813,7 @@ def run_data_collection(
             )
 
     # Return updated data
-    return missing_namings, collocation_data, categorized_entries
+    return missing_naming_variants, collocation_data, categorized_entries
 
 
 def check_and_extend_namings(
@@ -822,7 +822,7 @@ def check_and_extend_namings(
     normalized_verse: str,
     df: pd.DataFrame,
     naming_dict: dict,
-    missing_namings: list,
+    missing_naming_variants: list,
     root: Element,
     paths: dict,
     perform_categorization: bool,
@@ -878,7 +878,7 @@ def check_and_extend_namings(
 
         # skip if already handled in JSON
         skip = False
-        for entry in missing_namings:
+        for entry in missing_naming_variants:
             if entry.get("Vers") == verse_number:
                 values = [
                     entry.get("Eigennennung", ""),
@@ -913,9 +913,9 @@ def check_and_extend_namings(
             print(f"📖 Next verse ({verse_number + 1}): {next_text}")
 
         # 🧍 Confirm with user
-        confirm = ask_user_choice("Is this a missing naming? (y/n): ", ["y", "n"])
+        confirm = ask_user_choice("Is this a missing naming variant? (y/n): ", ["y", "n"])
         if confirm == "n":
-            missing_namings.append({
+            missing_naming_variants.append({
                 "Vers": verse_number,
                 "Eigennennung": naming,
                 "Nennende Figur": "",
@@ -923,7 +923,7 @@ def check_and_extend_namings(
                 "Erzähler": "",
                 "Status": "rejected"
             })
-            save_progress(missing_namings, verse_number, paths)
+            save_progress(missing_naming_variants, verse_number, paths)
             print("✅ Rejection saved.")
             continue
 
@@ -999,8 +999,8 @@ def check_and_extend_namings(
             if selected:
                 entry["Kollokation"] = ' / '.join(selected)
 
-        missing_namings.append(entry)
-        save_progress(missing_namings, verse_number, paths)
+        missing_naming_variants.append(entry)
+        save_progress(missing_naming_variants, verse_number, paths)
         print("✅ Entry saved.")
 
         # 🆕 Sofortige Kategorisierung, falls aktiviert und bestätigt
@@ -1015,9 +1015,9 @@ def check_and_extend_namings(
             if annotated:
                 categorized_entries.append(annotated)
 
-    return missing_namings
+    return missing_naming_variants
 
-def load_missing_namings(path: str) -> list:
+def load_missing_naming_variants(path: str) -> list:
     """
     Loads missing or confirmed namings from a JSON file.
     Returns an empty list if the file doesn't exist or is invalid.
@@ -1451,7 +1451,7 @@ def run_wordlist_menu(paths, book_name):
                 return
             filename = f"wordlist_Bezeichnung_{figure}.csv".replace(" ", "_")
             output_path = os.path.join(output_dir, filename)
-            generate_bezeichnungen_for_figure(figure, json_path, output_path)
+            generate_designations_for_figure(figure, json_path, output_path)
 
         elif choice == "3":
             figure = ask_valid_figure_name(paths["categorization_json"])
@@ -1459,7 +1459,7 @@ def run_wordlist_menu(paths, book_name):
                 return
             filename = f"wordlist_Epitheta_{figure}.csv".replace(" ", "_")
             output_path = os.path.join(output_dir, filename)
-            generate_epitheta_for_figure(figure, json_path, output_path)
+            generate_epithets_for_figure(figure, json_path, output_path)
 
         elif choice == "4":
             figure = ask_valid_figure_name(paths["categorization_json"])
@@ -1467,7 +1467,7 @@ def run_wordlist_menu(paths, book_name):
                 return
             filename = f"wordlist_Combined_{figure}.csv".replace(" ", "_")
             output_path = os.path.join(output_dir, filename)
-            generate_combined_bez_epi(figure, json_path, output_path)
+            generate_combined_designations_epithets(figure, json_path, output_path)
 
         elif choice == "5":
             print("↩️ Returning to analysis menu.")
@@ -1557,7 +1557,7 @@ def ask_valid_figure_name(json_path: str) -> str | None:
 
 
 
-def generate_bezeichnungen_for_figure(figure_name: str, json_path: str, output_path: str):
+def generate_designations_for_figure(figure_name: str, json_path: str, output_path: str):
     entries = safe_read_json(json_path, default=[])
     # no need to resolve again – already handled
     resolved_name = figure_name
@@ -1582,7 +1582,7 @@ def generate_bezeichnungen_for_figure(figure_name: str, json_path: str, output_p
 
     print(f"✅ Wordlist for '{resolved_name}' written to: {output_path}")
 
-def generate_epitheta_for_figure(figure_name: str, json_path: str, output_path: str):
+def generate_epithets_for_figure(figure_name: str, json_path: str, output_path: str):
     entries = safe_read_json(json_path, default=[])
     # no need to resolve again – already handled
     resolved_name = figure_name
@@ -1607,7 +1607,7 @@ def generate_epitheta_for_figure(figure_name: str, json_path: str, output_path: 
 
     print(f"✅ Wordlist for epithets of '{resolved_name}' written to: {output_path}")
 
-def generate_combined_bez_epi(figure_name: str, json_path: str, output_path: str):
+def generate_combined_designations_epithets(figure_name: str, json_path: str, output_path: str):
     """
     Generates a combined wordlist of all designations and epithets for a given figure.
     Bezeichnung 1–4 and Epitheta 1–5 are combined and counted together.
@@ -2040,7 +2040,7 @@ def export_all_data_to_new_excel(book_name, paths, options):
     Integrates confirmed namings, adds collocations, and creates a lemmatized worksheet.
 
     :param book_name: The name of the text corpus (used for directory and filename construction)
-    :param paths: Dictionary containing file paths (e.g., original_excel, missing_namings_json, etc.)
+    :param paths: Dictionary containing file paths (e.g., original_excel, missing_naming_variants_json, etc.)
     :param options: Dictionary with Boolean flags for: benennungen, kollokationen, kategorisierung
     """
 
@@ -2049,7 +2049,7 @@ def export_all_data_to_new_excel(book_name, paths, options):
     # Support alternate keys for export paths
     paths = {
         **paths,
-        "json_benennungen": paths.get("json_benennungen") or paths.get("missing_namings_json"),
+        "json_benennungen": paths.get("json_benennungen") or paths.get("missing_naming_variants_json"),
         "json_kollokationen": paths.get("json_kollokationen") or paths.get("collocations_json"),
         "json_kategorisierung": paths.get("json_kategorisierung") or paths.get("categorization_json"),
     }
@@ -2066,8 +2066,8 @@ def export_all_data_to_new_excel(book_name, paths, options):
     sheet = wb["Gesamt"]
 
     if options.get("benennungen", False):
-        print("📤 Exporting confirmed namings...")
-        insert_namings(sheet, paths["missing_namings_json"])
+        print("📤 Exporting confirmed naming variants...")
+        insert_naming_variants(sheet, paths["missing_naming_variants_json"])
 
     if options.get("kollokationen", False):
         print("📤 Exporting collocations...")
@@ -2075,7 +2075,7 @@ def export_all_data_to_new_excel(book_name, paths, options):
 
     if options.get("kategorisierung", False):
         print("📤 Exporting categorized lemmata (this may take a second)...")
-        create_sheet_with_categorized_lemmata(wb, sheet, paths["categorization_json"])
+        create_categorized_lemmas_sheet(wb, sheet, paths["categorization_json"])
 
     wb.save(target_path)
     print(f"✅ Export completed: {target_path}")
@@ -2091,7 +2091,7 @@ def get_format_template(sheet, column_index):
                 return copy(cell.font), copy(cell.alignment), copy(cell.border), cell.number_format
     return None, None, None, None
 
-def insert_namings(sheet, json_path):
+def insert_naming_variants(sheet, json_path):
     """
     Inserts confirmed namings into the 'Gesamt' worksheet.
     Column formatting is inherited from 'get_format_template()'.
@@ -2103,7 +2103,7 @@ def insert_namings(sheet, json_path):
 
     confirmed_entries = [entry for entry in data if entry.get("Status") == "confirmed"]
     if not confirmed_entries:
-        print("ℹ️ No confirmed namings to insert.")
+        print("ℹ️ No confirmed naming variants to insert.")
         return
 
     last_line = sheet.max_row + 1
@@ -2134,7 +2134,7 @@ def insert_namings(sheet, json_path):
 
         last_line += 1
 
-    print("✅ Namings successfully added.")
+    print("✅ Naming variants successfully added.")
 
 def update_collocations(sheet, json_path):
     """
@@ -2176,7 +2176,7 @@ def update_collocations(sheet, json_path):
 
     print(f"✅ {updated_count} collocations successfully updated.")
 
-def create_sheet_with_categorized_lemmata(wb, _, json_path):
+def create_categorized_lemmas_sheet(wb, _, json_path):
     """
     Creates a new worksheet 'lemmatisiert' with structured designations and epithets.
     Format and structure are copied from the 'Gesamt' sheet in the template.
@@ -2256,7 +2256,7 @@ def main():
     root = data.get("xml")
 
     # 🔹 Preload all JSON data for duplication checks (independent of mode)
-    missing_namings = load_missing_namings(paths["missing_namings_json"])
+    missing_naming_variants = load_missing_naming_variants(paths["missing_naming_variants_json"])
     collocation_data = load_collocations_json(paths["collocations_json"])
     categorized_entries = load_json_annotations(paths["categorization_json"])
 
@@ -2285,7 +2285,7 @@ def main():
     if check_namings:
         previous_verse = namings_last_verse
         active_last_verse = namings_last_verse
-        previous_namings = missing_namings.copy()
+        previous_namings = missing_naming_variants.copy()
 
     elif fill_collocations:
         previous_verse = collocations_last_verse
@@ -2305,13 +2305,13 @@ def main():
         active_last_verse = 0
 
     # 🔹 8. Process TEI and run requested analysis steps
-    missing_namings, collocation_data, categorized_entries = run_data_collection(
+    missing_naming_variants, collocation_data, categorized_entries = run_data_collection(
         df=df,
         root=root,
         naming_dict=naming_dict,
         last_verse=active_last_verse,
         paths=paths,
-        missing_namings=missing_namings,
+        missing_naming_variants=missing_naming_variants,
         collocation_data=collocation_data,
         check_namings=check_namings,
         perform_collocations=fill_collocations,
@@ -2324,7 +2324,7 @@ def main():
 
     # 🔹 9. Final save
     save_progress(
-        missing_namings=missing_namings,
+        missing_naming_variants=missing_naming_variants,
         last_processed_verse=active_last_verse,
         paths=paths,
         previous_verse=previous_verse,
