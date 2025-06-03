@@ -157,11 +157,10 @@ def initialize_project():
     categorization_last_verse = 0
 
     if os.path.exists(progress_path):
-        with open(progress_path, "r", encoding="utf-8") as f:
-            progress_data = json.load(f)
-            namings_last_verse = progress_data.get("namings_last_verse", 0)
-            collocations_last_verse = progress_data.get("collocations_last_verse", 0)
-            categorization_last_verse = progress_data.get("categorization_last_verse", 0)
+        progress_data = safe_read_json(progress_path, default={})
+        namings_last_verse = progress_data.get("namings_last_verse", 0)
+        collocations_last_verse = progress_data.get("collocations_last_verse", 0)
+        categorization_last_verse = progress_data.get("categorization_last_verse", 0)
 
     # Fehlende Dateien anlegen
     initialize_files(paths)
@@ -407,10 +406,7 @@ def save_progress(
     """
 
     # Load existing progress file (if available)
-    progress_data = {}
-    if os.path.exists(paths["progress_json"]):
-        with open(paths["progress_json"], "r", encoding="utf-8") as f:
-            progress_data = json.load(f)
+    progress_data = safe_read_json(paths["progress_json"], default={})
 
     # Update the respective last-verse value only if it changed
     if previous_verse is None or last_processed_verse != previous_verse:
@@ -445,8 +441,7 @@ def load_or_extend_naming_dict():
 
     # Load existing dict or create new one
     if os.path.exists(dict_path):
-        with open(dict_path, "r", encoding="utf-8") as f:
-            naming_dict = json.load(f)
+        naming_dict = safe_read_json(dict_path, default={"Included Books": [], "Namings": {}})
         print(f"📚 A naming dictionary was found.")
         book_list = naming_dict.get("Included Books", [])
         if book_list:
@@ -522,8 +517,7 @@ def ask_config_interactively(config_path):
     if os.path.exists(config_path):
         reuse = ask_user_choice("⚙️ A configuration for this book was found. Do you want to reuse the previous settings? (y/n): ", ["y", "n"])
         if reuse == "y":
-            with open(config_path, "r", encoding="utf-8") as f:
-                config_data = json.load(f)
+            config_data = safe_read_json(config_path, default={})
 
             # 🟩 Excel automatisch laden, wenn Pfad bekannt & gültig
             excel_path = config_data.get("excel_path")
@@ -2138,8 +2132,7 @@ def insert_naming_variants(sheet, json_path):
     New rows are visually highlighted.
     """
 
-    with open(json_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    data = safe_read_json(json_path, default=[])
 
     confirmed_entries = [entry for entry in data if entry.get("Status") == "confirmed"]
     if not confirmed_entries:
@@ -2181,8 +2174,7 @@ def update_collocations(sheet, json_path):
     Updates the 'Kollokationen' column using the JSON data.
     Formatting is copied from the first filled cell via get_format_template().
     """
-    with open(json_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    data = safe_read_json(json_path, default=[])
 
     header = [cell.value for cell in sheet[1]]
     try:
@@ -2223,8 +2215,7 @@ def create_categorized_lemmas_sheet(wb, _, json_path):
     """
 
     # Load JSON data
-    with open(json_path, "r", encoding="utf-8") as f:
-        annotations = json.load(f)
+    annotations = safe_read_json(json_path, default=[])
 
     # Replace existing sheet if necessary
     if "lemmatisiert" in wb.sheetnames:
