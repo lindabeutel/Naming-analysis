@@ -75,6 +75,10 @@
   "algewaltec": [
     "alwaltigen"
   ],
+  "Aliers": [
+    "aliere",
+    "aliers"
+  ],
   "allerliebest": [
     "allerlibistin"
   ],
@@ -188,7 +192,8 @@
     "arthan"
   ],
   "Artus": [
-    "artûs"
+    "artûs",
+    "artûse"
   ],
   "arzât": [
     "arzet"
@@ -208,6 +213,9 @@
   ],
   "Aschalpems": [
     "aschalbaies"
+  ],
+  "Askalon": [
+    "ascalôn"
   ],
   "Athamas": [
     "athamas"
@@ -269,6 +277,9 @@
     "peringeren",
     "pernger"
   ],
+  "bescheidenlich": [
+    "bescheiden"
+  ],
   "beste": [
     "besten"
   ],
@@ -302,6 +313,7 @@
     "boser"
   ],
   "bote": [
+    "bot",
     "bote"
   ],
   "Brechmundâ": [
@@ -427,6 +439,7 @@
     "die",
     "dirre",
     "disem",
+    "disen",
     "diu",
     "div",
     "diz",
@@ -520,6 +533,12 @@
     "einer",
     "eines"
   ],
+  "einec": [
+    "einigen"
+  ],
+  "einsidele": [
+    "einsidel"
+  ],
   "Ekerîch": [
     "ekerich",
     "ekerichen"
@@ -547,8 +566,14 @@
     "engelris",
     "englirs"
   ],
+  "Enite": [
+    "ênîten"
+  ],
   "entrinnen": [
     "entrunner"
+  ],
+  "Erec": [
+    "êreke"
   ],
   "erweln": [
     "erwelten"
@@ -588,6 +613,9 @@
     "falsarones",
     "valsaron"
   ],
+  "Feimorgan": [
+    "feimorgân"
+  ],
   "Flemin": [
     "flemin"
   ],
@@ -617,7 +645,8 @@
   ],
   "gast": [
     "gast",
-    "gaste"
+    "gaste",
+    "gastes"
   ],
   "Gawein": [
     "gâwein"
@@ -632,6 +661,9 @@
   "gebërn": [
     "geborn",
     "giborne"
+  ],
+  "gebûr": [
+    "gebûre"
   ],
   "gegen": [
     "gegin"
@@ -669,6 +701,9 @@
   ],
   "genendec": [
     "ginendige"
+  ],
+  "genâdelôs": [
+    "genadeloser"
   ],
   "genôz": [
     "genoz"
@@ -755,6 +790,7 @@
     "gote",
     "gotes",
     "gotez",
+    "weizgot",
     "zegote",
     "zegotes"
   ],
@@ -774,17 +810,22 @@
     "grimme",
     "grimmigen"
   ],
+  "griuwelich": [
+    "griulîchen"
+  ],
   "grunt": [
     "grunt"
   ],
   "grâve": [
     "graue",
-    "grauen"
+    "grauen",
+    "grâven"
   ],
   "guot": [
     "gueten",
     "guot",
     "guote",
+    "guoten",
     "gute",
     "guten"
   ],
@@ -796,6 +837,9 @@
   ],
   "Haimunt": [
     "haimunt"
+  ],
+  "halptôt": [
+    "halptôte"
   ],
   "harpfaere": [
     "harphaere"
@@ -914,6 +958,7 @@
   "hêrre": [
     "erre",
     "her",
+    "hern",
     "herre",
     "herren",
     "herrin",
@@ -941,10 +986,13 @@
     "dinir",
     "dinis",
     "du",
+    "dû",
     "ich",
+    "iewer",
     "ir",
     "iren",
     "irs",
+    "iuwers",
     "iwer",
     "iwerm",
     "iwern",
@@ -960,6 +1008,13 @@
     "minim",
     "minin",
     "minis",
+    "mîn",
+    "mîne",
+    "mînem",
+    "mînen",
+    "mîner",
+    "mînes",
+    "mîns",
     "sein",
     "seine",
     "seinem",
@@ -974,6 +1029,10 @@
     "sines",
     "sinim",
     "sinin",
+    "sîne",
+    "sînem",
+    "sîner",
+    "sîns",
     "unser",
     "unsere",
     "unseren",
@@ -1009,7 +1068,9 @@
     "iuo"
   ],
   "Iwein": [
-    "îwein"
+    "îwein",
+    "îweinen",
+    "îweins"
   ],
   "Japyx": [
     "lapis"
@@ -1052,7 +1113,8 @@
     "iunge",
     "iungen",
     "ivnge",
-    "ivngen"
+    "ivngen",
+    "junge"
   ],
   "junchêrre": [
     "iunchherre",
@@ -1065,10 +1127,12 @@
     "iunchfrawe",
     "iunchfrawen",
     "iunchfrowen",
+    "iunchvrouwe",
     "ivnchfrove",
     "ivnchfrowe",
     "ivnchfrowen",
     "junchfrawe",
+    "juncvrouwen",
     "jvnchfrove"
   ],
   "jungelinc": [
@@ -1086,6 +1150,10 @@
   ],
   "Justîn": [
     "iustinen"
+  ],
+  "Kalogreant": [
+    "kâlogreandes",
+    "kâlogrêant"
   ],
   "Kanabeus": [
     "chanabeus"
@@ -1138,10 +1206,14 @@
   ],
   "knëht": [
     "chnecht",
-    "knecht"
+    "knecht",
+    "knehte"
   ],
   "Konrad": [
     "chunrat"
+  ],
+  "kranc": [
+    "krankez"
   ],
   "Krieche": [
     "crieche"
@@ -1187,6 +1259,7 @@
     "chuoninc",
     "chuoninge",
     "kunc",
+    "kunec",
     "kunic",
     "kunich",
     "kunige",
@@ -1199,7 +1272,10 @@
     "kuoninc",
     "kuoninge",
     "künc",
-    "künec"
+    "künec",
+    "künege",
+    "küneges",
+    "künige"
   ],
   "küniclîn": [
     "chungelin"
@@ -1216,7 +1292,10 @@
     "kungeinne",
     "kuniginne",
     "kuoneginne",
-    "künegin"
+    "künegin",
+    "küneginne",
+    "künegîn",
+    "künegînne"
   ],
   "künne": [
     "chunne"
@@ -1236,6 +1315,9 @@
     "latinum",
     "latinus",
     "latinvs"
+  ],
+  "Laudine": [
+    "laudîne"
   ],
   "Laurentius": [
     "laurentien"
@@ -1294,6 +1376,9 @@
     "ludewige",
     "ludewigin"
   ],
+  "Lunete": [
+    "lûnete"
+  ],
   "lustsam": [
     "lussam",
     "lussame"
@@ -1308,6 +1393,7 @@
     "lerare"
   ],
   "lëbendec": [
+    "lebende",
     "lebendigen"
   ],
   "lützel": [
@@ -1522,7 +1608,8 @@
   ],
   "nëve": [
     "neue",
-    "neuen"
+    "neuen",
+    "neve"
   ],
   "ober": [
     "oberiste",
@@ -1784,7 +1871,13 @@
   "rîtaere": [
     "reter",
     "riter",
-    "ritter"
+    "ritter",
+    "rîter",
+    "rîters"
+  ],
+  "rîterlich": [
+    "rîterlîche",
+    "rîterlîchen"
   ],
   "Rôm": [
     "rome"
@@ -1793,6 +1886,7 @@
     "romere"
   ],
   "saelec": [
+    "saelic",
     "salige"
   ],
   "Salomon": [
@@ -1824,6 +1918,9 @@
     "scalc",
     "schalch"
   ],
+  "schande": [
+    "schanden"
+  ],
   "schepfaere": [
     "schephare",
     "schephere"
@@ -1832,6 +1929,7 @@
     "schefmuode"
   ],
   "schoene": [
+    "schoenen",
     "schone",
     "schonen",
     "schones",
@@ -1933,6 +2031,9 @@
     "bin",
     "pin"
   ],
+  "süeze": [
+    "süeze"
+  ],
   "Tantalus": [
     "thalantus"
   ],
@@ -2020,6 +2121,9 @@
   "Troilus": [
     "troilus"
   ],
+  "truhtsaeʒe": [
+    "truhsaeze"
+  ],
   "truhtîn": [
     "trechtin",
     "trechtines",
@@ -2027,6 +2131,9 @@
   ],
   "trût": [
     "truot"
+  ],
+  "trûtgeselle": [
+    "trûtgeselle"
   ],
   "tugent": [
     "tugente"
@@ -2072,6 +2179,14 @@
   "tân": [
     "tanen"
   ],
+  "tôre": [
+    "tore",
+    "tôre",
+    "tôren"
+  ],
+  "tôt": [
+    "tôten"
+  ],
   "Ulixes": [
     "vlixes"
   ],
@@ -2088,6 +2203,9 @@
   "under": [
     "unter"
   ],
+  "ungehiure": [
+    "ungehiure"
+  ],
   "ungelückec": [
     "vngilucher"
   ],
@@ -2098,21 +2216,36 @@
     "vngetriwe",
     "vngitriwe"
   ],
+  "ungetân": [
+    "ungetânen"
+  ],
+  "ungevüege": [
+    "ungevüegen"
+  ],
   "unnütze": [
     "vnnuoczen"
   ],
   "unsaelec": [
+    "unsaeliger",
     "vnsalige",
     "vnsaligen"
   ],
   "unwîs": [
+    "unwîse",
     "vnweise"
+  ],
+  "Urjên": [
+    "urjên",
+    "urjênes"
   ],
   "urkünde": [
     "urchunde"
   ],
   "Urtanne": [
     "urtannen"
+  ],
+  "Utpandragon": [
+    "uptandragôn"
   ],
   "Valdebrûn": [
     "ualdebrun",
@@ -2153,6 +2286,9 @@
   "ver": [
     "verge",
     "vern"
+  ],
+  "verborgen": [
+    "verborgen"
   ],
   "Vergil": [
     "uirgilius",
@@ -2208,10 +2344,14 @@
   "vremde": [
     "fromden"
   ],
+  "vriundinne": [
+    "vriundîn"
+  ],
   "vriunt": [
     "friunt",
     "frivnt",
-    "frunt"
+    "frunt",
+    "vriunde"
   ],
   "vrouwe": [
     "frawe",
@@ -2228,6 +2368,8 @@
     "frvvwe",
     "frvwe",
     "vro",
+    "vrou",
+    "vrouwen",
     "vrowe",
     "vrowen"
   ],
@@ -2235,7 +2377,8 @@
     "frumige",
     "frumigen",
     "fruomige",
-    "fruomigen"
+    "fruomigen",
+    "vrumer"
   ],
   "vrî": [
     "friez"
@@ -2257,6 +2400,9 @@
   "vëhtgenôz": [
     "vehtginoz"
   ],
+  "vîandinne": [
+    "vîendinne"
+  ],
   "vîant": [
     "uiandes",
     "uiant",
@@ -2269,6 +2415,9 @@
   "Waldram": [
     "waldram"
   ],
+  "walt": [
+    "waldes"
+  ],
   "walten": [
     "waltet"
   ],
@@ -2279,6 +2428,9 @@
     "walter",
     "walthere",
     "waltheren"
+  ],
+  "waltman": [
+    "waltman"
   ],
   "warc": [
     "warch"
@@ -2320,7 +2472,9 @@
     "winden"
   ],
   "wirt": [
-    "wirt"
+    "wirt",
+    "wirte",
+    "wirtes"
   ],
   "Witel": [
     "witel"
@@ -2381,7 +2535,9 @@
     "wib",
     "wibe",
     "wibes",
-    "wip"
+    "wip",
+    "wîbe",
+    "wîbes"
   ],
   "wîs": [
     "wis",
@@ -2420,6 +2576,9 @@
   ],
   "Ägidius": [
     "egidien"
+  ],
+  "êrbaere": [
+    "êrbaeren"
   ],
   "êre": [
     "ere"
