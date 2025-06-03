@@ -127,7 +127,7 @@ def ask_user_choice(prompt, valid_options):
         print(f"⚠️ Invalid input. Please select one of the following options: {', '.join(valid_options)}")
 
 def initialize_project():
-    book_name = input("Which book are we working on today? (e.g., Eneasroman): ").strip()
+    book_name = input("Which book are we working on today? (e.g., Iwein): ").strip()
     book_name = book_name[0].upper() + book_name[1:]
 
     project_dir = os.path.join("data", book_name)
@@ -1050,6 +1050,19 @@ def clean_cell_value(value):
         return ""
     return normalize_text(str(value).strip())
 
+def sanitize_cell_value(value):
+    """
+    Cleans a cell value from invisible characters for robust empty-checking.
+    """
+    if pd.isna(value) or value is None:
+        return ""
+    cleaned = str(value)
+    # Remove invisible Unicode characters
+    cleaned = re.sub(r'[\u200b\u200c\u200d\uFEFF\xa0]', '', cleaned)
+    cleaned = cleaned.strip()
+    return cleaned
+
+
 def check_and_add_collocations(verse_number, df, collocation_data, root, paths):
     """Checks whether a collocation should be added – if so, prompts for user input."""
 
@@ -1059,7 +1072,7 @@ def check_and_add_collocations(verse_number, df, collocation_data, root, paths):
 
     # Check if already handled via Excel
     row = rows.iloc[0]
-    if pd.notna(row.get("Kollokationen")) and str(row["Kollokationen"]).strip() != "":
+    if sanitize_cell_value(row.get("Kollokationen")) != "":
         return None
 
     # Check if already handled via JSON
