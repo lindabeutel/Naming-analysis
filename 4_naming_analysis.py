@@ -682,9 +682,12 @@ def run_data_collection(
 
             # Collocations
             if perform_collocations:
-                check_and_add_collocations(
-                    verse_number, df, collocation_data, root, paths
-                )
+                rows = df[df["Vers"] == verse_number]
+
+                for _, row in rows.iterrows():
+                    check_and_add_collocations(
+                        verse_number, collocation_data, root, paths, row=row
+                    )
 
             # Categorization
             if perform_categorization:
@@ -754,10 +757,12 @@ def run_data_collection(
 
             # Collocations
             if perform_collocations:
-                check_and_add_collocations(
-                    verse_number, df, collocation_data, root, paths
-                )
+                rows = df[df["Vers"] == verse_number]
 
+                for _, row in rows.iterrows():
+                    check_and_add_collocations(
+                        verse_number, collocation_data, root, paths, row=row
+                    )
             # Categorization
             if perform_categorization:
                 df_verse = df[(df["Vers"] >= verse_number) & (df["Vers"] < verse_number + 1)]
@@ -1050,43 +1055,34 @@ def clean_cell_value(value):
         return ""
     return normalize_text(str(value).strip())
 
+
 def sanitize_cell_value(value):
     """
-    Cleans a cell value from invisible characters for robust empty-checking.
+    Cleans a cell value from invisible characters and special cases for robust empty-checking.
     """
-    if pd.isna(value) or value is None:
+    # Catch NA, None, and strange pandas 'nan' strings
+    if pd.isna(value) or value is None or str(value).lower().strip() in {"", "nan", "na"}:
         return ""
+
     cleaned = str(value)
     # Remove invisible Unicode characters
     cleaned = re.sub(r'[\u200b\u200c\u200d\uFEFF\xa0]', '', cleaned)
     cleaned = cleaned.strip()
     return cleaned
 
-
-def check_and_add_collocations(verse_number, df, collocation_data, root, paths):
+def check_and_add_collocations(verse_number, collocation_data, root, paths, row):
     """Checks whether a collocation should be added – if so, prompts for user input."""
 
-    rows = df[df["Vers"] == verse_number]
-    if rows.empty:
-        return None
-
     # Check if already handled via Excel
-    row = rows.iloc[0]
     if sanitize_cell_value(row.get("Kollokationen")) != "":
         return None
 
     # Check if already handled via JSON
     if any(
-            int(entry.get("Vers", -1)) == verse_number and str(entry.get("Kollokationen", "")).strip()
-            for entry in collocation_data
+        int(entry.get("Vers", -1)) == verse_number and str(entry.get("Kollokationen", "")).strip()
+        for entry in collocation_data
     ):
         return None
-
-    if any(
-            get_valid_verse_number(entry.get("Vers")) == verse_number and str(entry.get("Kollokationen", "")).strip()
-            for entry in collocation_data
-    ):
-        return None  # already handled
 
     naming = clean_cell_value(row.get("Eigennennung")) \
              or clean_cell_value(row.get("Bezeichnung")) \
