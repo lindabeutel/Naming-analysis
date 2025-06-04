@@ -928,7 +928,7 @@ def check_and_extend_namings(
 
         extend = ask_user_choice("💡 Would you like to shorten or lengthen the naming variant (y/n): ", ["y", "n"])
         if extend == "y":
-            naming = input("✍ Enter the full naming: ").strip()
+            naming = input("✍ Enter the adapted naming variant: ").strip()
 
         print("Please choose the correct category:")
         print("[1] Eigennennung")
