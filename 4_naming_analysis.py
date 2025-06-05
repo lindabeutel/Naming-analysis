@@ -1071,13 +1071,6 @@ def check_and_add_collocations(verse_number, collocation_data, root, paths, row)
     if sanitize_cell_value(row.get("Kollokationen")) != "":
         return None
 
-    # Check if already handled via JSON
-    if any(
-        int(entry.get("Vers", -1)) == verse_number and str(entry.get("Kollokationen", "")).strip()
-        for entry in collocation_data
-    ):
-        return None
-
     naming = clean_cell_value(row.get("Eigennennung")) \
              or clean_cell_value(row.get("Bezeichnung")) \
              or clean_cell_value(row.get("Erzähler"))
@@ -1088,8 +1081,20 @@ def check_and_add_collocations(verse_number, collocation_data, root, paths, row)
 
     collocations = ask_for_collocations(verse_number, named_entity, naming, context)
 
+    # Check if already handled via JSON
+    if any(
+            int(entry.get("Vers", -1)) == verse_number
+            and entry.get("Benannte Figur", "") == named_entity
+            and entry.get("Naming", "") == naming
+            and str(entry.get("Kollokationen", "")).strip()
+            for entry in collocation_data
+    ):
+        return None
+
     collocation_data.append({
         "Vers": verse_number,
+        "Benannte Figur": named_entity,
+        "Naming": naming,
         "Kollokationen": collocations
     })
 
