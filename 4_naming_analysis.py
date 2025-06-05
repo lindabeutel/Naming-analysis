@@ -1119,20 +1119,22 @@ def ask_for_collocations(verse_number, named_entity, naming, context):
             highlighted = text
         print(f"{number}. {highlighted}")
 
-    user_input = input("\n👉 Please enter the number(s) of the relevant lines (e.g., '5' or '5-7'): ")
+    while True:
+        user_input = input("\n👉 Please enter the number(s) of the relevant lines (e.g., '5' or '5-7'): ")
 
-    selected = []
+        selected = []
 
-    try:
-        if "-" in user_input:
-            start, end = map(int, user_input.split("-"))
-            selected = [text for number, text in context if start <= number <= end]
-        else:
-            number = int(user_input)
-            selected = [text for num, text in context if num == number]
-    except (ValueError, StopIteration):
-        print("⚠️ Invalid input. Please enter a single number or a range.")
-        return ""
+        try:
+            if "-" in user_input:
+                start, end = map(int, user_input.split("-"))
+                selected = [text for number, text in context if start <= number <= end]
+            else:
+                number = int(user_input)
+                selected = [text for num, text in context if num == number]
+            break
+
+        except (ValueError, KeyError):
+            print("⚠️ Invalid input. Please enter a single number or a range.")
 
     return " / ".join(selected)
 
