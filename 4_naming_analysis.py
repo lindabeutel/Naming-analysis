@@ -1104,17 +1104,17 @@ def check_and_add_collocations(verse_number, collocation_data, root, paths, row)
 
     return True
 
-def ask_for_collocations(verse_number, named_entity, naming, context):
+def ask_for_collocations(verse_number, named_entity, naming_variant, context):
     """Displays the context around a verse and interactively asks for relevant collocations."""
 
     print(f"\n🟡 Empty collocation field detected in verse {verse_number}!")
-    if named_entity or naming:
-        print(f"👤 {named_entity}: {naming}\n")
+    if named_entity or naming_variant:
+        print(f"👤 {named_entity}: {naming_variant}\n")
 
     for number, text in context:
-        if naming:
+        if naming_variant:
             # Highlight naming
-            highlighted = text.replace(str(naming), f"\033[1;33m{naming}\033[0m")
+            highlighted = text.replace(str(naming_variant), f"\033[1;33m{naming_variant}\033[0m")
         else:
             highlighted = text
         print(f"{number}. {highlighted}")
