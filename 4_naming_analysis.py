@@ -152,13 +152,13 @@ def initialize_project():
     }
 
     # Fortschritt laden oder initialisieren
-    namings_last_verse = 0
+    naming_variants_last_verse = 0
     collocations_last_verse = 0
     categorization_last_verse = 0
 
     if os.path.exists(progress_path):
         progress_data = safe_read_json(progress_path, default={})
-        namings_last_verse = progress_data.get("namings_last_verse", 0)
+        naming_variants_last_verse = progress_data.get("naming_variants_last_verse", 0)
         collocations_last_verse = progress_data.get("collocations_last_verse", 0)
         categorization_last_verse = progress_data.get("categorization_last_verse", 0)
 
@@ -167,7 +167,7 @@ def initialize_project():
 
     return (
         book_name,
-        namings_last_verse,
+        naming_variants_last_verse,
         collocations_last_verse,
         categorization_last_verse,
         paths
@@ -182,7 +182,7 @@ def initialize_files(paths):
                 json.dump(content, f, indent=4, ensure_ascii=False)
 
     create_if_missing(paths["progress_json"], {
-        "namings_last_verse": 0,
+        "naming_variants_last_verse": 0,
         "collocations_last_verse": 0,
         "categorization_last_verse": 0
     })
@@ -390,12 +390,12 @@ def save_progress(
     last_processed_verse,
     paths,
     previous_verse=None,
-    previous_namings=None,
+    previous_naming_variants=None,
     collocation_data=None,
     previous_collocations=None,
     categorized_entries=None,
     previous_categorized_entries=None,
-    check_namings=False,
+    check_naming_variants=False,
     perform_collocations=False,
     perform_categorization=False
 ):
@@ -410,8 +410,8 @@ def save_progress(
 
     # Update the respective last-verse value only if it changed
     if previous_verse is None or last_processed_verse != previous_verse:
-        if check_namings:
-            progress_data["namings_last_verse"] = last_processed_verse
+        if check_naming_variants:
+            progress_data["naming_variants_last_verse"] = last_processed_verse
         if perform_collocations:
             progress_data["collocations_last_verse"] = last_processed_verse
         if perform_categorization:
@@ -419,7 +419,7 @@ def save_progress(
 
         safe_write_json(progress_data, paths["progress_json"])
 
-    if previous_namings is None or sorted_entries(missing_naming_variants) != sorted_entries(previous_namings):
+    if previous_naming_variants is None or sorted_entries(missing_naming_variants) != sorted_entries(previous_naming_variants):
         safe_write_json(missing_naming_variants, paths["missing_naming_variants_json"], merge=True)
 
     if collocation_data is not None:
@@ -431,26 +431,26 @@ def save_progress(
                 previous_categorized_entries):
             safe_write_json(categorized_entries, paths["categorization_json"], merge=True)
 
-def load_or_extend_naming_dict():
+def load_or_extend_naming_variants_dict():
     """
     Loads or creates a central dictionary with character namings from Excel files.
     Returns a dict with structure {'Included Books': [...], 'Namings': {book: [namings, ...]}}
     """
     os.makedirs("data", exist_ok=True)
-    dict_path = os.path.join("data", "naming_dict.json")
+    dict_path = os.path.join("data", "naming_variants_dict.json")
 
     # Load existing dict or create new one
     if os.path.exists(dict_path):
-        naming_dict = safe_read_json(dict_path, default={"Included Books": [], "Namings": {}})
+        naming_variants_dict = safe_read_json(dict_path, default={"Included Books": [], "Namings": {}})
         print(f"📚 A naming dictionary was found.")
-        book_list = naming_dict.get("Included Books", [])
+        book_list = naming_variants_dict.get("Included Books", [])
         if book_list:
             print(f"👉 Included books: {', '.join(book_list)}")
         else:
             print("👉 Included books: [empty]")
         extend = ask_user_choice("Do you want to add a file? (y/n): ", ["y", "n"])
     else:
-        naming_dict = {"Included Books": [], "Namings": {}}
+        naming_variants_dict = {"Included Books": [], "Namings": {}}
         print("❗ No naming dictionary found.")
         extend = "y"
 
@@ -495,16 +495,16 @@ def load_or_extend_naming_dict():
             print(f"❌ Error while reading the file: {e}")
             break
 
-        naming_dict["Included Books"].append(book_name)
-        naming_dict["Namings"][book_name] = namings
+        naming_variants_dict["Included Books"].append(book_name)
+        naming_variants_dict["Namings"][book_name] = namings
         print(f"✅ Book '{book_name}' added with {len(namings)} naming variants.")
 
         extend = ask_user_choice("Do you want to add another file? (y/n): ", ["y", "n"])
 
-        safe_write_json(naming_dict, dict_path)
+        safe_write_json(naming_variants_dict, dict_path)
         print(f"💾 Current dictionary saved at: {dict_path}")
 
-    return naming_dict
+    return naming_variants_dict
 
 def ask_config_interactively(config_path):
     """
@@ -599,7 +599,7 @@ def ask_config_interactively(config_path):
         save_config(config_path, config_data)
         return config_data, data
 
-    config_data["check_namings"] = ask_user_choice("Should namings be checked and added? (y/n): ", ["y", "n"]) == "y"
+    config_data["check_naming_variants"] = ask_user_choice("Should namings be checked and added? (y/n): ", ["y", "n"]) == "y"
     config_data["fill_collocations"] = ask_user_choice("Should empty collocations be filled? (y/n): ", ["y", "n"]) == "y"
     config_data["do_categorization"] = ask_user_choice("Should namings be lemmatized and categorized? (y/n): ", ["y", "n"]) == "y"
 
@@ -617,12 +617,12 @@ def save_config(path, config_data):
 def run_data_collection(
     df,
     root,
-    naming_dict,
+    naming_variants_dict,
     last_verse,
     paths,
     missing_naming_variants,
     collocation_data,
-    check_namings=True,
+    check_naming_variants=True,
     perform_collocations=False,
     perform_categorization=False,
     lemma_normalization=None,
@@ -632,7 +632,7 @@ def run_data_collection(
 ):
     """
     Runs the data collection process depending on active modes:
-    - If check_namings is True → TEI-based loop.
+    - If check_naming_variants is True → TEI-based loop.
     - If only collocations and/or categorization are active → Excel-based loop.
     Returns updated (missing_naming_variants, collocation_data, categorized_entries).
     """
@@ -642,8 +642,8 @@ def run_data_collection(
         print("⚠️ No verses found.")
         return missing_naming_variants, collocation_data, categorized_entries
 
-    # --- TEI-based loop (only when check_namings is active)
-    if check_namings:
+    # --- TEI-based loop (only when check_naming_variants is active)
+    if check_naming_variants:
         start_index = next(
             (i for i, line in enumerate(verse) if get_valid_verse_number(line.get("n")) > last_verse),
             0
@@ -663,7 +663,7 @@ def run_data_collection(
                 verse_text,
                 normalized_verse,
                 df,
-                naming_dict,
+                naming_variants_dict,
                 missing_naming_variants,
                 root,
                 paths,
@@ -732,7 +732,7 @@ def run_data_collection(
                 missing_naming_variants=missing_naming_variants,
                 last_processed_verse=verse_number,
                 paths=paths,
-                check_namings=check_namings,
+                check_naming_variants=check_naming_variants,
                 perform_collocations=perform_collocations,
                 perform_categorization=perform_categorization
             )
@@ -806,7 +806,7 @@ def run_data_collection(
                 missing_naming_variants=missing_naming_variants,
                 last_processed_verse=verse_number,
                 paths=paths,
-                check_namings=check_namings,
+                check_naming_variants=check_naming_variants,
                 perform_collocations=perform_collocations,
                 perform_categorization=perform_categorization
             )
@@ -820,7 +820,7 @@ def check_and_extend_namings(
     verse_text: str,
     normalized_verse: str,
     df: pd.DataFrame,
-    naming_dict: dict,
+    naming_variants_dict: dict,
     missing_naming_variants: list,
     root: Element,
     paths: dict,
@@ -837,38 +837,38 @@ def check_and_extend_namings(
     """
 
     # 1. Extract namings from Excel for the current verse
-    existing_namings = set()
+    existing_naming_variants = set()
     if "Vers" in df.columns:
         df_verse = df[df["Vers"] == verse_number]
         for column in ["Eigennennung", "Bezeichnung", "Erzähler"]:
             if column in df_verse.columns:
                 values = df_verse[column].dropna().tolist()
-                existing_namings.update(
+                existing_naming_variants.update(
                     normalize_text(str(value).strip()) for value in values if str(value).strip()
                 )
 
-    # 2. Extract and normalize namings from dict
-    dict_namings = set()
-    for book_list in naming_dict.get("Namings", {}).values():
-        dict_namings.update(
+    # 2. Extract and normalize naming variants from dict
+    dict_naming_variants = set()
+    for book_list in naming_variants_dict.get("Namings", {}).values():
+        dict_naming_variants.update(
             normalize_text(name.strip()) for name in book_list if name.strip()
         )
 
     # 3. Match check & user interaction
-    for naming in dict_namings:
-        if not naming:
+    for naming_variant in dict_naming_variants:
+        if not naming_variant:
             continue
 
         # skip if already handled in Excel (auch als Token-Menge)
-        naming_tokens = set(naming.split())
+        naming_variant_tokens = set(naming_variant.split())
 
         skip_existing = False
-        for entry in existing_namings:
+        for entry in existing_naming_variants:
             entry_tokens = set(entry.split())
-            if naming in entry or entry in naming:
+            if naming_variant in entry or entry in naming_variant:
                 skip_existing = True
                 break
-            if naming_tokens <= entry_tokens or entry_tokens <= naming_tokens:
+            if naming_variant_tokens <= entry_tokens or entry_tokens <= naming_variant_tokens:
                 skip_existing = True
                 break
 
@@ -884,18 +884,18 @@ def check_and_extend_namings(
                     entry.get("Bezeichnung", ""),
                     entry.get("Erzähler", "")
                 ]
-                if normalize_text(naming) in map(normalize_text, values):
+                if normalize_text(naming_variant) in map(normalize_text, values):
                     skip = True
                     break
         if skip:
             continue
 
-        if not re.search(rf'\b{re.escape(naming)}\b', normalized_verse):
+        if not re.search(rf'\b{re.escape(naming_variant)}\b', normalized_verse):
             continue
 
         print("\n" + "-" * 60)
-        print(f"❗ New naming found that is not listed in the Excel file!")
-        print(f"🔍 Detected naming: \"{naming}\"")
+        print(f"❗ New naming variant found that is not listed in the Excel file!")
+        print(f"🔍 Detected naming variant: \"{naming_variant}\"")
 
         # 📖 Show context
         prev_line = root.find(f'.//tei:l[@n="{verse_number - 1}"]', tei_ns)
@@ -903,7 +903,7 @@ def check_and_extend_namings(
             prev_text = ' '.join([seg.text for seg in prev_line.findall('.//tei:seg', tei_ns) if seg.text])
             print(f"📖 Previous verse ({verse_number - 1}): {prev_text}")
 
-        highlighted = verse_text.replace(naming, f"\033[1m\033[93m{naming}\033[0m")
+        highlighted = verse_text.replace(naming_variant, f"\033[1m\033[93m{naming_variant}\033[0m")
         print(f"📖 Verse ({verse_number}): {highlighted}")
 
         next_line = root.find(f'.//tei:l[@n="{verse_number + 1}"]', tei_ns)
@@ -916,7 +916,7 @@ def check_and_extend_namings(
         if confirm == "n":
             missing_naming_variants.append({
                 "Vers": verse_number,
-                "Eigennennung": naming,
+                "Eigennennung": naming_variant,
                 "Nennende Figur": "",
                 "Bezeichnung": "",
                 "Erzähler": "",
@@ -928,7 +928,7 @@ def check_and_extend_namings(
 
         extend = ask_user_choice("💡 Would you like to shorten or lengthen the naming variant (y/n): ", ["y", "n"])
         if extend == "y":
-            naming = input("✍ Enter the adapted naming variant: ").strip()
+            naming_variant = input("✍ Enter the adapted naming variant: ").strip()
 
         print("Please choose the correct category:")
         print("[1] Eigennennung")
@@ -948,10 +948,10 @@ def check_and_extend_namings(
         entry = {
             "Benannte Figur": named_entity,
             "Vers": verse_number,
-            "Eigennennung": naming if choice == "1" else "",
+            "Eigennennung": naming_variant if choice == "1" else "",
             "Nennende Figur": naming_entity,
-            "Bezeichnung": naming if choice == "2" else "",
-            "Erzähler": naming if choice == "3" else "",
+            "Bezeichnung": naming_variant if choice == "2" else "",
+            "Erzähler": naming_variant if choice == "3" else "",
             "Status": "confirmed"
         }
 
@@ -1018,7 +1018,7 @@ def check_and_extend_namings(
 
 def load_missing_naming_variants(path: str) -> list:
     """
-    Loads missing or confirmed namings from a JSON file.
+    Loads missing or confirmed naming variants from a JSON file.
     Returns an empty list if the file doesn't exist or is invalid.
     """
     return safe_read_json(path, default=[])
@@ -1071,7 +1071,7 @@ def check_and_add_collocations(verse_number, collocation_data, root, paths, row)
     if sanitize_cell_value(row.get("Kollokationen")) != "":
         return None
 
-    naming = clean_cell_value(row.get("Eigennennung")) \
+    naming_variant = clean_cell_value(row.get("Eigennennung")) \
              or clean_cell_value(row.get("Bezeichnung")) \
              or clean_cell_value(row.get("Erzähler"))
 
@@ -1079,13 +1079,13 @@ def check_and_add_collocations(verse_number, collocation_data, root, paths, row)
 
     context = get_verse_context(verse_number, root)
 
-    collocations = ask_for_collocations(verse_number, named_entity, naming, context)
+    collocations = ask_for_collocations(verse_number, named_entity, naming_variant, context)
 
     # Check if already handled via JSON
     if any(
             int(entry.get("Vers", -1)) == verse_number
             and entry.get("Benannte Figur", "") == named_entity
-            and entry.get("Naming", "") == naming
+            and entry.get("Naming", "") == naming_variant
             and str(entry.get("Kollokationen", "")).strip()
             for entry in collocation_data
     ):
@@ -1094,7 +1094,7 @@ def check_and_add_collocations(verse_number, collocation_data, root, paths, row)
     collocation_data.append({
         "Vers": verse_number,
         "Benannte Figur": named_entity,
-        "Naming": naming,
+        "Naming": naming_variant,
         "Kollokationen": collocations
     })
 
@@ -1113,7 +1113,7 @@ def ask_for_collocations(verse_number, named_entity, naming_variant, context):
 
     for number, text in context:
         if naming_variant:
-            # Highlight naming
+            # Highlight naming_variant
             highlighted = text.replace(str(naming_variant), f"\033[1;33m{naming_variant}\033[0m")
         else:
             highlighted = text
@@ -2078,14 +2078,14 @@ def build_fallback_collocation_df_from_tei(root_tei: Element) -> pd.DataFrame:
 
 def export_all_data_to_new_excel(book_name, paths, options):
     """
-    Integrates confirmed namings, adds collocations, and creates a lemmatized worksheet.
+    Integrates confirmed naming variants, adds collocations, and creates a lemmatized worksheet.
 
     :param book_name: The name of the text corpus (used for directory and filename construction)
     :param paths: Dictionary containing file paths (e.g., original_excel, missing_naming_variants_json, etc.)
     :param options: Dictionary with Boolean flags for: benennungen, kollokationen, kategorisierung
     """
 
-    print("🟢 Starting export of all naming data...")
+    print("🟢 Starting export of all naming variant data...")
 
     # Support alternate keys for export paths
     paths = {
@@ -2134,7 +2134,7 @@ def get_format_template(sheet, column_index):
 
 def insert_naming_variants(sheet, json_path):
     """
-    Inserts confirmed namings into the 'Gesamt' worksheet.
+    Inserts confirmed naming variants into the 'Gesamt' worksheet.
     Column formatting is inherited from 'get_format_template()'.
     New rows are visually highlighted.
     """
@@ -2281,10 +2281,10 @@ def create_categorized_lemmas_sheet(wb, _, json_path):
 
 def main():
     # 🔹 1. Initialization: book selection, paths, last verse
-    book_name, namings_last_verse, collocations_last_verse, categorization_last_verse, paths = initialize_project()
+    book_name, naming_variants_last_verse, collocations_last_verse, categorization_last_verse, paths = initialize_project()
 
     # 🔹 2. Load global naming dictionary (from all books)
-    naming_dict = load_or_extend_naming_dict()
+    naming_variants_dict = load_or_extend_naming_variants_dict()
 
     # 🔹 3. Konfiguration abfragen (interaktiv oder reuse)
     config_data, data = ask_config_interactively(paths["config_json"])
@@ -2299,7 +2299,7 @@ def main():
     categorized_entries = load_json_annotations(paths["categorization_json"])
 
     # Defaults for optional tracking
-    previous_namings = []
+    previous_naming_variants = []
     previous_collocations = []
     previous_categorized_entries = []
 
@@ -2315,15 +2315,15 @@ def main():
         return  # skip rest of collection logic
 
     # 🔹 6. User-controlled analysis paths
-    check_namings = config_data["check_namings"]
+    check_naming_variants = config_data["check_naming_variants"]
     fill_collocations = config_data["fill_collocations"]
     do_categorization = config_data["do_categorization"]
 
     # 🔹 7. Load previous data depending on paths
-    if check_namings:
-        previous_verse = namings_last_verse
-        active_last_verse = namings_last_verse
-        previous_namings = missing_naming_variants.copy()
+    if check_naming_variants:
+        previous_verse = naming_variants_last_verse
+        active_last_verse = naming_variants_last_verse
+        previous_naming_variants = missing_naming_variants.copy()
 
     elif fill_collocations:
         previous_verse = collocations_last_verse
@@ -2346,12 +2346,12 @@ def main():
     missing_naming_variants, collocation_data, categorized_entries = run_data_collection(
         df=df,
         root=root,
-        naming_dict=naming_dict,
+        naming_variants_dict=naming_variants_dict,
         last_verse=active_last_verse,
         paths=paths,
         missing_naming_variants=missing_naming_variants,
         collocation_data=collocation_data,
-        check_namings=check_namings,
+        check_naming_variants=check_naming_variants,
         perform_collocations=fill_collocations,
         perform_categorization=do_categorization,
         lemma_normalization=lemma_normalization if do_categorization else None,
@@ -2366,12 +2366,12 @@ def main():
         last_processed_verse=active_last_verse,
         paths=paths,
         previous_verse=previous_verse,
-        previous_namings=previous_namings,
+        previous_naming_variants=previous_naming_variants,
         collocation_data=collocation_data,
         previous_collocations=previous_collocations,
         categorized_entries=categorized_entries,
         previous_categorized_entries=previous_categorized_entries,
-        check_namings=check_namings,
+        check_naming_variants=check_naming_variants,
         perform_collocations=fill_collocations,
         perform_categorization=do_categorization
     )
@@ -2381,7 +2381,7 @@ def main():
     if export:
         paths["original_excel"] = data["excel_path"]
         options = {
-            "benennungen": check_namings,
+            "benennungen": check_naming_variants,
             "kollokationen": fill_collocations,
             "kategorisierung": do_categorization
         }
