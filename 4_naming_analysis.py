@@ -10,6 +10,7 @@ import time
 import csv
 import difflib
 import math
+import webbrowser
 
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import Element
@@ -25,6 +26,8 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles import PatternFill
 from openpyxl.styles import Font, Alignment, Border
 from openpyxl import load_workbook
+
+import plotly.express as px
 
 DataType = dict[str, Union[pd.DataFrame, Element, str, None]]
 tei_ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
@@ -1402,9 +1405,10 @@ def run_analysis_menu(config_data, paths, data, book_name):
         print("[1] Wordlist")
         print("[2] Keywords")
         print("[3] Collocations")
-        print("[4] Exit analysis")
+        print("[4] Visualization")
+        print("[5] Exit analysis")
 
-        choice = ask_user_choice("> ", ["1", "2", "3", "4"])
+        choice = ask_user_choice("> ", ["1", "2", "3", "4", "5"])
 
         if choice == "1":
             run_wordlist_menu(paths, book_name)
@@ -1413,6 +1417,8 @@ def run_analysis_menu(config_data, paths, data, book_name):
         elif choice == "3":
             run_collocation_menu(config_data, paths, data, book_name)
         elif choice == "4":
+            run_visualization_menu(paths, book_name)
+        elif choice == "5":
             print("📦 Analysis completed.")
             break
 
@@ -2075,6 +2081,212 @@ def build_fallback_collocation_df_from_tei(root_tei: Element) -> pd.DataFrame:
         context_data.append({"Vers": verse_num, "Kollokationen": full_context})
 
     return pd.DataFrame(context_data)
+
+def run_visualization_menu(paths, book_name):
+    """
+    CLI-based interface to visualize naming variants and/or epithets
+    for a selected figure using plotly. Output can be saved or opened in browser.
+    """
+
+    entries = safe_read_json(paths["categorization_json"], default=[])
+    if not entries:
+        print("❌ No categorization data available.")
+        return
+
+    df = pd.DataFrame(entries)
+
+    # Step 1 – Ask for figure name
+    figure_name = ask_valid_figure_name(paths["categorization_json"])
+    if figure_name is None:
+        return
+
+    # Step 2 – Choose visualization type
+    print("\n📌 What should be visualized?")
+    print("[1] Naming variants")
+    print("[2] Epithets")
+    print("[3] Combined")
+    variant_type = ask_user_choice("> ", ["1", "2", "3"])
+
+    # Step 3 – Prepare long-format DataFrame
+    df_figure = df[df["Benannte Figur"] == figure_name].copy()
+    naming_cols = [f"Bezeichnung {i}" for i in range(1, 5)]
+    epithet_cols = [f"Epitheta {i}" for i in range(1, 6)]
+
+    all_entries = []
+    for col in naming_cols + epithet_cols:
+        temp = df_figure[["Vers", col]].dropna().rename(columns={col: "Token"})
+        all_entries.append(temp)
+
+    df_combined = pd.concat(all_entries)
+    df_combined["Token"] = df_combined["Token"].astype(str).str.strip()
+    df_combined["Vers"] = pd.to_numeric(df_combined["Vers"], errors="coerce")
+
+    # Step 4 – Count frequencies
+    naming_values = [
+        v.strip()
+        for col in naming_cols
+        for v in df_figure[col].dropna().astype(str)
+        if v.strip() != ""
+    ]
+
+    epithet_values = [
+        v.strip()
+        for col in epithet_cols
+        for v in df_figure[col].dropna().astype(str)
+        if v.strip() != ""
+    ]
+
+    naming_list = Counter(naming_values).most_common()
+    epithet_list = Counter(epithet_values).most_common()
+
+    selected_naming = []
+    selected_epithets = []
+
+    # Step 5 – Token selection (user input with validation)
+    if variant_type in ("1", "3"):
+        print(f"\n📁 Available naming variants for {figure_name}:")
+        for i, (token, freq) in enumerate(naming_list, 1):
+            print(f"{i}. {token} – {freq}")
+        while True:
+            input_str = input("\n✍ Which naming variants should be included? (e.g., 1–3, 5)\n> ").strip()
+            indices = parse_token_selection(input_str, len(naming_list))
+            if indices:
+                selected_naming = [naming_list[i - 1][0] for i in indices]
+                break
+            print("⚠️ Invalid input – please try again.")
+
+    if variant_type in ("2", "3"):
+        print(f"\n📁 Available epithets for {figure_name}:")
+        for i, (token, freq) in enumerate(epithet_list, 1):
+            print(f"{i}. {token} – {freq}")
+        while True:
+            input_str = input("\n✍ Which epithets should be included? (e.g., 1–3, 5)\n> ").strip()
+            indices = parse_token_selection(input_str, len(epithet_list))
+            if indices:
+                selected_epithets = [epithet_list[i - 1][0] for i in indices]
+                break
+            print("⚠️ Invalid input – please try again.")
+
+    # Combine selected tokens
+    tokens_to_plot = selected_naming + selected_epithets
+    if not tokens_to_plot:
+        print("⚠️ No tokens selected – aborting.")
+        return
+
+    # Step 6 – Filter for plot and prepare HTML display labels
+    df_plot = df_combined[df_combined["Token"].isin(tokens_to_plot)].copy()
+
+    plot_token_counts = Counter(df_plot["Token"])
+    sorted_tokens = [token for token, _ in plot_token_counts.most_common()]
+
+    df_plot["Token_html"] = df_plot["Token"].apply(lambda x: f"<i>{x}</i>")
+    df_plot["Token_html"] = pd.Categorical(
+        df_plot["Token_html"],
+        categories=[f"<i>{t}</i>" for t in sorted_tokens],
+        ordered=True
+    )
+
+    if variant_type == "3":
+        df_plot["Category"] = df_plot["Token"].apply(
+            lambda x: "Naming variant" if x in selected_naming else "Epitheton"
+        )
+        color_column = "Category"
+    else:
+        color_column = "Token_html"
+
+    # Step 7 – Create interactive plot
+    fig = px.scatter(
+        df_plot,
+        x="Vers",
+        y="Token_html",
+        color=color_column,
+        title=f"Visualization for '{figure_name}'",
+        hover_data=["Vers", "Token"]
+    )
+
+    fig.update_traces(marker=dict(size=10, opacity=0.7))
+
+    fig.update_layout(
+        title=dict(
+            text=f"Visualization for '{figure_name}'",
+            x=0.5,
+            xanchor="center"
+        ),
+        xaxis_title="Verse",
+        yaxis_title="Naming variants / epithets",
+        font=dict(
+            family="Times New Roman",
+            size=12
+        ),
+        height=800,
+        margin=dict(l=100, r=40, t=60, b=60),
+        showlegend=(variant_type == "3"),
+        yaxis=dict(
+            categoryorder="array",
+            categoryarray=[f"<i>{t}</i>" for t in sorted_tokens]
+        )
+    )
+
+    # Step 8 – Ask for output mode
+    print("\n📅 How should the output be handled?")
+    print("[1] Save as HTML file")
+    print("[2] Show plot in browser")
+    print("[3] Both")
+    output_mode = ask_user_choice("> ", ["1", "2", "3"])
+
+    output_dir = os.path.join("data", book_name, "visualization")
+    os.makedirs(output_dir, exist_ok=True)
+    variant_label = "combined" if variant_type == "3" else "epithets" if variant_type == "2" else "naming"
+    filename = f"viz_{variant_label}_{figure_name}.html"
+    output_path = os.path.join(output_dir, filename)
+
+    # Step 9 – Output
+    if output_mode in ("1", "3"):
+        fig.write_html(output_path)
+        print(f"\n✅ Visualization completed.")
+        print(f"📂 File saved at:\n{output_path}")
+
+    if output_mode in ("2", "3"):
+        webbrowser.open_new_tab(f"file://{os.path.abspath(output_path)}")
+        print(f"🌐 The plot has been opened in your browser.")
+
+
+def parse_token_selection(input_str: str, max_value: int) -> list[int] | None:
+    """
+    Parses user input like '1–3, 5, 7' into a list of valid indices.
+    Validates input and ensures all values are within 1 and max_value.
+    Returns None if the input is invalid.
+    """
+
+    if not input_str.strip():
+        return None
+
+    input_str = input_str.replace("–", "-").replace(" ", "")
+    parts = input_str.split(",")
+
+    result = set()
+    for part in parts:
+        if "-" in part:
+            try:
+                start_str, end_str = part.split("-", 1)
+                start = int(start_str)
+                end = int(end_str)
+                if start > end or start < 1 or end > max_value:
+                    return None
+                result.update(range(start, end + 1))
+            except ValueError:
+                return None
+        else:
+            try:
+                value = int(part)
+                if 1 <= value <= max_value:
+                    result.add(value)
+                else:
+                    return None
+            except ValueError:
+                return None
+
+    return sorted(result)
 
 def export_all_data_to_new_excel(book_name, paths, options):
     """
