@@ -1,33 +1,36 @@
+# Built-in libraries
+import os
+import re
+import csv
+import json
+import time
+import math
+import shutil
+import difflib
+import webbrowser
+from copy import copy, deepcopy
+from collections import Counter
+
+# Type annotations
+from typing import Union, List
+
+# GUI and file dialogs
 import tkinter as tk
 from tkinter import filedialog
 
+# Third-party libraries
 import pandas as pd
-import re
-import json
-import os
-import shutil
-import time
-import csv
-import difflib
-import math
-import webbrowser
+import openpyxl
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import PatternFill, Font, Alignment, Border
 
+import plotly.express as px
+
+# XML and TEI handling
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import Element
 
-from copy import copy, deepcopy
-
-from typing import Union, List
-
-from collections import Counter
-
-import openpyxl
-from openpyxl.utils import get_column_letter
-from openpyxl.styles import PatternFill
-from openpyxl.styles import Font, Alignment, Border
-from openpyxl import load_workbook
-
-import plotly.express as px
 
 DataType = dict[str, Union[pd.DataFrame, Element, str, None]]
 tei_ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
