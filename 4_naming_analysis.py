@@ -2500,6 +2500,79 @@ def create_categorized_lemmas_sheet(wb, _, json_path):
 
     print("✅ Worksheet 'lemmatisiert' successfully created.")
 
+def load_cached_json_data(paths: dict) -> tuple[list, dict, dict]:
+    """
+    Loads cached JSON data for:
+    - missing naming variants
+    - collocation data
+    - categorized entries
+
+    Args:
+        paths (dict): dictionary containing all relevant JSON paths
+
+    Returns:
+        tuple:
+            missing_naming_variants (dict)
+            collocation_data (dict)
+            categorized_entries (dict)
+    """
+    missing_naming_variants = load_missing_naming_variants(paths["missing_naming_variants_json"])
+    collocation_data = load_collocations_json(paths["collocations_json"])
+    categorized_entries = load_json_annotations(paths["categorization_json"])
+
+    return missing_naming_variants, collocation_data, categorized_entries
+
+def export_if_enabled(
+    data: dict,
+    paths: dict,
+    book_name: str,
+    check_naming_variants: bool,
+    perform_collocations: bool,
+    perform_categorization: bool
+):
+    """
+    Asks the user whether to export results and triggers export if confirmed.
+
+    Args:
+        data (dict): contains original Excel path info
+        paths (dict): project paths for output
+        book_name (str): name of the text being processed
+        check_naming_variants (bool): whether naming variants were collected
+        perform_collocations (bool): whether collocations were collected
+        perform_categorization (bool): whether categorization was performed
+    """
+    export = ask_user_choice("Do you want to export all results? (y/n): ", ["y", "n"]) == "y"
+    if not export:
+        return
+
+    options = {
+        "benennungen": check_naming_variants,
+        "kollokationen": perform_collocations,
+        "kategorisierung": perform_categorization
+    }
+
+    paths["original_excel"] = data.get("excel_path")
+    export_all_data_to_new_excel(book_name, paths, options)
+
+def analyze_if_enabled(
+    config_data: dict,
+    paths: dict,
+    data: dict,
+    book_name: str
+):
+    """
+    Asks the user whether to run an analysis after data collection and triggers it if confirmed.
+
+    Args:
+        config_data (dict): configuration settings
+        paths (dict): all relevant file paths
+        data (dict): loaded data (e.g. Excel, TEI)
+        book_name (str): name of the current text
+    """
+    analyze_after = ask_user_choice("Do you want to run an analysis now? (y/n): ", ["y", "n"])
+    if analyze_after == "y":
+        run_analysis_menu(config_data, paths, data, book_name)
+
 def main():
     # 🔹 1. Initialization: book selection, paths, last verse
     book_name, naming_variants_last_verse, collocations_last_verse, categorization_last_verse, paths = initialize_project()
@@ -2514,10 +2587,7 @@ def main():
     df = data.get("excel")
     root = data.get("xml")
 
-    # 🔹 Preload all JSON data for duplication checks (independent of mode)
-    missing_naming_variants = load_missing_naming_variants(paths["missing_naming_variants_json"])
-    collocation_data = load_collocations_json(paths["collocations_json"])
-    categorized_entries = load_json_annotations(paths["categorization_json"])
+    missing_naming_variants, collocation_data, categorized_entries = load_cached_json_data(paths)
 
     # Defaults for optional tracking
     previous_naming_variants = []
@@ -2597,21 +2667,16 @@ def main():
         perform_categorization=do_categorization
     )
 
-    # 🔹 10. Optional export
-    export = ask_user_choice("Do you want to export all results? (y/n): ", ["y", "n"]) == "y"
-    if export:
-        paths["original_excel"] = data["excel_path"]
-        options = {
-            "benennungen": check_naming_variants,
-            "kollokationen": fill_collocations,
-            "kategorisierung": do_categorization
-        }
-        export_all_data_to_new_excel(book_name, paths, options)
+    export_if_enabled(
+        data,
+        paths,
+        book_name,
+        check_naming_variants=check_naming_variants,
+        perform_collocations=fill_collocations,
+        perform_categorization=do_categorization
+    )
 
-    # 🔹 11. Optional analysis after data collection
-    analyze_after = ask_user_choice("Do you want to run an analysis now? (y/n): ", ["y", "n"])
-    if analyze_after == "y":
-        run_analysis_menu(config_data, paths, data, book_name)
+    analyze_if_enabled(config_data, paths, data, book_name)
 
 
 if __name__ == "__main__":
