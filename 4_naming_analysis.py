@@ -1272,11 +1272,11 @@ def lemmatize_and_categorize_entry(entry, lemma_normalization, paths, ignored_le
     print(f"\n▶ Lemma: {', '.join(lemmata)}\n")
 
     while True:
-        designations, epithets = run_categorization(
+        naming_variants, epithets = run_categorization(
             lemmata, lemma_categories, ignored_lemmas, paths
         )
 
-        if not designations and not epithets:
+        if not naming_variants and not epithets:
             print("⚠ No entry – please review and confirm again.")
             confirm = ask_user_choice("Really skip this entry? [y = yes / n = no]: ", ["y", "n"])
             if confirm == "y":
@@ -1298,10 +1298,10 @@ def lemmatize_and_categorize_entry(entry, lemma_normalization, paths, ignored_le
 
     annotated_entry = {
         **entry,
-        "Bezeichnung 1": designations[0] if len(designations) > 0 else "",
-        "Bezeichnung 2": designations[1] if len(designations) > 1 else "",
-        "Bezeichnung 3": designations[2] if len(designations) > 2 else "",
-        "Bezeichnung 4": designations[3] if len(designations) > 3 else "",
+        "Bezeichnung 1": naming_variants[0] if len(naming_variants) > 0 else "",
+        "Bezeichnung 2": naming_variants[1] if len(naming_variants) > 1 else "",
+        "Bezeichnung 3": naming_variants[2] if len(naming_variants) > 2 else "",
+        "Bezeichnung 4": naming_variants[3] if len(naming_variants) > 3 else "",
         "Epitheta 1": epithets[0] if len(epithets) > 0 else "",
         "Epitheta 2": epithets[1] if len(epithets) > 1 else "",
         "Epitheta 3": epithets[2] if len(epithets) > 2 else "",
@@ -1319,7 +1319,7 @@ def lemmatize_and_categorize_entry(entry, lemma_normalization, paths, ignored_le
 
 def run_categorization(lemmata, lemma_categories, ignored_lemmas, paths):
     while True:
-        designations = []
+        naming_variants = []
         epithets = []
         history = []
         i = 0
@@ -1342,7 +1342,7 @@ def run_categorization(lemmata, lemma_categories, ignored_lemmas, paths):
                 i -= 1
                 last_action = history.pop()
                 if last_action["type"] == "a":
-                    designations.pop()
+                    naming_variants.pop()
                 elif last_action["type"] == "e":
                     epithets.pop()
                 elif last_action["type"] == "ignore":
@@ -1355,7 +1355,7 @@ def run_categorization(lemmata, lemma_categories, ignored_lemmas, paths):
 
             if user_input == "" and default:
                 if default == "[a]":
-                    designations.append(lemma)
+                    naming_variants.append(lemma)
                     history.append({"type": "a", "lemma": lemma})
                 elif default == "[e]":
                     epithets.append(lemma)
@@ -1378,7 +1378,7 @@ def run_categorization(lemmata, lemma_categories, ignored_lemmas, paths):
 
             if user_input in ("a", "e"):
                 if user_input == "a":
-                    designations.append(lemma)
+                    naming_variants.append(lemma)
                 else:
                     epithets.append(lemma)
                 lemma_categories[lemma] = user_input
@@ -1393,7 +1393,7 @@ def run_categorization(lemmata, lemma_categories, ignored_lemmas, paths):
                 cat = input(f'Define category for “{correction}” [a/e]: ').strip().lower()
 
             if cat == "a":
-                designations.append(correction)
+                naming_variants.append(correction)
             else:
                 epithets.append(correction)
 
@@ -1402,7 +1402,7 @@ def run_categorization(lemmata, lemma_categories, ignored_lemmas, paths):
             history.append({"type": "override", "lemma": correction})
             i += 1
 
-        return designations, epithets
+        return naming_variants, epithets
 
 def tokenize(text):
     return re.findall(r'\w+|[^\w\s]', text, re.UNICODE)
@@ -1464,9 +1464,9 @@ def run_wordlist_menu(paths, book_name):
     while True:
         print("\n📁 What kind of wordlist do you want to generate?")
         print("[1] All values from a column (e.g., 'Benannte Figur')")
-        print("[2] All designations (Bezeichnungen) for a specific figure")
+        print("[2] All naming variants (Bezeichnungen) for a specific figure")
         print("[3] All epithets (Epitheta) for a specific figure")
-        print("[4] Combined designations and epithets")
+        print("[4] Combined naming variants and epithets")
         print("[5] Back to main analysis menu")
 
         choice = ask_user_choice("> ", ["1", "2", "3", "4", "5"])
@@ -1494,7 +1494,7 @@ def run_wordlist_menu(paths, book_name):
                 return
             filename = f"wordlist_Bezeichnung_{figure}.csv".replace(" ", "_")
             output_path = os.path.join(output_dir, filename)
-            generate_designations_for_figure(figure, json_path, output_path)
+            generate_naming_variants_for_figure(figure, json_path, output_path)
 
         elif choice == "3":
             figure = ask_valid_figure_name(paths["categorization_json"])
@@ -1510,7 +1510,7 @@ def run_wordlist_menu(paths, book_name):
                 return
             filename = f"wordlist_Combined_{figure}.csv".replace(" ", "_")
             output_path = os.path.join(output_dir, filename)
-            generate_combined_designations_epithets(figure, json_path, output_path)
+            generate_combined_naming_variants_epithets(figure, json_path, output_path)
 
         elif choice == "5":
             print("↩️ Returning to analysis menu.")
@@ -1601,7 +1601,7 @@ def ask_valid_figure_name(json_path: str) -> str | None:
 
 
 
-def generate_designations_for_figure(figure_name: str, json_path: str, output_path: str):
+def generate_naming_variants_for_figure(figure_name: str, json_path: str, output_path: str):
     entries = safe_read_json(json_path, default=[])
     # no need to resolve again – already handled
     resolved_name = figure_name
@@ -1653,9 +1653,9 @@ def generate_epithets_for_figure(figure_name: str, json_path: str, output_path: 
     print(f"✅ Wordlist for epithets of '{resolved_name}' written to: {output_path}")
     ask_to_open_file(output_path)
 
-def generate_combined_designations_epithets(figure_name: str, json_path: str, output_path: str):
+def generate_combined_naming_variants_epithets(figure_name: str, json_path: str, output_path: str):
     """
-    Generates a combined wordlist of all designations and epithets for a given figure.
+    Generates a combined wordlist of all naming variants and epithets for a given figure.
     Bezeichnung 1–4 and Epitheta 1–5 are combined and counted together.
     Output is saved as CSV with 'Wert' and 'Anzahl'.
     """
@@ -1720,7 +1720,7 @@ def run_keyword_menu(config_data, paths, data, book_name):
         reference_books = [r.strip() for r in references.split(",") if r.strip()]
 
     print("\n🎯 What should be the unit of comparison?")
-    print("[1] Designations (Bezeichnungen)")
+    print("[1] Naming variants (Bezeichnungen)")
     print("[2] Epithets (Epitheta)")
     print("[3] Combined")
 
@@ -1784,7 +1784,7 @@ def generate_keywords(
     output_path: str
 ):
     """
-    Calculates key terms (designations, epithets or both) for a figure or full work
+    Calculates key terms (naming variants, epithets or both) for a figure or full work
     compared to a reference corpus. Saves results as CSV (only values above threshold).
     """
     target_entries = safe_read_json(target_json, default=[])
@@ -1885,7 +1885,7 @@ def extract_tokens(entries: list[dict], unit: str) -> list[str]:
 def run_collocation_menu(config_data, paths, data, book_name):
     """
     Interactive menu to search for collocation contexts of a specific type
-    (designation or epithet), optionally restricted to a figure.
+    (naming variants or epithet), optionally restricted to a figure.
     Results can be shown in the console or saved as CSV.
     """
 
@@ -2463,7 +2463,7 @@ def update_collocations(sheet, json_path):
 
 def create_categorized_lemmas_sheet(wb, _, json_path):
     """
-    Creates a new worksheet 'lemmatisiert' with structured designations and epithets.
+    Creates a new worksheet 'lemmatisiert' with structured naming variants and epithets.
     Format and structure are copied from the 'Gesamt' sheet in the template.
     """
 
