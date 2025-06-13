@@ -1552,6 +1552,7 @@ def generate_wordlist_by_column(column_name: str, json_path: str, output_path: s
             writer.writerow([value, count])
 
     print(f"✅ Wordlist written to: {output_path}")
+    ask_to_open_file(output_path)
 
 def resolve_figure_name(name: str, entries: list[dict]) -> str | None:
     """
@@ -1624,6 +1625,7 @@ def generate_designations_for_figure(figure_name: str, json_path: str, output_pa
             writer.writerow([val, count])
 
     print(f"✅ Wordlist for '{resolved_name}' written to: {output_path}")
+    ask_to_open_file(output_path)
 
 def generate_epithets_for_figure(figure_name: str, json_path: str, output_path: str):
     entries = safe_read_json(json_path, default=[])
@@ -1649,6 +1651,7 @@ def generate_epithets_for_figure(figure_name: str, json_path: str, output_path: 
             writer.writerow([val, count])
 
     print(f"✅ Wordlist for epithets of '{resolved_name}' written to: {output_path}")
+    ask_to_open_file(output_path)
 
 def generate_combined_designations_epithets(figure_name: str, json_path: str, output_path: str):
     """
@@ -1683,6 +1686,7 @@ def generate_combined_designations_epithets(figure_name: str, json_path: str, ou
             writer.writerow([val, count])
 
     print(f"✅ Combined wordlist for '{resolved_name}' written to: {output_path}")
+    ask_to_open_file(output_path)
 
 def run_keyword_menu(config_data, paths, data, book_name):
     """
@@ -1761,6 +1765,7 @@ def run_keyword_menu(config_data, paths, data, book_name):
         )
 
     print(f"✅ Keyword analysis written to: {output_path}")
+    ask_to_open_file(output_path)
 
     print("\n🔁 Do you want to run another keyword analysis? [y/n]")
     again = ask_user_choice("> ", ["y", "n"])
@@ -2027,6 +2032,7 @@ def generate_collocations(
             for row in results:
                 writer.writerow(row)
         print(f"✅ Collocation results saved to: {output_path}")
+        ask_to_open_file(output_path)
 
 def load_collocation_sheet(config_data: dict, book_name: str) -> pd.DataFrame | None:
     """
@@ -2359,6 +2365,7 @@ def export_all_data_to_new_excel(book_name, paths, options):
 
     wb.save(target_path)
     print(f"✅ Export completed: {target_path}")
+    ask_to_open_file(target_path)
 
 def get_format_template(sheet, column_index):
     """
