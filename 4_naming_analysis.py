@@ -32,6 +32,33 @@ import plotly.express as px
 DataType = dict[str, Union[pd.DataFrame, Element, str, None]]
 tei_ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
+def ask_to_open_file(path: str):
+    """
+    Asks the user whether to open a given CSV or Excel file,
+    and opens it in the default system application (e.g., Excel)
+    if the user agrees.
+
+    :param path: Absolute or relative path to the file
+    """
+    if not os.path.isfile(path):
+        print(f"❌ File not found: {path}")
+        return
+
+    if not (path.endswith(".csv") or path.endswith(".xlsx")):
+        print("⚠️ File type not supported for automatic opening.")
+        return
+
+    filename = os.path.basename(path)
+    answer = input(f"📂 Do you want to open the file '{filename}' now? (y/n): ").strip().lower()
+    if answer != "y":
+        return
+
+    try:
+        os.startfile(os.path.abspath(path))  # only works on Windows
+    except Exception as e:
+        print(f"⚠️ Could not open file: {e}")
+
+
 def get_valid_verse_number(value, fallback=-1):
     """
     Tries to parse a verse number as integer.
