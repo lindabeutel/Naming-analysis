@@ -32,33 +32,6 @@ import plotly.express as px
 DataType = dict[str, Union[pd.DataFrame, Element, str, None]]
 tei_ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
-def ask_to_open_file(path: str):
-    """
-    Asks the user whether to open a given CSV or Excel file,
-    and opens it in the default system application (e.g., Excel)
-    if the user agrees.
-
-    :param path: Absolute or relative path to the file
-    """
-    if not os.path.isfile(path):
-        print(f"❌ File not found: {path}")
-        return
-
-    if not (path.endswith(".csv") or path.endswith(".xlsx")):
-        print("⚠️ File type not supported for automatic opening.")
-        return
-
-    filename = os.path.basename(path)
-    answer = input(f"📂 Do you want to open the file '{filename}' now? (y/n): ").strip().lower()
-    if answer != "y":
-        return
-
-    try:
-        os.startfile(os.path.abspath(path))  # only works on Windows
-    except Exception as e:
-        print(f"⚠️ Could not open file: {e}")
-
-
 def get_valid_verse_number(value, fallback=-1):
     """
     Tries to parse a verse number as integer.
@@ -1552,7 +1525,6 @@ def generate_wordlist_by_column(column_name: str, json_path: str, output_path: s
             writer.writerow([value, count])
 
     print(f"✅ Wordlist written to: {output_path}")
-    ask_to_open_file(output_path)
 
 def resolve_figure_name(name: str, entries: list[dict]) -> str | None:
     """
@@ -1625,7 +1597,6 @@ def generate_naming_variants_for_figure(figure_name: str, json_path: str, output
             writer.writerow([val, count])
 
     print(f"✅ Wordlist for '{resolved_name}' written to: {output_path}")
-    ask_to_open_file(output_path)
 
 def generate_epithets_for_figure(figure_name: str, json_path: str, output_path: str):
     entries = safe_read_json(json_path, default=[])
@@ -1651,7 +1622,6 @@ def generate_epithets_for_figure(figure_name: str, json_path: str, output_path: 
             writer.writerow([val, count])
 
     print(f"✅ Wordlist for epithets of '{resolved_name}' written to: {output_path}")
-    ask_to_open_file(output_path)
 
 def generate_combined_naming_variants_epithets(figure_name: str, json_path: str, output_path: str):
     """
@@ -1686,7 +1656,6 @@ def generate_combined_naming_variants_epithets(figure_name: str, json_path: str,
             writer.writerow([val, count])
 
     print(f"✅ Combined wordlist for '{resolved_name}' written to: {output_path}")
-    ask_to_open_file(output_path)
 
 def run_keyword_menu(config_data, paths, data, book_name):
     """
@@ -1765,7 +1734,6 @@ def run_keyword_menu(config_data, paths, data, book_name):
         )
 
     print(f"✅ Keyword analysis written to: {output_path}")
-    ask_to_open_file(output_path)
 
     print("\n🔁 Do you want to run another keyword analysis? [y/n]")
     again = ask_user_choice("> ", ["y", "n"])
@@ -2032,7 +2000,6 @@ def generate_collocations(
             for row in results:
                 writer.writerow(row)
         print(f"✅ Collocation results saved to: {output_path}")
-        ask_to_open_file(output_path)
 
 def load_collocation_sheet(config_data: dict, book_name: str) -> pd.DataFrame | None:
     """
@@ -2365,7 +2332,15 @@ def export_all_data_to_new_excel(book_name, paths, options):
 
     wb.save(target_path)
     print(f"✅ Export completed: {target_path}")
-    ask_to_open_file(target_path)
+
+    # Optional open
+    answer = input(
+        f"📂 Do you want to open the Excel file '{os.path.basename(target_path)}' now? (y/n): ").strip().lower()
+    if answer == "y":
+        try:
+            os.startfile(os.path.abspath(target_path))  # Only works on Windows
+        except Exception as e:
+            print(f"⚠️ Could not open file: {e}")
 
 def get_format_template(sheet, column_index):
     """
