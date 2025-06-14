@@ -1,0 +1,10 @@
+{
+  "load_excel": true,
+  "excel_path": "C:/Users/linda/OneDrive - stud.sbg.ac.at/Studium/Dissertation/4_Iwein/Anhang 2.xlsx",
+  "load_tei": true,
+  "tei_path": "C:/Users/linda/OneDrive - stud.sbg.ac.at/Studium/Dissertation/4_Iwein/IW.tei.xml",
+  "modus": "collect",
+  "check_naming_variants": true,
+  "fill_collocations": true,
+  "do_categorization": true
+}
