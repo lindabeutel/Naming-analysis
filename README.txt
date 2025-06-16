@@ -35,34 +35,3 @@ python run.py
 ```
 
 During execution, users can choose between **data collection** and **analysis mode**. Configuration settings are saved per book automatically.
-
----
-
-## 📁 Project Structure
-
-```bash
-.
-├── run.py                  # Main script to start the application
-├── naming_analysis/        # Central Python package containing:
-│   ├── __init__.py             # Package initialization
-│   ├── config.py              # Configuration & user prompts
-│   ├── controller.py          # Execution control flow
-│   ├── analysis.py            # Analysis functionality (wordlists, keywords, visualizations)
-│   ├── collection.py          # Interactive data collection & annotation
-│   ├── savers.py              # Functions for saving JSON data
-│   ├── loaders.py             # Loaders for Excel and TEI data
-│   ├── io_utils.py            # JSON read/write utilities
-│   ├── tei_utils.py           # TEI-specific XML processing functions
-│   ├── shared.py              # Common helpers (e.g., text normalization)
-│   ├── types.py               # Type definitions
-│   ├── exporter.py            # Export functionality (Excel)
-│   ├── validation.py          # Excel column validation
-│   └── project_setup.py       # Directory and session setup logic
-├── data/
-│   ├── template_excel.xlsx           # Excel template, located alongside run.py
-│   ├── naming_variants_dict.json     # Predefined naming patterns per book
-│   ├── lemma_normalization.json      # Normalization rules for lemma variants
-│   ├── ignored_lemmas.json           # Lemmata to ignore (e.g., function words)
-│   ├── lemma_categories.json         # Classification: 'a' = name, 'e' = epithet
-└── ...
-```
