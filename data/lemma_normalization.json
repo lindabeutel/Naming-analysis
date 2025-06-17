@@ -699,6 +699,9 @@
     "gimeit",
     "gmeite"
   ],
+  "gemüete": [
+    "gemuote"
+  ],
   "genaedec": [
     "genadige",
     "gnadeclicher"
@@ -873,6 +876,9 @@
   ],
   "gân": [
     "ganden"
+  ],
+  "gêret": [
+    "geret"
   ],
   "h": [
     "h"
@@ -1221,6 +1227,9 @@
   "Kalogreant": [
     "kâlogreandes",
     "kâlogrêant"
+  ],
+  "kampfgenôz": [
+    "kampfgenoz"
   ],
   "Kanabeus": [
     "chanabeus"
@@ -1627,7 +1636,8 @@
     "minos"
   ],
   "mit": [
-    "mit"
+    "mit",
+    "mittem"
   ],
   "mortgiric": [
     "mortgire"
@@ -2075,6 +2085,9 @@
     "sinon",
     "synon"
   ],
+  "slahen": [
+    "sluoc"
+  ],
   "smide": [
     "smide"
   ],
@@ -2115,6 +2128,9 @@
     "suone",
     "svn"
   ],
+  "sus": [
+    "sus"
+  ],
   "Sutri": [
     "sutria"
   ],
@@ -2140,6 +2156,7 @@
     "pin"
   ],
   "süeze": [
+    "suoze",
     "süeze"
   ],
   "Tantalus": [

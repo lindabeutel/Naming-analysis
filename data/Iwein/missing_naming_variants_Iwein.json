@@ -7220,5 +7220,771 @@
     "Bezeichnung": "",
     "Erzähler": "",
     "Status": "rejected"
+  },
+  {
+    "Benannte Figur": "Iwein",
+    "Vers": 7304,
+    "Eigennennung": "",
+    "Nennende Figur": "Die Junge vom Schwarzen Dorn",
+    "Bezeichnung": "ein sus geret man",
+    "Erzähler": "",
+    "Status": "confirmed",
+    "Kollokation": "si sprach < e ein sus geret man / den tot in minem namen kur / ode sin ere verlur , / min lip und unser beider lant / waeren bezzer verbrant ."
+  },
+  {
+    "Vers": 7360,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7367,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7370,
+    "Eigennennung": "min her",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Benannte Figur": "Gawein",
+    "Vers": 7371,
+    "Eigennennung": "",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "sinen kampfgenoz",
+    "Status": "confirmed",
+    "Kollokation": "sich verkunte min her iwein / wider sinen kampfgenoz ,"
+  },
+  {
+    "Vers": 7375,
+    "Eigennennung": "der ander",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7384,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7417,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7419,
+    "Eigennennung": "weizgot",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7420,
+    "Eigennennung": "got",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7426,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7431,
+    "Eigennennung": "min her",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7431,
+    "Eigennennung": "her gawein",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7431,
+    "Eigennennung": "min her gawein",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7444,
+    "Eigennennung": "ein man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7444,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Benannte Figur": "Gott (christlich)",
+    "Vers": 7464,
+    "Eigennennung": "",
+    "Nennende Figur": "Gawein",
+    "Bezeichnung": "weizgot",
+    "Erzähler": "",
+    "Status": "confirmed",
+    "Kollokation": "des sit ir weizgot wol wert ."
+  },
+  {
+    "Vers": 7471,
+    "Eigennennung": "genant",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7481,
+    "Eigennennung": "genant",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Benannte Figur": "Gawein",
+    "Vers": 7483,
+    "Eigennennung": "",
+    "Nennende Figur": "Iwein",
+    "Bezeichnung": "herre",
+    "Erzähler": "",
+    "Status": "confirmed",
+    "Kollokation": "herre , ich bin ez iwein . >"
+  },
+  {
+    "Vers": 7485,
+    "Eigennennung": "liebe",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7498,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7505,
+    "Eigennennung": "die minne",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7516,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7522,
+    "Eigennennung": "genant",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7523,
+    "Eigennennung": "min her",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7531,
+    "Eigennennung": "riter",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7536,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7557,
+    "Eigennennung": "her gawein",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7564,
+    "Eigennennung": "unser herre",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7568,
+    "Eigennennung": "her gawein",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7568,
+    "Eigennennung": "min her gawein",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7568,
+    "Eigennennung": "min her",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7579,
+    "Eigennennung": "her iwein",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7582,
+    "Eigennennung": "liebe",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7583,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7589,
+    "Eigennennung": "her gawein",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7589,
+    "Eigennennung": "min her gawein",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7589,
+    "Eigennennung": "min her",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7596,
+    "Eigennennung": "die minne",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7599,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7600,
+    "Eigennennung": "her gawein",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7615,
+    "Eigennennung": "genant",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7626,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7644,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7654,
+    "Eigennennung": "die juncvrouwen",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7655,
+    "Eigennennung": "maget",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7655,
+    "Eigennennung": "die maget",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7659,
+    "Eigennennung": "ir vater",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7659,
+    "Eigennennung": "vater",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7674,
+    "Eigennennung": "ein wip",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7680,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7727,
+    "Eigennennung": "der lewe",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7730,
+    "Eigennennung": "sines herren",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7735,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7741,
+    "Eigennennung": "der degen",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7755,
+    "Eigennennung": "genant",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7767,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7813,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7817,
+    "Eigennennung": "ein man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7817,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7826,
+    "Eigennennung": "vrou lunete",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7829,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7829,
+    "Eigennennung": "den man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Benannte Figur": "Gott (christlich)",
+    "Vers": 7832,
+    "Eigennennung": "",
+    "Nennende Figur": "Lunete",
+    "Bezeichnung": "weizgot",
+    "Erzähler": "",
+    "Status": "confirmed",
+    "Kollokation": "der ist ie weizgot ungereit ,"
+  },
+  {
+    "Vers": 7833,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7842,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7845,
+    "Eigennennung": "maget",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Benannte Figur": "Lunete",
+    "Vers": 7851,
+    "Eigennennung": "ich bin ein wip",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "confirmed",
+    "Kollokation": "ich bin ein wip : naem ich mich an / ze ratenne als ein wiser man , / so waer ich tumber danne ein kint ."
+  },
+  {
+    "Vers": 7852,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7853,
+    "Eigennennung": "ein kint",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7856,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7895,
+    "Eigennennung": "vrou lunete",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7902,
+    "Eigennennung": "wirt",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7916,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7927,
+    "Eigennennung": "der lewe",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Benannte Figur": "Gott (christlich)",
+    "Vers": 7955,
+    "Eigennennung": "",
+    "Nennende Figur": "Lunete",
+    "Bezeichnung": "got",
+    "Erzähler": "",
+    "Status": "confirmed",
+    "Kollokation": "si sprach < daz ich iech also bi / vunden han , des lob ich got . >"
+  },
+  {
+    "Vers": 7965,
+    "Eigennennung": "einer",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7970,
+    "Eigennennung": "herre",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7970,
+    "Eigennennung": "min herre",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7972,
+    "Eigennennung": "vrouwe",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 7972,
+    "Eigennennung": "min vrouwe",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8010,
+    "Eigennennung": "liebe",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8010,
+    "Eigennennung": "vrou lunete",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8018,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8040,
+    "Eigennennung": "einen gast",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8050,
+    "Eigennennung": "einer",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8062,
+    "Eigennennung": "krist",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8087,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8097,
+    "Eigennennung": "der herre",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8105,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8112,
+    "Eigennennung": "wirt",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8137,
+    "Eigennennung": "vrou lunete",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
+  },
+  {
+    "Vers": 8139,
+    "Eigennennung": "man",
+    "Nennende Figur": "",
+    "Bezeichnung": "",
+    "Erzähler": "",
+    "Status": "rejected"
   }
 ]
