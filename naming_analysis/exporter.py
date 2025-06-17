@@ -54,7 +54,16 @@ def export_all_data_to_new_excel(book_name, paths, options):
     target_path = os.path.join(project_dir, f"{book_name}_final.xlsx")
 
     # Copy the Excel file
-    shutil.copy(paths["original_excel"], target_path)
+    while True:
+        try:
+            shutil.copy(paths["original_excel"], target_path)
+            break  # Erfolgreich
+        except PermissionError:
+            print("❌ The Excel file is currently open or locked.")
+            print("🔁 Please close the file and try again.")
+            retry = input("🔁 Retry export? (y/n): ").strip().lower()
+            if retry != "y":
+                return
 
     wb = openpyxl.load_workbook(target_path)
     sheet = wb["Gesamt"]
