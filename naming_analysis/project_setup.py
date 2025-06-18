@@ -32,7 +32,7 @@ def initialize_project():
             categorization_last_verse (int): Last processed verse for categorization
             paths (dict): Dictionary of all file paths used in this session
     """
-    book_name = input("Which book are we working on today? (e.g., Iwein): ").strip()
+    book_name = input("Which book are we working on today? (e.g., Eneasroman): ").strip()
     book_name = book_name[0].upper() + book_name[1:]
 
     project_dir = os.path.join("data", book_name)
