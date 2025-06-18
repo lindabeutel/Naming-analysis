@@ -19,6 +19,7 @@ import pandas as pd
 import openpyxl
 from openpyxl.styles import PatternFill, Font, Alignment, Border
 from openpyxl.utils import get_column_letter
+from naming_analysis.shared import ask_user_choice
 
 from naming_analysis.io_utils import safe_read_json
 
@@ -84,8 +85,8 @@ def export_all_data_to_new_excel(book_name, paths, options):
     print(f"✅ Export completed: {target_path}")
 
     # Optional open
-    answer = input(
-        f"📂 Do you want to open the Excel file '{os.path.basename(target_path)}' now? (y/n): ").strip().lower()
+    answer = ask_user_choice(
+        f"📂 Do you want to open the Excel file '{os.path.basename(target_path)}' now? (y/n):", ["y", "n"]).strip().lower()
     if answer == "y":
         try:
             os.startfile(os.path.abspath(target_path))  # Only works on Windows
