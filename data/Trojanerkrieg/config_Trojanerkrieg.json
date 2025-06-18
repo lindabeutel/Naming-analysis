@@ -1,0 +1,10 @@
+{
+  "load_excel": true,
+  "excel_path": "C:/Users/linda/OneDrive - stud.sbg.ac.at/Studium/Dissertation/2_Trojanerkrieg/BEUTEL_DISS_Trojanerkrieg_Normalisiert.xlsx",
+  "load_tei": true,
+  "tei_path": "C:/Users/linda/OneDrive - stud.sbg.ac.at/Studium/Dissertation/2_Trojanerkrieg/TRO.tei.xml",
+  "modus": "collect",
+  "check_naming_variants": true,
+  "fill_collocations": true,
+  "do_categorization": true
+}
