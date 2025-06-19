@@ -102,3 +102,26 @@ def ask_user_choice(prompt: str, valid_options: list[str]) -> str:
         if user_input in valid_options:
             return user_input
         print(f"⚠️ Invalid input. Please select one of the following options: {', '.join(valid_options)}")
+
+def parse_verse_number(value, fallback=-1):
+    """
+    Attempts to extract a valid verse number as integer from various formats (float, str, int).
+    Example: '17.02' → 17; 18.9 → 18
+    Returns fallback if conversion fails.
+    """
+
+    try:
+        return float(str(value).replace(",", ".").strip())
+    except (ValueError, TypeError):
+        return fallback
+
+def is_same_verse_number(a, b, tolerance: float = 0.0001) -> bool:
+    """
+    Compares two verse numbers (e.g. 18, 18.07, "18.24").
+    Returns True if they are numerically equal within a small tolerance.
+    Falls parsing fails, compares as cleaned strings.
+    """
+    try:
+        return abs(float(str(a).replace(",", ".")) - float(str(b).replace(",", "."))) < tolerance
+    except (ValueError, TypeError):
+        return False
