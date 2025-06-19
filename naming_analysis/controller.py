@@ -55,6 +55,21 @@ def setup_project_session():
         run_analysis_menu(config_data, paths, data, book_name)
         exit(0)
 
+    elif config_data.get("modus") == "export":
+        options = {
+            "benennungen": config_data.get("check_naming_variants", True),
+            "kollokationen": config_data.get("fill_collocations", True),
+            "kategorisierung": config_data.get("do_categorization", True)
+        }
+        paths["original_excel"] = data.get("excel_path")
+        export_all_data_to_new_excel(book_name, paths, options)
+
+        analyze = ask_user_choice("Do you want to run an analysis now? (y/n): ", ["y", "n"])
+        if analyze == "y":
+            run_analysis_menu(config_data, paths, data, book_name)
+
+        exit(0)
+
     if mode_flags["check_naming_variants"]:
         last_verse = naming_variants_last_verse
     elif mode_flags["perform_collocations"]:

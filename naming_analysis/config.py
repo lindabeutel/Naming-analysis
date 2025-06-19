@@ -129,13 +129,20 @@ def ask_config_interactively(config_path: str) -> tuple[dict, DataType]:
             print("❌ No TEI file was loaded. Disabling TEI-related processing.")
             config_data["load_tei"] = False
 
-    print("Do you want to collect new data or analyze existing data?")
-    print("[1] Collect data")
-    print("[2] Analyze data")
-    mode = ask_user_choice("> ", ["1", "2"])
-    config_data["modus"] = "collect" if mode == "1" else "analyze"
+    print("What would you like to do today?")
+    print("[1] Collect new data")
+    print("[2] Analyze existing data")
+    print("[3] Export current results")
+    mode = ask_user_choice("> ", ["1", "2", "3"])
 
-    if config_data["modus"] == "analyze":
+    if mode == "1":
+        config_data["modus"] = "collect"
+    elif mode == "2":
+        config_data["modus"] = "analyze"
+    else:
+        config_data["modus"] = "export"
+
+    if config_data["modus"] in {"analyze", "export"}:
         save_config(config_path, config_data)
         return config_data, data
 
