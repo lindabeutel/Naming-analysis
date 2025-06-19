@@ -60,13 +60,17 @@ def run_data_collection(
     Returns updated (missing_naming_variants, collocation_data, categorized_entries).
     """
 
-    verse = root.findall('.//tei:l', tei_ns)
-    if not verse:
-        print("⚠️ No verses found.")
-        return missing_naming_variants, collocation_data, categorized_entries
-
     # --- TEI-based loop (only when check_naming_variants is active)
     if check_naming_variants:
+        if root is None:
+            print("⚠️ No TEI root found – cannot perform TEI-based iteration.")
+            return missing_naming_variants, collocation_data, categorized_entries
+
+        verse = root.findall('.//tei:l', tei_ns)
+        if not verse:
+            print("⚠️ No verses found in TEI.")
+            return missing_naming_variants, collocation_data, categorized_entries
+
         start_index = next(
             (i for i, line in enumerate(verse) if get_valid_verse_number(line.get("n")) > last_verse),
             0
