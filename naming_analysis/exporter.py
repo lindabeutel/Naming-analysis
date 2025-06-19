@@ -62,7 +62,7 @@ def export_all_data_to_new_excel(book_name, paths, options):
         except PermissionError:
             print("❌ The Excel file is currently open or locked.")
             print("🔁 Please close the file and try again.")
-            retry = input("🔁 Retry export? (y/n): ").strip().lower()
+            retry = ask_user_choice("🔁 Retry export? (y/n): ", ["y", "n"])
             if retry != "y":
                 return
 
