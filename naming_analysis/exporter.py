@@ -54,6 +54,14 @@ def export_all_data_to_new_excel(book_name, paths, options):
     os.makedirs(project_dir, exist_ok=True)
     target_path = os.path.join(project_dir, f"{book_name}_final.xlsx")
 
+    # Prevent overwriting if source and target are identical – warn and allow user to choose
+    if os.path.abspath(paths["original_excel"]) == os.path.abspath(target_path):
+        print(f"⚠️ The export target file is the same as the original: {target_path}")
+        decision = ask_user_choice("❓ Do you want to overwrite it? (y = overwrite / n = enter new name): ", ["y", "n"])
+        if decision != "y":
+            new_name = input("📝 Enter a new filename (e.g. 'Eneasroman_final_v2.xlsx'): ").strip()
+            target_path = os.path.join(project_dir, new_name)
+
     # Copy the Excel file
     while True:
         try:
