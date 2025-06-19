@@ -786,6 +786,12 @@ def run_visualization_menu(paths, book_name):
     print("[3] Combined")
     variant_type = ask_user_choice("> ", ["1", "2", "3"])
 
+    variant_label = {
+        "1": "Naming variants",
+        "2": "Epithets",
+        "3": "Naming variants & epithets"
+    }[variant_type]
+
     # Step 3 – Prepare long-format DataFrame
     df_figure = df[df["Benannte Figur"] == figure_name].copy()
     naming_cols = [f"Bezeichnung {i}" for i in range(1, 5)]
@@ -887,12 +893,12 @@ def run_visualization_menu(paths, book_name):
 
     fig.update_layout(
         title=dict(
-            text=f"Visualization for '{figure_name}'",
+            text=f"Visualization for {variant_label} '{figure_name}'",
             x=0.5,
             xanchor="center"
         ),
         xaxis_title="Verse",
-        yaxis_title="Naming variants / epithets",
+        yaxis_title=variant_label,
         font=dict(
             family="Times New Roman",
             size=12
