@@ -105,11 +105,19 @@ def ask_user_choice(prompt: str, valid_options: list[str]) -> str:
 
 def parse_verse_number(value, fallback=-1):
     """
-    Attempts to extract a valid verse number as integer from various formats (float, str, int).
-    Example: '17.02' → 17; 18.9 → 18
-    Returns fallback if conversion fails.
-    """
+    Converts a given value (string, float, int) into a verse number as float.
 
+    - Handles strings with commas or periods (e.g., "17,02" → 17.02).
+    - Returns a float representing the verse number (e.g., "18.7" → 18.7).
+    - If the value is invalid or cannot be parsed, returns the fallback (default: -1).
+
+    Parameters:
+        value (any): The input to be parsed as a verse number.
+        fallback (float|int): Value to return if parsing fails.
+
+    Returns:
+        float: Parsed verse number, or fallback on failure.
+    """
     try:
         return float(str(value).replace(",", ".").strip())
     except (ValueError, TypeError):
@@ -117,9 +125,24 @@ def parse_verse_number(value, fallback=-1):
 
 def is_same_verse_number(a, b, tolerance: float = 0.0001) -> bool:
     """
-    Compares two verse numbers (e.g. 18, 18.07, "18.24").
-    Returns True if they are numerically equal within a small tolerance.
-    Falls parsing fails, compares as cleaned strings.
+    Compares two verse numbers numerically within a given tolerance.
+
+    - Accepts input as int, float, or string (with "." or "," as decimal separator).
+    - Returns True if the absolute numeric difference between a and b is smaller than the tolerance.
+    - If parsing fails for either value, returns False.
+
+    Examples:
+        is_same_verse_number("18", "18.00001") → True
+        is_same_verse_number("18", "18.24")    → False
+        is_same_verse_number("foo", 18)        → False
+
+    Parameters:
+        a (any): First verse number to compare.
+        b (any): Second verse number to compare.
+        tolerance (float): Allowed numeric deviation (default: 0.0001).
+
+    Returns:
+        bool: True if numbers are equal within tolerance, else False.
     """
     try:
         return abs(float(str(a).replace(",", ".")) - float(str(b).replace(",", "."))) < tolerance
