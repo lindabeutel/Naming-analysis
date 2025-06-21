@@ -7,6 +7,8 @@ Includes text normalization, fallback selection, user interaction, and data clea
 import re
 import pandas as pd
 
+from copy import deepcopy
+
 def normalize_text(text):
     """
     Normalizes a given text by applying character substitutions and standardizations.
@@ -172,3 +174,47 @@ def standardize_verse_number(entry):
         entry = entry.copy()
         entry["Vers"] = parse_verse_number(entry["Vers"])
     return entry
+
+def sorted_entries(entries: list) -> list:
+    """
+    Returns a cleaned and consistently sorted list of entry dictionaries.
+
+    Entries are:
+    - filtered to include only those with a valid numeric 'Vers' value
+    - sorted by:
+        (1) verse number (numerically, including decimals),
+        (2) the decimal part (e.g. 12.30 > 12.24),
+        (3) the first non-empty string among 'Eigennennung', 'Bezeichnung', or 'Erzähler' (case-insensitive)
+
+    Parameters:
+        entries (list): A list of dictionaries representing naming or categorization entries.
+
+    Returns:
+        list: The cleaned and sorted list of entries.
+    """
+
+    def sort_key(entry):
+        """
+        Sorting key:
+        - numerical verse number split into integer and decimal parts
+        - alphabetical name resolution fallback
+        """
+        v = parse_verse_number(entry.get("Vers"))
+        return (
+            int(v),
+            int(round((v % 1) * 100)),
+            get_first_valid_text(
+                entry.get("Eigennennung"),
+                entry.get("Bezeichnung"),
+                entry.get("Erzähler")
+            ).strip().lower()
+        )
+
+    entries_clean = [
+        e for e in deepcopy(entries)
+        if isinstance(e, dict)
+        and parse_verse_number(e.get("Vers")) != -1
+        and not math.isnan(parse_verse_number(e.get("Vers")))
+    ]
+
+    return sorted(entries_clean, key=sort_key)

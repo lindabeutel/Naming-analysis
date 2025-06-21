@@ -9,8 +9,7 @@ import json
 import time
 import os
 
-from naming_analysis.shared import standardize_verse_number
-from naming_analysis.savers import sorted_entries
+from naming_analysis.shared import sorted_entries, standardize_verse_number
 
 def safe_write_json(data, path, sort_keys=False, merge=False):
     """
