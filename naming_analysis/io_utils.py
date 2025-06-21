@@ -10,6 +10,7 @@ import time
 import os
 
 from naming_analysis.shared import standardize_verse_number
+from naming_analysis.savers import sorted_entries
 
 def safe_write_json(data, path, sort_keys=False, merge=False):
     """
@@ -59,9 +60,10 @@ def safe_write_json(data, path, sort_keys=False, merge=False):
             elif isinstance(data, set):
                 data = list(data)
 
-            # Normalize 'Vers' field if present (outside of merge)
-            if isinstance(data, list) and all(isinstance(x, dict) for x in data):
+            # Standardize and sort if applicable
+            if isinstance(data, list) and all(isinstance(x, dict) and "Vers" in x for x in data):
                 data = [standardize_verse_number(entry) for entry in data]
+                data = sorted_entries(data)
             elif isinstance(data, dict) and "Vers" in data:
                 data = standardize_verse_number(data)
 
@@ -85,26 +87,27 @@ def safe_write_json(data, path, sort_keys=False, merge=False):
 def safe_read_json(path, default=None):
     """
     Safely reads a JSON file and returns its content.
-    Applies automatic standardization of 'Vers' fields to ensure consistent float formatting
-    for numerical sorting and further processing.
+    If the content is a list of dicts with 'Vers', entries are normalized and sorted.
 
     Parameters:
         path (str): Path to the JSON file.
         default (any): Fallback value in case of read failure.
 
     Returns:
-        any: Parsed JSON content with standardized 'Vers' fields, or fallback structure.
+        any: Parsed and optionally sorted JSON content, or fallback structure.
     """
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
 
-            if isinstance(data, list) and all(isinstance(x, dict) for x in data):
-                return [standardize_verse_number(x) for x in data]
+            if isinstance(data, list) and all(isinstance(x, dict) and "Vers" in x for x in data):
+                data = [standardize_verse_number(x) for x in data]
+                return sorted_entries(data)
+
             elif isinstance(data, dict) and "Vers" in data:
                 return standardize_verse_number(data)
-            else:
-                return data
+
+            return data
 
     except FileNotFoundError:
         print(f"⚠️ File not found: {path} – using fallback structure.")
