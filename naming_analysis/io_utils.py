@@ -84,19 +84,28 @@ def safe_write_json(data, path, sort_keys=False, merge=False):
 
 def safe_read_json(path, default=None):
     """
-    Safely reads JSON content from a file.
-    Returns a default value if the file is missing, unreadable, or access is denied.
+    Safely reads a JSON file and returns its content.
+    Applies automatic standardization of 'Vers' fields to ensure consistent float formatting
+    for numerical sorting and further processing.
 
     Parameters:
-        path (str): File path to read.
-        default (any): Default return value in case of failure.
+        path (str): Path to the JSON file.
+        default (any): Fallback value in case of read failure.
 
     Returns:
-        any: Parsed JSON content or fallback value.
+        any: Parsed JSON content with standardized 'Vers' fields, or fallback structure.
     """
     try:
         with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+
+            if isinstance(data, list) and all(isinstance(x, dict) for x in data):
+                return [standardize_verse_number(x) for x in data]
+            elif isinstance(data, dict) and "Vers" in data:
+                return standardize_verse_number(data)
+            else:
+                return data
+
     except FileNotFoundError:
         print(f"⚠️ File not found: {path} – using fallback structure.")
         return default if default is not None else {}
