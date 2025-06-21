@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 from naming_analysis.io_utils import safe_read_json, safe_write_json
 from naming_analysis.tei_utils import normalize_tei_text
 from naming_analysis.shared import ask_user_choice
-from naming_analysis.types import DataType
+from naming_analysis.project_types import DataType
 from naming_analysis.validation import check_required_columns
 from naming_analysis.loaders import load_data
 

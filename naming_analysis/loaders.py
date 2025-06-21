@@ -17,7 +17,7 @@ from naming_analysis.io_utils import safe_read_json, safe_write_json
 from naming_analysis.shared import ask_user_choice
 from naming_analysis.tei_utils import tei_ns, normalize_tei_text
 from naming_analysis.validation import check_required_columns,has_collocations_column
-from naming_analysis.types import DataType
+from naming_analysis.project_types import DataType
 
 def load_data(load_excel: bool = False, load_tei: bool = False) -> DataType:
     """
