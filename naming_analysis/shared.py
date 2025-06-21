@@ -148,3 +148,27 @@ def is_same_verse_number(a, b, tolerance: float = 0.0001) -> bool:
         return abs(float(str(a).replace(",", ".")) - float(str(b).replace(",", "."))) < tolerance
     except (ValueError, TypeError):
         return False
+
+def standardize_verse_number(entry):
+    """
+    Ensures that the 'Vers' field in a dictionary is stored as a float.
+
+    This function is used to normalize verse values from JSON or Excel
+    sources. It ensures that all 'Vers' fields are converted into consistent
+    float representations, enabling correct sorting, comparison, and numeric logic.
+
+    Examples:
+        {"Vers": "15"}      → {"Vers": 15.0}
+        {"Vers": "12,3"}    → {"Vers": 12.3}
+        {"Vers": 18.75}     → {"Vers": 18.75}
+
+    Parameters:
+        entry (dict): A data dictionary that may contain a 'Vers' field.
+
+    Returns:
+        dict: A copy of the original dictionary with 'Vers' normalized as float (if present).
+    """
+    if isinstance(entry, dict) and "Vers" in entry:
+        entry = entry.copy()
+        entry["Vers"] = parse_verse_number(entry["Vers"])
+    return entry

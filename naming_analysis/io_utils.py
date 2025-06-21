@@ -9,6 +9,8 @@ import json
 import time
 import os
 
+from naming_analysis.shared import standardize_verse_number
+
 def safe_write_json(data, path, sort_keys=False, merge=False):
     """
     Safely writes data to a JSON file.
@@ -44,7 +46,7 @@ def safe_write_json(data, path, sort_keys=False, merge=False):
                                 entry.get("Eigennennung") or entry.get("Bezeichnung") or entry.get("Erzähler")
                             )
                             if key not in seen:
-                                merged.append(entry)
+                                merged.append(standardize_verse_number(entry))
                                 seen.add(key)
                         data = merged
                     else:
@@ -56,6 +58,12 @@ def safe_write_json(data, path, sort_keys=False, merge=False):
 
             elif isinstance(data, set):
                 data = list(data)
+
+            # Normalize 'Vers' field if present (outside of merge)
+            if isinstance(data, list) and all(isinstance(x, dict) for x in data):
+                data = [standardize_verse_number(entry) for entry in data]
+            elif isinstance(data, dict) and "Vers" in data:
+                data = standardize_verse_number(data)
 
             with open(path, "w", encoding="utf-8") as f:
                 json.dump(
