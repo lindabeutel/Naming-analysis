@@ -398,7 +398,7 @@ def run_keyword_menu(config_data, paths, data, book_name):
         "3": "combined"
     }[unit_choice]
 
-    print("\n🧪 Enter significance threshold (Log-Likelihood G²), default = 3.84:")
+    print("\n🧪 Type in significance threshold (Log-Likelihood G²), for default = 3.84 press 'Enter':")
     threshold_input = input("> ").strip()
     try:
         threshold = float(threshold_input) if threshold_input else 3.84
