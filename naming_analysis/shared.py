@@ -4,6 +4,7 @@ shared.py
 General-purpose helper functions used throughout the project.
 Includes text normalization, fallback selection, user interaction, and data cleaning utilities."""
 
+import math
 import re
 import pandas as pd
 
