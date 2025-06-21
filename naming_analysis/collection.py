@@ -11,6 +11,7 @@ All functionality in this module is designed for interactive use during
 the data collection phase of the project.
 """
 import re
+import math
 import json
 import pandas as pd
 from xml.etree.ElementTree import Element
@@ -172,11 +173,12 @@ def run_data_collection(
 
         # Extract and sort valid verse numbers from Excel
         vers_list = sorted(set(
-            parse_verse_number(v) for v in df["Vers"] if parse_verse_number(v) != -1
+            v for v in (parse_verse_number(v) for v in df["Vers"])
+            if v != -1 and not math.isnan(v)
         ))
 
         for verse_number in vers_list:
-            verse_number = f"{verse_number:.2f}"
+            verse_number = parse_verse_number(verse_number)
 
             # Collocations
             if perform_collocations:
@@ -188,7 +190,7 @@ def run_data_collection(
                     )
             # Categorization
             if perform_categorization:
-                df_verse = df[df["Vers"].apply(lambda v: f"{v:.2f}") == verse_number]
+                df_verse = df[df["Vers"].apply(lambda v: is_same_verse_number(v, verse_number))]
                 entries = df_verse.to_dict(orient="records")
 
                 for entry in entries:
@@ -234,7 +236,7 @@ def run_data_collection(
             # Save progress after each verse
             save_progress(
                 missing_naming_variants=missing_naming_variants,
-                last_processed_verse=int(float(verse_number)),
+                last_processed_verse = int(parse_verse_number(verse_number)),
                 paths=paths,
                 check_naming_variants=check_naming_variants,
                 perform_collocations=perform_collocations,
