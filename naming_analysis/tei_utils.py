@@ -5,26 +5,36 @@ Utility functions for working with TEI-XML documents.
 Includes normalization of <seg> elements and retrieval of verse context.
 """
 
-from naming_analysis.shared import normalize_text
+from naming_analysis.shared import normalize_text, parse_verse_number
 
 tei_ns = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
 def get_valid_verse_number(value, fallback=-1):
     """
-    Tries to parse a verse number as integer.
-    Returns fallback if conversion fails (e.g., empty, NaN, wrong type).
+    Parses and returns a valid verse number as float.
+
+    This function ensures that all verse identifiers (e.g., from TEI @n attributes or
+    Excel 'Vers' fields) are interpreted numerically and retain any decimal precision.
+
+    It accepts values in various formats, such as
+    - strings with commas or dots (e.g. "15,2" or "15.2")
+    - plain integers or floats (e.g., 17 or 18.0)
+
+    All returned values are of type float:
+    - "15" → 15.0
+    - "15,08" → 15.08
+    - "16.75" → 16.75
+
+    If parsing fails (e.g., non-numeric input), the specified fallback is returned.
 
     Parameters:
-        value (any): Input value to parse.
-        fallback (int): Value to return on failure.
+        value (any): The input value representing a verse number.
+        fallback (float | int): The value to return if parsing fails (default: -1).
 
     Returns:
-        int: Validated verse number or fallback.
+        float: A parsed verse number as float, or fallback on failure.
     """
-    try:
-        return int(str(value).strip())
-    except (ValueError, TypeError):
-        return fallback
+    return parse_verse_number(value, fallback=fallback)
 
 def normalize_tei_text(root):
     """
