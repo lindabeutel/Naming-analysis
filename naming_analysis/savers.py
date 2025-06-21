@@ -11,9 +11,10 @@ the naming analysis process. It includes:
 All JSON write operations rely on the unified `safe_write_json()` utility
 from `io_utils.py`.
 """
+import math
+
 from naming_analysis.io_utils import safe_write_json, safe_read_json
-from naming_analysis.shared import get_first_valid_text
-from naming_analysis.tei_utils import get_valid_verse_number
+from naming_analysis.shared import get_first_valid_text, parse_verse_number
 from copy import deepcopy
 
 def save_progress(
@@ -138,12 +139,11 @@ def sorted_entries(entries: list) -> list:
     Returns a cleaned and consistently sorted list of entry dictionaries.
 
     Entries are:
-    - filtered to include only those with a valid integer 'Vers' value
+    - filtered to include only those with a valid numeric 'Vers' value
     - sorted by:
-        (1) verse number (numerical),
-        (2) the first non-empty string among 'Eigennennung', 'Bezeichnung', or 'Erzähler' (case-insensitive)
-
-    Used to ensure consistent ordering when comparing or saving naming variants or categorized entries.
+        (1) verse number (numerically, including decimals),
+        (2) the decimal part (e.g. 12.30 > 12.24),
+        (3) the first non-empty string among 'Eigennennung', 'Bezeichnung', or 'Erzähler' (case-insensitive)
 
     Parameters:
         entries (list): A list of dictionaries representing naming or categorization entries.
@@ -151,21 +151,29 @@ def sorted_entries(entries: list) -> list:
     Returns:
         list: The cleaned and sorted list of entries.
     """
-    # Only keep entries with a valid numeric "Vers" value
+
+    def sort_key(entry):
+        """
+        Sorting key:
+        - numerical verse number split into integer and decimal parts
+        - alphabetical name resolution fallback
+        """
+        v = parse_verse_number(entry.get("Vers"))
+        return (
+            int(v),
+            int(round((v % 1) * 100)),
+            get_first_valid_text(
+                entry.get("Eigennennung"),
+                entry.get("Bezeichnung"),
+                entry.get("Erzähler")
+            ).strip().lower()
+        )
+
     entries_clean = [
         e for e in deepcopy(entries)
         if isinstance(e, dict)
-        and str(e.get("Vers", "")).strip().isdigit()
+        and parse_verse_number(e.get("Vers")) != -1
+        and not math.isnan(parse_verse_number(e.get("Vers")))
     ]
 
-    return sorted(
-        entries_clean,
-        key=lambda x: (
-            get_valid_verse_number(x.get("Vers")),
-            get_first_valid_text(
-                x.get("Eigennennung"),
-                x.get("Bezeichnung"),
-                x.get("Erzähler")
-            ).strip().lower()
-        )
-    )
+    return sorted(entries_clean, key=sort_key)
