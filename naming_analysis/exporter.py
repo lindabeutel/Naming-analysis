@@ -152,7 +152,14 @@ def insert_naming_variants(sheet, json_path):
                 cell.font = font_tpl
                 cell.alignment = alignment_tpl
                 cell.border = border_tpl
-                cell.number_format = number_format_tpl
+                # Format "Vers" column (column 2): 0 or 0.00
+                if col_num == 2 and isinstance(value, (int, float)):
+                    if value % 1 == 0:
+                        cell.number_format = "0"
+                    else:
+                        cell.number_format = "0.00"
+                else:
+                    cell.number_format = number_format_tpl
 
             cell.fill = fill_color
 
@@ -261,7 +268,14 @@ def create_categorized_lemmas_sheet(wb, _, json_path):
             cell.font = regular_font
             cell.alignment = default_alignment
             cell.border = default_border
-            cell.number_format = "General"
+            # Format "Vers" column: 0 or 0.00
+            if header == "Vers" and isinstance(row[header], (int, float)):
+                if row[header] % 1 == 0:
+                    cell.number_format = "0"
+                else:
+                    cell.number_format = "0.00"
+            else:
+                cell.number_format = "General"
 
     # Freeze only the first row
     ws_new.freeze_panes = "A2"
