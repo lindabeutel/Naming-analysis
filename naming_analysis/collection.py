@@ -79,7 +79,7 @@ def run_data_collection(
             0
         )
 
-        print(f"🔁 Starting TEI iteration from verse {int(verse[start_index].get('n'))} (Index {start_index})")
+        print(f"🔁 Starting TEI iteration from verse {verse[start_index].get('n')} (Index {start_index})")
 
         for line in verse[start_index:]:
             verse_number = get_valid_verse_number(line.get("n"))
@@ -89,7 +89,7 @@ def run_data_collection(
 
             # Naming detection
             missing_naming_variants = check_and_extend_namings(
-                verse_number,
+                int(verse_number),
                 verse_text,
                 normalized_verse,
                 df,
@@ -160,7 +160,7 @@ def run_data_collection(
             # Save progress after each verse
             save_progress(
                 missing_naming_variants=missing_naming_variants,
-                last_processed_verse=verse_number,
+                last_processed_verse=int(verse_number),
                 paths=paths,
                 check_naming_variants=check_naming_variants,
                 perform_collocations=perform_collocations,
@@ -236,7 +236,7 @@ def run_data_collection(
             # Save progress after each verse
             save_progress(
                 missing_naming_variants=missing_naming_variants,
-                last_processed_verse = int(parse_verse_number(verse_number)),
+                last_processed_verse = int(verse_number),
                 paths=paths,
                 check_naming_variants=check_naming_variants,
                 perform_collocations=perform_collocations,
