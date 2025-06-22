@@ -43,7 +43,9 @@ def safe_write_json(data, path, sort_keys=False, merge=False):
                             key = (
                                 entry.get("Vers"),
                                 entry.get("Benannte Figur"),
-                                entry.get("Eigennennung") or entry.get("Bezeichnung") or entry.get("Erzähler")
+                                entry.get("Bezeichnung"),
+                                entry.get("Erzähler"),
+                                entry.get("Eigennennung")
                             )
                             if key not in seen:
                                 merged.append(standardize_verse_number(entry))
