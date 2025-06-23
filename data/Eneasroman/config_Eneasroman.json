@@ -1,9 +1,6 @@
 {
   "load_excel": true,
-  "excel_path": "C:/Users/linda/OneDrive - stud.sbg.ac.at/Studium/Dissertation/1_Eneasroman/FÜR_PROGRAMM_Eneas_Bezeichnungsformen.xlsx",
+  "excel_path": "C:/Users/linda/OneDrive - stud.sbg.ac.at/Studium/Dissertation/Programm/data/Eneasroman/Eneasroman_final.xlsx",
   "load_tei": false,
-  "modus": "collect",
-  "check_naming_variants": false,
-  "fill_collocations": false,
-  "do_categorization": true
+  "modus": "analyze"
 }
