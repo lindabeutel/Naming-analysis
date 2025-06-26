@@ -1,7 +1,9 @@
 {
   "load_excel": true,
-  "excel_path": "C:/Users/linda/OneDrive - stud.sbg.ac.at/Studium/Dissertation/3_Rolandslied/BEUTEL_DISS_Rolandslied_Bezeichnungsformen.xlsx",
-  "load_tei": true,
-  "tei_path": "C:/Users/linda/OneDrive - stud.sbg.ac.at/Studium/Dissertation/3_Rolandslied/ROL.tei.xml",
-  "modus": "analyze"
+  "excel_path": "C:/Users/linda/OneDrive - stud.sbg.ac.at/Studium/Dissertation/3_Rolandslied/FÜR_PROGRAMM_Rolandslied_Bezeichnungsformen.xlsx",
+  "load_tei": false,
+  "modus": "collect",
+  "check_naming_variants": false,
+  "fill_collocations": false,
+  "do_categorization": true
 }
