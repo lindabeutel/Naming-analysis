@@ -6,6 +6,7 @@ Used throughout the project to persist progress, annotations, and configuration.
 """
 
 import json
+import math
 import time
 import os
 
@@ -40,12 +41,10 @@ def safe_write_json(data, path, sort_keys=False, merge=False):
                         seen = set()
                         merged = []
                         for entry in existing + data:
-                            key = (
-                                entry.get("Vers"),
-                                entry.get("Benannte Figur"),
-                                entry.get("Bezeichnung"),
-                                entry.get("Erzähler"),
-                                entry.get("Eigennennung")
+                            key = tuple(
+                                None if (isinstance(entry.get(k), float) and math.isnan(entry.get(k)))
+                                else entry.get(k)
+                                for k in ("Vers", "Benannte Figur", "Bezeichnung", "Erzähler", "Eigennennung")
                             )
                             if key not in seen:
                                 merged.append(standardize_verse_number(entry))
