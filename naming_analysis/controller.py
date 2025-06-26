@@ -146,12 +146,22 @@ def finalize_and_prompt(results, data, paths, book_name, config_data):
     """
     Offers the user optional export and analysis steps after data collection is complete.
     """
-    export = ask_user_choice("Do you want to export all results? (y/n): ", ["y", "n"])
-    if export == "y":
+    print("\n📤 Export results:")
+    print(" [1] Naming variants")
+    print(" [2] Collocations")
+    print(" [3] Categorizations")
+    print(" [4] All of the above")
+    print(" [0] No export")
+
+    export = ask_user_choice("👉 Please select one or more (e.g., '1,3' or '4'): ",
+                             ["0", "1", "2", "3", "4", "1,2", "1,3", "2,3", "1,2,3"])
+
+    if export != "0":
+        selected = export.split(",") if export != "4" else ["1", "2", "3"]
         options = {
-            "benennungen": config_data["check_naming_variants"],
-            "kollokationen": config_data["fill_collocations"],
-            "kategorisierung": config_data["do_categorization"]
+            "benennungen": "1" in selected,
+            "kollokationen": "2" in selected,
+            "kategorisierung": "3" in selected
         }
         paths["original_excel"] = data.get("excel_path")
         export_all_data_to_new_excel(book_name, paths, options)
