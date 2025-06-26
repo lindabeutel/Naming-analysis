@@ -174,8 +174,10 @@ def run_data_collection(
         # Extract and sort valid verse numbers from Excel
         vers_list = sorted(set(
             v for v in (parse_verse_number(v) for v in df["Vers"])
-            if v != -1 and not math.isnan(v)
+            if v != -1 and not math.isnan(v) and v > last_verse
         ))
+
+        print(f"▶️ Resuming from last categorized verse: {last_verse}")
 
         for verse_number in vers_list:
             verse_number = parse_verse_number(verse_number)
