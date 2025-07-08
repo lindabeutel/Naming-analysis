@@ -18,7 +18,7 @@
   },
   {
     "Benannte Figur": "Hartmann",
-    "Vers": 21,
+    "Vers": 21.0,
     "Eigennennung": "ein riter",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -206,13 +206,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Iwein",
+    "Benannte Figur": "Segremors",
     "Vers": 88.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "Îwein",
-    "Bezeichnung 1": "Iwein",
+    "Erzähler": "Segremors",
+    "Bezeichnung 1": "Segremors",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -223,13 +223,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Segremors",
+    "Benannte Figur": "Iwein",
     "Vers": 88.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "Segremors",
-    "Bezeichnung 1": "Segremors",
+    "Erzähler": "Îwein",
+    "Bezeichnung 1": "Iwein",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -343,7 +343,7 @@
   },
   {
     "Benannte Figur": "Kalogreant",
-    "Vers": 110,
+    "Vers": 110.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -447,7 +447,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 155,
+    "Vers": 155.0,
     "Eigennennung": "",
     "Nennende Figur": "Ginover",
     "Bezeichnung": "got",
@@ -653,7 +653,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 296,
+    "Vers": 296.0,
     "Eigennennung": "",
     "Nennende Figur": "Kalogreant",
     "Bezeichnung": "got",
@@ -672,7 +672,7 @@
   },
   {
     "Benannte Figur": "Burgherr von Breziljan",
-    "Vers": 305,
+    "Vers": 305.0,
     "Eigennennung": "",
     "Nennende Figur": "Kalogreant",
     "Bezeichnung": "des wirtes",
@@ -708,7 +708,7 @@
   },
   {
     "Benannte Figur": "Kalogreant",
-    "Vers": 328,
+    "Vers": 328.0,
     "Eigennennung": "ich unsaeliger man",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -744,7 +744,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 338,
+    "Vers": 338.0,
     "Eigennennung": "",
     "Nennende Figur": "Kalogreant",
     "Bezeichnung": "weizgot",
@@ -865,7 +865,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 393,
+    "Vers": 393.0,
     "Eigennennung": "",
     "Nennende Figur": "Kalogreant",
     "Bezeichnung": "gote",
@@ -900,7 +900,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 416.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Kalogreant",
@@ -969,7 +969,7 @@
   },
   {
     "Benannte Figur": "Waldmensch",
-    "Vers": 488,
+    "Vers": 488.0,
     "Eigennennung": "ein man",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -987,7 +987,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 502.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Kalogreant",
@@ -1005,7 +1005,7 @@
   },
   {
     "Benannte Figur": "Waldmensch",
-    "Vers": 514,
+    "Vers": 514.0,
     "Eigennennung": "",
     "Nennende Figur": "Kalogreant",
     "Bezeichnung": "herre",
@@ -1092,7 +1092,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 654,
+    "Vers": 654.0,
     "Eigennennung": "",
     "Nennende Figur": "Kalogreant",
     "Bezeichnung": "gotes",
@@ -1145,7 +1145,7 @@
   },
   {
     "Benannte Figur": "Kalogreant",
-    "Vers": 780,
+    "Vers": 780.0,
     "Eigennennung": "ich genadeloser man",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -1198,7 +1198,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 794,
+    "Vers": 794.0,
     "Eigennennung": "",
     "Nennende Figur": "Kalogreant",
     "Bezeichnung": "got",
@@ -1421,7 +1421,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 887,
+    "Vers": 887.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -1695,7 +1695,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 985,
+    "Vers": 985.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -1764,7 +1764,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1021.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -1935,7 +1935,7 @@
   },
   {
     "Benannte Figur": "Askalon",
-    "Vers": 1122,
+    "Vers": 1122.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -1954,7 +1954,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 1126,
+    "Vers": 1126.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -2091,7 +2091,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1172.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -2194,7 +2194,7 @@
   },
   {
     "Benannte Figur": "Urjên",
-    "Vers": 1199,
+    "Vers": 1199.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
     "Bezeichnung": "iewer vater",
@@ -2264,7 +2264,7 @@
   },
   {
     "Benannte Figur": "Askalon",
-    "Vers": 1228,
+    "Vers": 1228.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -2316,23 +2316,6 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
-    "Vers": 1272.0,
-    "Eigennennung": NaN,
-    "Nennende Figur": NaN,
-    "Bezeichnung": NaN,
-    "Erzähler": "got",
-    "Bezeichnung 1": "got",
-    "Bezeichnung 2": "",
-    "Bezeichnung 3": "",
-    "Bezeichnung 4": "",
-    "Epitheta 1": "",
-    "Epitheta 2": "",
-    "Epitheta 3": "",
-    "Epitheta 4": "",
-    "Epitheta 5": ""
-  },
-  {
     "Benannte Figur": "Teufel",
     "Vers": 1272.0,
     "Eigennennung": NaN,
@@ -2350,8 +2333,25 @@
     "Epitheta 5": ""
   },
   {
+    "Benannte Figur": "Gott (christlich)",
+    "Vers": 1272.0,
+    "Eigennennung": NaN,
+    "Nennende Figur": NaN,
+    "Bezeichnung": NaN,
+    "Erzähler": "got",
+    "Bezeichnung 1": "got",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "",
+    "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
     "Benannte Figur": "Iwein",
-    "Vers": 1273,
+    "Vers": 1273.0,
     "Eigennennung": "",
     "Nennende Figur": "[MENGE]",
     "Bezeichnung": "der man",
@@ -2370,7 +2370,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 1282,
+    "Vers": 1282.0,
     "Eigennennung": "",
     "Nennende Figur": "[MENGE]",
     "Bezeichnung": "dirre man",
@@ -2406,7 +2406,7 @@
   },
   {
     "Benannte Figur": "Askalon",
-    "Vers": 1306,
+    "Vers": 1306.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -2425,7 +2425,7 @@
   },
   {
     "Benannte Figur": "Laudine",
-    "Vers": 1307,
+    "Vers": 1307.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -2461,7 +2461,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 1348,
+    "Vers": 1348.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -2513,7 +2513,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1381.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -2531,7 +2531,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 1382,
+    "Vers": 1382.0,
     "Eigennennung": "",
     "Nennende Figur": "Laudine",
     "Bezeichnung": "herre",
@@ -2550,7 +2550,7 @@
   },
   {
     "Benannte Figur": "Askalon",
-    "Vers": 1383,
+    "Vers": 1383.0,
     "Eigennennung": "",
     "Nennende Figur": "Laudine",
     "Bezeichnung": "minen man",
@@ -2568,7 +2568,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1392.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -2637,7 +2637,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 1416,
+    "Vers": 1416.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -2775,7 +2775,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 1472,
+    "Vers": 1472.0,
     "Eigennennung": "",
     "Nennende Figur": "Laudine",
     "Bezeichnung": "got",
@@ -2827,7 +2827,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1498.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -2879,7 +2879,7 @@
   },
   {
     "Benannte Figur": "Frau Minne",
-    "Vers": 1537,
+    "Vers": 1537.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -3033,7 +3033,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1610.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -3051,7 +3051,7 @@
   },
   {
     "Benannte Figur": "Askalon",
-    "Vers": 1620,
+    "Vers": 1620.0,
     "Eigennennung": "",
     "Nennende Figur": "Iwein",
     "Bezeichnung": "ir man",
@@ -3188,7 +3188,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1679.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -3206,7 +3206,7 @@
   },
   {
     "Benannte Figur": "Laudine",
-    "Vers": 1681,
+    "Vers": 1681.0,
     "Eigennennung": "",
     "Nennende Figur": "Iwein",
     "Bezeichnung": "die guote",
@@ -3224,7 +3224,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1686.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -3395,7 +3395,7 @@
   },
   {
     "Benannte Figur": "Askalon",
-    "Vers": 1802,
+    "Vers": 1802.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
     "Bezeichnung": "ein vrumer herre",
@@ -3413,7 +3413,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1803.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -3447,7 +3447,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1808.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -3464,7 +3464,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1812.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -3481,7 +3481,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1814.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -3617,7 +3617,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1890.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -3668,7 +3668,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1903.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -3702,7 +3702,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1928.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -3770,7 +3770,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1946.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -3923,7 +3923,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1987.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -3940,7 +3940,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 1991.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -4008,14 +4008,14 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Iwein",
+    "Benannte Figur": "Lunete",
     "Vers": 2003.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "her Îwein",
-    "Bezeichnung 1": "hêrre",
-    "Bezeichnung 2": "Iwein",
+    "Erzähler": "Diu maget",
+    "Bezeichnung 1": "maget",
+    "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
     "Epitheta 1": "",
@@ -4025,14 +4025,14 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Lunete",
+    "Benannte Figur": "Iwein",
     "Vers": 2003.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "Diu maget",
-    "Bezeichnung 1": "maget",
-    "Bezeichnung 2": "",
+    "Erzähler": "her Îwein",
+    "Bezeichnung 1": "hêrre",
+    "Bezeichnung 2": "Iwein",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
     "Epitheta 1": "",
@@ -4059,13 +4059,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Laudine",
+    "Benannte Figur": "Lunete",
     "Vers": 2009.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "diu vrouwe",
-    "Bezeichnung 1": "vrouwe",
+    "Erzähler": "die magt",
+    "Bezeichnung 1": "maget",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -4076,13 +4076,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Lunete",
+    "Benannte Figur": "Laudine",
     "Vers": 2009.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "die magt",
-    "Bezeichnung 1": "maget",
+    "Erzähler": "diu vrouwe",
+    "Bezeichnung 1": "vrouwe",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -4128,7 +4128,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 2064,
+    "Vers": 2064.0,
     "Eigennennung": "",
     "Nennende Figur": "Laudine",
     "Bezeichnung": "des selben man",
@@ -4197,7 +4197,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2084.0,
     "Eigennennung": " ",
     "Nennende Figur": "Laudine",
@@ -4232,7 +4232,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 2094,
+    "Vers": 2094.0,
     "Eigennennung": "",
     "Nennende Figur": "Laudine",
     "Bezeichnung": "den man",
@@ -4251,7 +4251,7 @@
   },
   {
     "Benannte Figur": "Askalon",
-    "Vers": 2095,
+    "Vers": 2095.0,
     "Eigennennung": "",
     "Nennende Figur": "Laudine",
     "Bezeichnung": "minen herren",
@@ -4286,23 +4286,6 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Iwein",
-    "Vers": 2111.0,
-    "Eigennennung": NaN,
-    "Nennende Figur": "Laudine",
-    "Bezeichnung": "sun des küneges Urjênes",
-    "Erzähler": NaN,
-    "Bezeichnung 1": "sun",
-    "Bezeichnung 2": "",
-    "Bezeichnung 3": "",
-    "Bezeichnung 4": "",
-    "Epitheta 1": "künic",
-    "Epitheta 2": "Urjên",
-    "Epitheta 3": "",
-    "Epitheta 4": "",
-    "Epitheta 5": ""
-  },
-  {
     "Benannte Figur": "Urjên",
     "Vers": 2111.0,
     "Eigennennung": NaN,
@@ -4315,6 +4298,23 @@
     "Bezeichnung 4": "",
     "Epitheta 1": "",
     "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
+    "Benannte Figur": "Iwein",
+    "Vers": 2111.0,
+    "Eigennennung": NaN,
+    "Nennende Figur": "Laudine",
+    "Bezeichnung": "sun des küneges Urjênes",
+    "Erzähler": NaN,
+    "Bezeichnung 1": "sun",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "künic",
+    "Epitheta 2": "Urjên",
     "Epitheta 3": "",
     "Epitheta 4": "",
     "Epitheta 5": ""
@@ -4354,7 +4354,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2120.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -4507,7 +4507,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2189.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -4575,7 +4575,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2211.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -4694,7 +4694,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2260.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -4711,7 +4711,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2262.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -4763,7 +4763,7 @@
   },
   {
     "Benannte Figur": "Askalon",
-    "Vers": 2275,
+    "Vers": 2275.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
     "Bezeichnung": "ir vil lieben man",
@@ -4816,7 +4816,7 @@
   },
   {
     "Benannte Figur": "Askalon",
-    "Vers": 2317,
+    "Vers": 2317.0,
     "Eigennennung": "",
     "Nennende Figur": "Laudine",
     "Bezeichnung": "der kunec",
@@ -4851,7 +4851,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2324.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -4886,7 +4886,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 2338,
+    "Vers": 2338.0,
     "Eigennennung": "",
     "Nennende Figur": "Iwein",
     "Bezeichnung": "got",
@@ -4938,7 +4938,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2349.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -4990,7 +4990,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 2381,
+    "Vers": 2381.0,
     "Eigennennung": "",
     "Nennende Figur": "[MENGE]",
     "Bezeichnung": "disen riter",
@@ -5009,7 +5009,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 2382,
+    "Vers": 2382.0,
     "Eigennennung": "",
     "Nennende Figur": "[MENGE]",
     "Bezeichnung": "got",
@@ -5062,7 +5062,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 2392,
+    "Vers": 2392.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -5081,14 +5081,14 @@
   },
   {
     "Benannte Figur": "Truchseß von Laudine",
-    "Vers": 2403,
+    "Vers": 2403.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
     "Erzähler": "der truhsaeze",
     "Status": "confirmed",
     "Kollokation": "do der truhsaeze getete / siner vrouwen rede nach ir bete .",
-    "Bezeichnung 1": "truhtsaeʒe",
+    "Bezeichnung 1": "truhtsaeze",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -5151,7 +5151,7 @@
   },
   {
     "Benannte Figur": "Laudine",
-    "Vers": 2421,
+    "Vers": 2421.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -5186,7 +5186,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2426.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -5373,7 +5373,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2521.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Gawein",
@@ -5492,7 +5492,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2560.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -5509,7 +5509,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2564.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -5577,7 +5577,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 2591.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -5612,7 +5612,7 @@
   },
   {
     "Benannte Figur": "Artus",
-    "Vers": 2604,
+    "Vers": 2604.0,
     "Eigennennung": "",
     "Nennende Figur": "Iwein",
     "Bezeichnung": "herre",
@@ -5631,7 +5631,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 2610,
+    "Vers": 2610.0,
     "Eigennennung": "",
     "Nennende Figur": "Artus",
     "Bezeichnung": "herre",
@@ -5650,7 +5650,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 2611,
+    "Vers": 2611.0,
     "Eigennennung": "",
     "Nennende Figur": "Artus",
     "Bezeichnung": "got",
@@ -5686,7 +5686,7 @@
   },
   {
     "Benannte Figur": "Artus",
-    "Vers": 2612,
+    "Vers": 2612.0,
     "Eigennennung": "",
     "Nennende Figur": "Iwein",
     "Bezeichnung": "herre",
@@ -5790,7 +5790,7 @@
   },
   {
     "Benannte Figur": "Artus",
-    "Vers": 2663,
+    "Vers": 2663.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -5944,14 +5944,14 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gawein",
+    "Benannte Figur": "Iwein",
     "Vers": 2710.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "her Gâwein",
-    "Bezeichnung 1": "hêrre",
-    "Bezeichnung 2": "Gawein",
+    "Erzähler": "der wirt",
+    "Bezeichnung 1": "wirt",
+    "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
     "Epitheta 1": "",
@@ -5961,14 +5961,14 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Iwein",
+    "Benannte Figur": "Gawein",
     "Vers": 2710.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "der wirt",
-    "Bezeichnung 1": "wirt",
-    "Bezeichnung 2": "",
+    "Erzähler": "her Gâwein",
+    "Bezeichnung 1": "hêrre",
+    "Bezeichnung 2": "Gawein",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
     "Epitheta 1": "",
@@ -6608,7 +6608,7 @@
   },
   {
     "Benannte Figur": "Laudine",
-    "Vers": 2994,
+    "Vers": 2994.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -6728,7 +6728,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 3046.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -7137,7 +7137,7 @@
   },
   {
     "Benannte Figur": "Laudine",
-    "Vers": 3213,
+    "Vers": 3213.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -7241,7 +7241,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 3261,
+    "Vers": 3261.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -7277,14 +7277,14 @@
   },
   {
     "Benannte Figur": "Einsiedler",
-    "Vers": 3288,
+    "Vers": 3288.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
     "Erzähler": "der selbe",
     "Status": "confirmed",
     "Kollokation": "der selbe sach im daz wol an / daz er niht rehtes sinnes was .",
-    "Bezeichnung 1": "sëlp",
+    "Bezeichnung 1": "sëlbic",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -7313,7 +7313,7 @@
   },
   {
     "Benannte Figur": "Einsiedler",
-    "Vers": 3299,
+    "Vers": 3299.0,
     "Eigennennung": "ich arme",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -7331,7 +7331,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 3307.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -7382,7 +7382,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 3315.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -7417,7 +7417,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 3320,
+    "Vers": 3320.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -7673,7 +7673,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 3465.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -7708,7 +7708,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 3511,
+    "Vers": 3511.0,
     "Eigennennung": "",
     "Nennende Figur": "Iwein",
     "Bezeichnung": "herre",
@@ -7897,7 +7897,7 @@
   },
   {
     "Benannte Figur": "Gräfin von Narison",
-    "Vers": 3654,
+    "Vers": 3654.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -7984,7 +7984,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 3688,
+    "Vers": 3688.0,
     "Eigennennung": "",
     "Nennende Figur": "Gräfin von Narison",
     "Bezeichnung": "einen riter",
@@ -8071,7 +8071,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 3717,
+    "Vers": 3717.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -8226,7 +8226,7 @@
   },
   {
     "Benannte Figur": "Graf Aliers",
-    "Vers": 3789,
+    "Vers": 3789.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -8295,13 +8295,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Drache",
+    "Benannte Figur": "Löwe",
     "Vers": 3840.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "ein wurm",
-    "Bezeichnung 1": "wurm",
+    "Erzähler": "ein leu",
+    "Bezeichnung 1": "lëwe",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -8312,13 +8312,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Löwe",
+    "Benannte Figur": "Drache",
     "Vers": 3840.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "ein leu",
-    "Bezeichnung 1": "lëwe",
+    "Erzähler": "ein wurm",
+    "Bezeichnung 1": "wurm",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -8516,13 +8516,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Iwein",
+    "Benannte Figur": "Löwe",
     "Vers": 3881.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "sîn herre",
-    "Bezeichnung 1": "hêrre",
+    "Erzähler": "Der leu",
+    "Bezeichnung 1": "lëwe",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -8533,13 +8533,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Löwe",
+    "Benannte Figur": "Iwein",
     "Vers": 3881.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "Der leu",
-    "Bezeichnung 1": "lëwe",
+    "Erzähler": "sîn herre",
+    "Bezeichnung 1": "hêrre",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -8618,23 +8618,6 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Iwein",
-    "Vers": 3921.0,
-    "Eigennennung": NaN,
-    "Nennende Figur": NaN,
-    "Bezeichnung": NaN,
-    "Erzähler": "disem man",
-    "Bezeichnung 1": "man",
-    "Bezeichnung 2": "",
-    "Bezeichnung 3": "",
-    "Bezeichnung 4": "",
-    "Epitheta 1": "",
-    "Epitheta 2": "",
-    "Epitheta 3": "",
-    "Epitheta 4": "",
-    "Epitheta 5": ""
-  },
-  {
     "Benannte Figur": "Löwe",
     "Vers": 3921.0,
     "Eigennennung": NaN,
@@ -8652,8 +8635,25 @@
     "Epitheta 5": ""
   },
   {
+    "Benannte Figur": "Iwein",
+    "Vers": 3921.0,
+    "Eigennennung": NaN,
+    "Nennende Figur": NaN,
+    "Bezeichnung": NaN,
+    "Erzähler": "disem man",
+    "Bezeichnung 1": "man",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "",
+    "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
     "Benannte Figur": "Laudine",
-    "Vers": 3925,
+    "Vers": 3925.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -8672,7 +8672,7 @@
   },
   {
     "Benannte Figur": "Laudine",
-    "Vers": 3935,
+    "Vers": 3935.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -8792,7 +8792,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 3976.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -8810,7 +8810,7 @@
   },
   {
     "Benannte Figur": "Laudine",
-    "Vers": 3988,
+    "Vers": 3988.0,
     "Eigennennung": "",
     "Nennende Figur": "Iwein",
     "Bezeichnung": "miner vrouwen",
@@ -8930,7 +8930,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4046.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -8964,8 +8964,8 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Laudine",
-    "Vers": 4058,
+    "Benannte Figur": "Gott (christlich)",
+    "Vers": 4058.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
     "Bezeichnung": "herre got",
@@ -8984,7 +8984,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 4063,
+    "Vers": 4063.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
     "Bezeichnung": "ein also vrumer man",
@@ -9003,7 +9003,7 @@
   },
   {
     "Benannte Figur": "Lunete",
-    "Vers": 4072,
+    "Vers": 4072.0,
     "Eigennennung": "ich bin leider ein wip",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -9175,7 +9175,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 4180,
+    "Vers": 4180.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
     "Bezeichnung": "herre",
@@ -9194,7 +9194,7 @@
   },
   {
     "Benannte Figur": "Urjên",
-    "Vers": 4182,
+    "Vers": 4182.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
     "Bezeichnung": "sin vater",
@@ -9280,8 +9280,8 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Îwein",
-    "Vers": 4211,
+    "Benannte Figur": "Iwein",
+    "Vers": 4211.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
     "Bezeichnung": "herre",
@@ -9316,7 +9316,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4214.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -9520,7 +9520,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4305.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -9725,7 +9725,7 @@
   },
   {
     "Benannte Figur": "Mann von Gaweins Schwester",
-    "Vers": 4433,
+    "Vers": 4433.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -9760,7 +9760,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4436.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -9829,7 +9829,7 @@
   },
   {
     "Benannte Figur": "Harpin",
-    "Vers": 4461,
+    "Vers": 4461.0,
     "Eigennennung": "",
     "Nennende Figur": "Mann von Gaweins Schwester",
     "Bezeichnung": "einem so gewanten man",
@@ -9881,7 +9881,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4490.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Mann von Gaweins Schwester",
@@ -9899,7 +9899,7 @@
   },
   {
     "Benannte Figur": "Harpin",
-    "Vers": 4500,
+    "Vers": 4500.0,
     "Eigennennung": "",
     "Nennende Figur": "Mann von Gaweins Schwester",
     "Bezeichnung": "der rise",
@@ -9934,7 +9934,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4502.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Mann von Gaweins Schwester",
@@ -10274,7 +10274,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4632.0,
     "Eigennennung": NaN,
     "Nennende Figur": "[die von der tavelrunde]",
@@ -10325,7 +10325,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4635.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Keie",
@@ -10360,7 +10360,7 @@
   },
   {
     "Benannte Figur": "Keie",
-    "Vers": 4639,
+    "Vers": 4639.0,
     "Eigennennung": "ich bin truhsaeze",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -10531,13 +10531,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Pilopleherin",
+    "Benannte Figur": "Millemagrot",
     "Vers": 4705.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Mann von Gaweins Schwester",
-    "Bezeichnung": "Pîlopleherîn",
+    "Bezeichnung": "Millamargot",
     "Erzähler": NaN,
-    "Bezeichnung 1": "Pilopleherin",
+    "Bezeichnung 1": "Millemagrot",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -10548,13 +10548,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Millemagrot",
+    "Benannte Figur": "Pilopleherin",
     "Vers": 4705.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Mann von Gaweins Schwester",
-    "Bezeichnung": "Millamargot",
+    "Bezeichnung": "Pîlopleherîn",
     "Erzähler": NaN,
-    "Bezeichnung 1": "Millemagrot",
+    "Bezeichnung 1": "Pilopleherin",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -10583,7 +10583,7 @@
   },
   {
     "Benannte Figur": "Ginover",
-    "Vers": 4715,
+    "Vers": 4715.0,
     "Eigennennung": "",
     "Nennende Figur": "Mann von Gaweins Schwester",
     "Bezeichnung": "die vrouwen",
@@ -10652,7 +10652,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4728.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Mann von Gaweins Schwester",
@@ -10788,23 +10788,6 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Mann von Gaweins Schwester",
-    "Vers": 4761.0,
-    "Eigennennung": NaN,
-    "Nennende Figur": NaN,
-    "Bezeichnung": NaN,
-    "Erzähler": "wirtes",
-    "Bezeichnung 1": "wirt",
-    "Bezeichnung 2": "",
-    "Bezeichnung 3": "",
-    "Bezeichnung 4": "",
-    "Epitheta 1": "",
-    "Epitheta 2": "",
-    "Epitheta 3": "",
-    "Epitheta 4": "",
-    "Epitheta 5": ""
-  },
-  {
     "Benannte Figur": "Schwester von Gawein",
     "Vers": 4761.0,
     "Eigennennung": NaN,
@@ -10822,8 +10805,25 @@
     "Epitheta 5": ""
   },
   {
+    "Benannte Figur": "Mann von Gaweins Schwester",
+    "Vers": 4761.0,
+    "Eigennennung": NaN,
+    "Nennende Figur": NaN,
+    "Bezeichnung": NaN,
+    "Erzähler": "wirtes",
+    "Bezeichnung 1": "wirt",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "",
+    "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
     "Benannte Figur": "Nichte von Gawein",
-    "Vers": 4763,
+    "Vers": 4763.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -10892,7 +10892,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4782.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -10926,23 +10926,6 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Schwester von Gawein",
-    "Vers": 4785.0,
-    "Eigennennung": NaN,
-    "Nennende Figur": "Iwein",
-    "Bezeichnung": "mînes hern Gâweins swester",
-    "Erzähler": NaN,
-    "Bezeichnung 1": "swëster",
-    "Bezeichnung 2": "",
-    "Bezeichnung 3": "",
-    "Bezeichnung 4": "",
-    "Epitheta 1": "hêrre",
-    "Epitheta 2": "Gawein",
-    "Epitheta 3": "",
-    "Epitheta 4": "",
-    "Epitheta 5": ""
-  },
-  {
     "Benannte Figur": "Gawein",
     "Vers": 4785.0,
     "Eigennennung": NaN,
@@ -10955,6 +10938,23 @@
     "Bezeichnung 4": "",
     "Epitheta 1": "",
     "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
+    "Benannte Figur": "Schwester von Gawein",
+    "Vers": 4785.0,
+    "Eigennennung": NaN,
+    "Nennende Figur": "Iwein",
+    "Bezeichnung": "mînes hern Gâweins swester",
+    "Erzähler": NaN,
+    "Bezeichnung 1": "swëster",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "hêrre",
+    "Epitheta 2": "Gawein",
     "Epitheta 3": "",
     "Epitheta 4": "",
     "Epitheta 5": ""
@@ -10995,7 +10995,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 4791,
+    "Vers": 4791.0,
     "Eigennennung": "mich armen man",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -11166,7 +11166,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4854.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -11183,12 +11183,29 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 4858.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
     "Erzähler": "gotes",
+    "Bezeichnung 1": "got",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "",
+    "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
+    "Benannte Figur": "Gott (christlich)",
+    "Vers": 4865.0,
+    "Eigennennung": NaN,
+    "Nennende Figur": NaN,
+    "Bezeichnung": NaN,
+    "Erzähler": "got",
     "Bezeichnung 1": "got",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
@@ -11217,25 +11234,8 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
-    "Vers": 4865.0,
-    "Eigennennung": NaN,
-    "Nennende Figur": NaN,
-    "Bezeichnung": NaN,
-    "Erzähler": "got",
-    "Bezeichnung 1": "got",
-    "Bezeichnung 2": "",
-    "Bezeichnung 3": "",
-    "Bezeichnung 4": "",
-    "Epitheta 1": "",
-    "Epitheta 2": "",
-    "Epitheta 3": "",
-    "Epitheta 4": "",
-    "Epitheta 5": ""
-  },
-  {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 4889,
+    "Vers": 4889.0,
     "Eigennennung": "",
     "Nennende Figur": "Iwein",
     "Bezeichnung": "got",
@@ -11287,23 +11287,6 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Schwester von Gawein",
-    "Vers": 4905.0,
-    "Eigennennung": NaN,
-    "Nennende Figur": "Iwein",
-    "Bezeichnung": "hern Gâweins swester",
-    "Erzähler": NaN,
-    "Bezeichnung 1": "swëster",
-    "Bezeichnung 2": "",
-    "Bezeichnung 3": "",
-    "Bezeichnung 4": "",
-    "Epitheta 1": "hêrre",
-    "Epitheta 2": "Gawein",
-    "Epitheta 3": "",
-    "Epitheta 4": "",
-    "Epitheta 5": ""
-  },
-  {
     "Benannte Figur": "Gawein",
     "Vers": 4905.0,
     "Eigennennung": NaN,
@@ -11316,6 +11299,23 @@
     "Bezeichnung 4": "",
     "Epitheta 1": "",
     "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
+    "Benannte Figur": "Schwester von Gawein",
+    "Vers": 4905.0,
+    "Eigennennung": NaN,
+    "Nennende Figur": "Iwein",
+    "Bezeichnung": "hern Gâweins swester",
+    "Erzähler": NaN,
+    "Bezeichnung 1": "swëster",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "hêrre",
+    "Epitheta 2": "Gawein",
     "Epitheta 3": "",
     "Epitheta 4": "",
     "Epitheta 5": ""
@@ -11458,7 +11458,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 4960,
+    "Vers": 4960.0,
     "Eigennennung": "",
     "Nennende Figur": "Iwein",
     "Bezeichnung": "got",
@@ -11579,7 +11579,7 @@
   },
   {
     "Benannte Figur": "Harpin",
-    "Vers": 5017,
+    "Vers": 5017.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -11683,7 +11683,7 @@
   },
   {
     "Benannte Figur": "Löwe",
-    "Vers": 5061,
+    "Vers": 5061.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -11702,7 +11702,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 5062,
+    "Vers": 5062.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -11721,7 +11721,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 5067,
+    "Vers": 5067.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -11740,7 +11740,7 @@
   },
   {
     "Benannte Figur": "Harpin",
-    "Vers": 5075,
+    "Vers": 5075.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -11759,7 +11759,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 5079,
+    "Vers": 5079.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -11778,7 +11778,7 @@
   },
   {
     "Benannte Figur": "Harpin",
-    "Vers": 5082,
+    "Vers": 5082.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -11933,7 +11933,7 @@
   },
   {
     "Benannte Figur": "Mann von Gaweins Schwester",
-    "Vers": 5127,
+    "Vers": 5127.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -11969,7 +11969,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 5140,
+    "Vers": 5140.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -11987,7 +11987,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5144.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -12038,7 +12038,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5159.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -12073,7 +12073,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 5169,
+    "Vers": 5169.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -12143,7 +12143,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 5186,
+    "Vers": 5186.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -12178,7 +12178,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5204.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -12195,7 +12195,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5205.0,
     "Eigennennung": NaN,
     "Nennende Figur": "[Gesinde]",
@@ -12314,6 +12314,23 @@
     "Epitheta 5": ""
   },
   {
+    "Benannte Figur": "Gott (christlich)",
+    "Vers": 5233.0,
+    "Eigennennung": NaN,
+    "Nennende Figur": "Lunete",
+    "Bezeichnung": "got",
+    "Erzähler": NaN,
+    "Bezeichnung 1": "got",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "",
+    "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
     "Benannte Figur": "Iwein",
     "Vers": 5233.0,
     "Eigennennung": NaN,
@@ -12331,24 +12348,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
-    "Vers": 5233.0,
-    "Eigennennung": NaN,
-    "Nennende Figur": "Lunete",
-    "Bezeichnung": "got",
-    "Erzähler": NaN,
-    "Bezeichnung 1": "got",
-    "Bezeichnung 2": "",
-    "Bezeichnung 3": "",
-    "Bezeichnung 4": "",
-    "Epitheta 1": "",
-    "Epitheta 2": "",
-    "Epitheta 3": "",
-    "Epitheta 4": "",
-    "Epitheta 5": ""
-  },
-  {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5237.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -12484,7 +12484,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5275.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -12518,7 +12518,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5283.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Truchseß von Laudine",
@@ -12536,7 +12536,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 5285,
+    "Vers": 5285.0,
     "Eigennennung": "",
     "Nennende Figur": "Truchseß von Laudine",
     "Bezeichnung": "herre",
@@ -12622,13 +12622,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Lunete",
     "Vers": 5301.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "got",
-    "Bezeichnung 1": "got",
+    "Erzähler": "die juncvrouwen",
+    "Bezeichnung 1": "juncvrouwe",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -12639,13 +12639,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Lunete",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5301.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "die juncvrouwen",
-    "Bezeichnung 1": "juncvrouwe",
+    "Erzähler": "got",
+    "Bezeichnung 1": "got",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -12691,7 +12691,7 @@
   },
   {
     "Benannte Figur": "Truchseß von Laudine",
-    "Vers": 5332,
+    "Vers": 5332.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -12710,7 +12710,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 5351,
+    "Vers": 5351.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -12729,7 +12729,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 5354,
+    "Vers": 5354.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -12747,7 +12747,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5357.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -12799,7 +12799,7 @@
   },
   {
     "Benannte Figur": "Truchseß von Laudine",
-    "Vers": 5377,
+    "Vers": 5377.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -12919,13 +12919,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Iwein",
+    "Benannte Figur": "Löwe",
     "Vers": 5406.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "der man",
-    "Bezeichnung 1": "man",
+    "Erzähler": "der leu",
+    "Bezeichnung 1": "lëwe",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -12936,13 +12936,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Löwe",
+    "Benannte Figur": "Iwein",
     "Vers": 5406.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
-    "Erzähler": "der leu",
-    "Bezeichnung 1": "lëwe",
+    "Erzähler": "der man",
+    "Bezeichnung 1": "man",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -13123,7 +13123,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5461.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -13208,7 +13208,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5482.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -13242,14 +13242,14 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Laudine",
+    "Benannte Figur": "Iwein",
     "Vers": 5490.0,
     "Eigennennung": NaN,
-    "Nennende Figur": "Iwein",
-    "Bezeichnung": "vrouwe",
-    "Erzähler": NaN,
-    "Bezeichnung 1": "vrouwe",
-    "Bezeichnung 2": "",
+    "Nennende Figur": NaN,
+    "Bezeichnung": NaN,
+    "Erzähler": "her Îwein",
+    "Bezeichnung 1": "hêrre",
+    "Bezeichnung 2": "Iwein",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
     "Epitheta 1": "",
@@ -13259,14 +13259,14 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Iwein",
+    "Benannte Figur": "Laudine",
     "Vers": 5490.0,
     "Eigennennung": NaN,
-    "Nennende Figur": NaN,
-    "Bezeichnung": NaN,
-    "Erzähler": "her Îwein",
-    "Bezeichnung 1": "hêrre",
-    "Bezeichnung 2": "Iwein",
+    "Nennende Figur": "Iwein",
+    "Bezeichnung": "vrouwe",
+    "Erzähler": NaN,
+    "Bezeichnung 1": "vrouwe",
+    "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
     "Epitheta 1": "",
@@ -13361,7 +13361,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5530.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein ",
@@ -13395,7 +13395,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5535.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -13515,7 +13515,7 @@
   },
   {
     "Benannte Figur": "Herr der Pflege",
-    "Vers": 5599,
+    "Vers": 5599.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -13551,7 +13551,7 @@
   },
   {
     "Benannte Figur": "Herr der Pflege",
-    "Vers": 5610,
+    "Vers": 5610.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -13671,7 +13671,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5641.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Die Junge vom Schwarzen Dorn",
@@ -13706,7 +13706,7 @@
   },
   {
     "Benannte Figur": "Die Junge vom Schwarzen Dorn",
-    "Vers": 5649,
+    "Vers": 5649.0,
     "Eigennennung": "ich bin ein wip",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -13844,7 +13844,7 @@
   },
   {
     "Benannte Figur": "Gawein",
-    "Vers": 5675,
+    "Vers": 5675.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -14203,7 +14203,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 5759,
+    "Vers": 5759.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -14272,7 +14272,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5792.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -14289,7 +14289,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5798.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -14357,7 +14357,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5836.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Mann von Gaweins Schwester",
@@ -14391,7 +14391,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5848.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Mann von Gaweins Schwester",
@@ -14409,7 +14409,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 5854,
+    "Vers": 5854.0,
     "Eigennennung": "",
     "Nennende Figur": "Mann von Gaweins Schwester",
     "Bezeichnung": "got",
@@ -14478,7 +14478,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5864.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Mann von Gaweins Schwester",
@@ -14580,7 +14580,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5906.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -14614,7 +14614,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5910.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Lunete",
@@ -14631,15 +14631,15 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott (christlich)",
-    "Vers": 5918,
+    "Benannte Figur": "Cousine vom Schwarzen Dorn",
+    "Vers": 5918.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
-    "Bezeichnung": "weizgot",
+    "Bezeichnung": "vrouwe",
     "Erzähler": "",
     "Status": "confirmed",
     "Kollokation": "weizgot , vrouwe , ich waere tot ,",
-    "Bezeichnung 1": "got",
+    "Bezeichnung 1": "vrouwe",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -14650,15 +14650,15 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Cousine vom Schwarzen Dorn",
-    "Vers": 5918,
+    "Benannte Figur": "Gott (christlich)",
+    "Vers": 5918.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
-    "Bezeichnung": "vrouwe",
+    "Bezeichnung": "weizgot",
     "Erzähler": "",
     "Status": "confirmed",
     "Kollokation": "weizgot , vrouwe , ich waere tot ,",
-    "Bezeichnung 1": "vrouwe",
+    "Bezeichnung 1": "got",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -14704,7 +14704,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 5944,
+    "Vers": 5944.0,
     "Eigennennung": "",
     "Nennende Figur": "Cousine vom Schwarzen Dorn",
     "Bezeichnung": "einen man",
@@ -14773,7 +14773,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5972.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Cousine vom Schwarzen Dorn",
@@ -14824,7 +14824,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 5988.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Cousine vom Schwarzen Dorn",
@@ -14842,13 +14842,30 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 5995,
+    "Vers": 5995.0,
     "Eigennennung": "",
     "Nennende Figur": "Cousine vom Schwarzen Dorn",
     "Bezeichnung": "got",
     "Erzähler": "",
     "Status": "confirmed",
     "Kollokation": "got gebe mir saelde unde sin . >",
+    "Bezeichnung 1": "got",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "",
+    "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
+    "Benannte Figur": "Gott (christlich)",
+    "Vers": 5997.0,
+    "Eigennennung": NaN,
+    "Nennende Figur": "Cousine vom Schwarzen Dorn",
+    "Bezeichnung": "got",
+    "Erzähler": NaN,
     "Bezeichnung 1": "got",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
@@ -14877,24 +14894,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
-    "Vers": 5997.0,
-    "Eigennennung": NaN,
-    "Nennende Figur": "Cousine vom Schwarzen Dorn",
-    "Bezeichnung": "got",
-    "Erzähler": NaN,
-    "Bezeichnung 1": "got",
-    "Bezeichnung 2": "",
-    "Bezeichnung 3": "",
-    "Bezeichnung 4": "",
-    "Epitheta 1": "",
-    "Epitheta 2": "",
-    "Epitheta 3": "",
-    "Epitheta 4": "",
-    "Epitheta 5": ""
-  },
-  {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6000.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Cousine vom Schwarzen Dorn",
@@ -14929,7 +14929,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 6013,
+    "Vers": 6013.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -15032,7 +15032,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6051.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Cousine vom Schwarzen Dorn",
@@ -15049,7 +15049,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6054.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Cousine vom Schwarzen Dorn",
@@ -15066,7 +15066,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6061.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Cousine vom Schwarzen Dorn",
@@ -15101,7 +15101,7 @@
   },
   {
     "Benannte Figur": "Cousine vom Schwarzen Dorn",
-    "Vers": 6067,
+    "Vers": 6067.0,
     "Eigennennung": "",
     "Nennende Figur": "Iwein",
     "Bezeichnung": "dem boten",
@@ -15238,7 +15238,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6149.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Frau auf Burg zum schlimmen Abenteuer",
@@ -15272,7 +15272,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6163.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Frau auf Burg zum schlimmen Abenteuer",
@@ -15408,7 +15408,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6254.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Pförnter",
@@ -15477,7 +15477,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 6322,
+    "Vers": 6322.0,
     "Eigennennung": "",
     "Nennende Figur": "Eine von 300",
     "Bezeichnung": "gote",
@@ -15529,7 +15529,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6342.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Eine von 300",
@@ -15580,7 +15580,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6409.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -15597,7 +15597,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6421.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -15614,7 +15614,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6423.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -15666,7 +15666,7 @@
   },
   {
     "Benannte Figur": "Juno",
-    "Vers": 6444,
+    "Vers": 6444.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -15753,7 +15753,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 6471,
+    "Vers": 6471.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -15874,7 +15874,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 6582,
+    "Vers": 6582.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -15893,7 +15893,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 6584,
+    "Vers": 6584.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -16115,7 +16115,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6660.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -16337,7 +16337,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 6719,
+    "Vers": 6719.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -16355,7 +16355,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6719.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -16423,7 +16423,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6752.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -16492,7 +16492,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 6768,
+    "Vers": 6768.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -16527,7 +16527,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6774.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -16596,7 +16596,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 6794,
+    "Vers": 6794.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -16631,7 +16631,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6798.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -16835,7 +16835,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6859.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -17022,7 +17022,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6876.28,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -17260,7 +17260,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6919.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -17362,7 +17362,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 6956.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -17414,7 +17414,7 @@
   },
   {
     "Benannte Figur": "Frau Minne",
-    "Vers": 7040,
+    "Vers": 7040.0,
     "Eigennennung": "",
     "Nennende Figur": "[implizites Publikum]",
     "Bezeichnung": "die minne",
@@ -17449,7 +17449,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 7172.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -17620,7 +17620,7 @@
   },
   {
     "Benannte Figur": "Iwein",
-    "Vers": 7304,
+    "Vers": 7304.0,
     "Eigennennung": "",
     "Nennende Figur": "Die Junge vom Schwarzen Dorn",
     "Bezeichnung": "ein sus geret man",
@@ -17655,7 +17655,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 7325.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -17775,7 +17775,7 @@
   },
   {
     "Benannte Figur": "Gawein",
-    "Vers": 7371,
+    "Vers": 7371.0,
     "Eigennennung": "",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -17810,7 +17810,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 7400.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -17827,7 +17827,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 7415.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -17844,7 +17844,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 7422.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -17896,7 +17896,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 7464,
+    "Vers": 7464.0,
     "Eigennennung": "",
     "Nennende Figur": "Gawein",
     "Bezeichnung": "weizgot",
@@ -17904,6 +17904,23 @@
     "Status": "confirmed",
     "Kollokation": "des sit ir weizgot wol wert .",
     "Bezeichnung 1": "got",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "",
+    "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
+    "Benannte Figur": "Gawein",
+    "Vers": 7471.0,
+    "Eigennennung": "Gâwein",
+    "Nennende Figur": NaN,
+    "Bezeichnung": NaN,
+    "Erzähler": NaN,
+    "Bezeichnung 1": "Gawein",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -17932,23 +17949,6 @@
   },
   {
     "Benannte Figur": "Gawein",
-    "Vers": 7471.0,
-    "Eigennennung": "Gâwein",
-    "Nennende Figur": NaN,
-    "Bezeichnung": NaN,
-    "Erzähler": NaN,
-    "Bezeichnung 1": "Gawein",
-    "Bezeichnung 2": "",
-    "Bezeichnung 3": "",
-    "Bezeichnung 4": "",
-    "Epitheta 1": "",
-    "Epitheta 2": "",
-    "Epitheta 3": "",
-    "Epitheta 4": "",
-    "Epitheta 5": ""
-  },
-  {
-    "Benannte Figur": "Gawein",
     "Vers": 7472.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -17966,7 +17966,7 @@
   },
   {
     "Benannte Figur": "Gawein",
-    "Vers": 7483,
+    "Vers": 7483.0,
     "Eigennennung": "",
     "Nennende Figur": "Iwein",
     "Bezeichnung": "herre",
@@ -18001,7 +18001,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 7502.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -18120,7 +18120,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 7564.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Iwein",
@@ -18341,7 +18341,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 7628.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Gawein",
@@ -18477,13 +18477,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Artus",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 7671.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Die Alte vom Schwarzen Dorn",
-    "Bezeichnung": "herre",
+    "Bezeichnung": "got",
     "Erzähler": NaN,
-    "Bezeichnung 1": "hêrre",
+    "Bezeichnung 1": "got",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -18494,13 +18494,13 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Artus",
     "Vers": 7671.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Die Alte vom Schwarzen Dorn",
-    "Bezeichnung": "got",
+    "Bezeichnung": "herre",
     "Erzähler": NaN,
-    "Bezeichnung 1": "got",
+    "Bezeichnung 1": "hêrre",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
@@ -18715,14 +18715,14 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gawein",
+    "Benannte Figur": "Iwein",
     "Vers": 7745.0,
     "Eigennennung": NaN,
-    "Nennende Figur": NaN,
-    "Bezeichnung": NaN,
-    "Erzähler": "her Gâwein",
-    "Bezeichnung 1": "hêrre",
-    "Bezeichnung 2": "Gawein",
+    "Nennende Figur": "Gawein",
+    "Bezeichnung": "geselle",
+    "Erzähler": NaN,
+    "Bezeichnung 1": "geselle",
+    "Bezeichnung 2": "",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
     "Epitheta 1": "",
@@ -18732,14 +18732,14 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Iwein",
+    "Benannte Figur": "Gawein",
     "Vers": 7745.0,
     "Eigennennung": NaN,
-    "Nennende Figur": "Gawein",
-    "Bezeichnung": "geselle",
-    "Erzähler": NaN,
-    "Bezeichnung 1": "geselle",
-    "Bezeichnung 2": "",
+    "Nennende Figur": NaN,
+    "Bezeichnung": NaN,
+    "Erzähler": "her Gâwein",
+    "Bezeichnung 1": "hêrre",
+    "Bezeichnung 2": "Gawein",
     "Bezeichnung 3": "",
     "Bezeichnung 4": "",
     "Epitheta 1": "",
@@ -19005,7 +19005,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 7832,
+    "Vers": 7832.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
     "Bezeichnung": "weizgot",
@@ -19075,7 +19075,7 @@
   },
   {
     "Benannte Figur": "Lunete",
-    "Vers": 7851,
+    "Vers": 7851.0,
     "Eigennennung": "ich bin ein wip",
     "Nennende Figur": "",
     "Bezeichnung": "",
@@ -19161,7 +19161,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 7889.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -19297,7 +19297,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 7933.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -19383,7 +19383,7 @@
   },
   {
     "Benannte Figur": "Gott (christlich)",
-    "Vers": 7955,
+    "Vers": 7955.0,
     "Eigennennung": "",
     "Nennende Figur": "Lunete",
     "Bezeichnung": "got",
@@ -19775,7 +19775,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 8126.0,
     "Eigennennung": NaN,
     "Nennende Figur": "Laudine",
@@ -19826,7 +19826,7 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 8146.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -19860,23 +19860,6 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Laudine",
-    "Vers": 8158.16,
-    "Eigennennung": NaN,
-    "Nennende Figur": NaN,
-    "Bezeichnung": NaN,
-    "Erzähler": "diu künegîn",
-    "Bezeichnung 1": "küniginne",
-    "Bezeichnung 2": "",
-    "Bezeichnung 3": "",
-    "Bezeichnung 4": "",
-    "Epitheta 1": "",
-    "Epitheta 2": "",
-    "Epitheta 3": "",
-    "Epitheta 4": "",
-    "Epitheta 5": ""
-  },
-  {
     "Benannte Figur": "Iwein",
     "Vers": 8158.16,
     "Eigennennung": NaN,
@@ -19894,7 +19877,24 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Laudine",
+    "Vers": 8158.16,
+    "Eigennennung": NaN,
+    "Nennende Figur": NaN,
+    "Bezeichnung": NaN,
+    "Erzähler": "diu künegîn",
+    "Bezeichnung 1": "küniginne",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "",
+    "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 8158.2,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
@@ -19928,12 +19928,31 @@
     "Epitheta 5": ""
   },
   {
-    "Benannte Figur": "Gott",
+    "Benannte Figur": "Gott (christlich)",
     "Vers": 8166.0,
     "Eigennennung": NaN,
     "Nennende Figur": NaN,
     "Bezeichnung": NaN,
     "Erzähler": "got",
+    "Bezeichnung 1": "got",
+    "Bezeichnung 2": "",
+    "Bezeichnung 3": "",
+    "Bezeichnung 4": "",
+    "Epitheta 1": "",
+    "Epitheta 2": "",
+    "Epitheta 3": "",
+    "Epitheta 4": "",
+    "Epitheta 5": ""
+  },
+  {
+    "Benannte Figur": "Gott (christlich)",
+    "Vers": 8489.0,
+    "Eigennennung": NaN,
+    "Nennende Figur": "Iwein",
+    "Bezeichnung": "got",
+    "Erzähler": NaN,
+    "Kollokationen": "nû ne mag ich ir beider niht bestân/ unde getar ouch ir deweder lân/ nû gebe mir got guoten rât",
+    "Verse": "4897 ff",
     "Bezeichnung 1": "got",
     "Bezeichnung 2": "",
     "Bezeichnung 3": "",
