@@ -17,6 +17,7 @@ import os
 import math
 import csv
 import difflib
+import uuid
 import webbrowser
 from collections import Counter
 from typing import List
@@ -797,8 +798,15 @@ def run_visualization_menu(paths, book_name):
     naming_cols = [f"Bezeichnung {i}" for i in range(1, 5)]
     epithet_cols = [f"Epitheta {i}" for i in range(1, 6)]
 
+    if variant_type == "1":
+        selected_cols = naming_cols
+    elif variant_type == "2":
+        selected_cols = epithet_cols
+    else:
+        selected_cols = naming_cols + epithet_cols
+
     all_entries = []
-    for col in naming_cols + epithet_cols:
+    for col in selected_cols:
         temp = df_figure[["Vers", col]].dropna().rename(columns={col: "Token"})
         all_entries.append(temp)
 
@@ -926,12 +934,26 @@ def run_visualization_menu(paths, book_name):
     output_path = os.path.join(output_dir, filename)
 
     # Step 9 – Output
-    if output_mode in ("1", "3"):
+    if output_mode == "1":
+        # Save only
         fig.write_html(output_path)
         print(f"\n✅ Visualization completed.")
         print(f"📂 File saved at:\n{output_path}")
 
-    if output_mode in ("2", "3"):
+    elif output_mode == "2":
+        # Display only → use temporary file
+        tmp_filename = f"viz_{uuid.uuid4().hex[:8]}.html"
+        tmp_path = os.path.join(paths["tmp_dir"], tmp_filename)
+        fig.write_html(tmp_path)
+        webbrowser.open_new_tab(f"file://{os.path.abspath(tmp_path)}")
+        print(f"🌐 The plot has been opened in your browser.")
+        print(f"🧾 Temporary file created at: {tmp_path}")
+
+    elif output_mode == "3":
+        # Save and display → use saved file
+        fig.write_html(output_path)
+        print(f"\n✅ Visualization completed.")
+        print(f"📂 File saved at:\n{output_path}")
         webbrowser.open_new_tab(f"file://{os.path.abspath(output_path)}")
         print(f"🌐 The plot has been opened in your browser.")
 

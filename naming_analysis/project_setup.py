@@ -32,12 +32,15 @@ def initialize_project():
             categorization_last_verse (int): Last processed verse for categorization
             paths (dict): Dictionary of all file paths used in this session
     """
-    book_name = input("Which book are we working on today? (e.g., Rolandslied): ").strip()
+    book_name = input("Which book are we working on today? (e.g., Trojanerkrieg): ").strip()
     book_name = book_name[0].upper() + book_name[1:]
 
     project_dir = os.path.join("data", book_name)
     os.makedirs(project_dir, exist_ok=True)
-    os.makedirs("data", exist_ok=True)  # Für globale Dateien, falls nicht vorhanden
+    os.makedirs("data", exist_ok=True)
+
+    tmp_dir = os.path.join("data", "tmp")
+    os.makedirs(tmp_dir, exist_ok=True)
 
     config_path = os.path.join(project_dir, f"config_{book_name}.json")
     progress_path = os.path.join(project_dir, f"progress_{book_name}.json")
@@ -53,7 +56,10 @@ def initialize_project():
         # Globale Dateien
         "lemma_normalization_json": os.path.join("data", "lemma_normalization.json"),
         "ignored_lemmas_json": os.path.join("data", "ignored_lemmas.json"),
-        "lemma_categories_json": os.path.join("data", "lemma_categories.json")
+        "lemma_categories_json": os.path.join("data", "lemma_categories.json"),
+
+        # temporary data
+        "tmp_dir": tmp_dir
     }
 
     # Fortschritt laden oder initialisieren
