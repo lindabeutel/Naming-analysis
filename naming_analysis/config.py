@@ -7,6 +7,7 @@ Supports reuse of previous settings and conditional loading of Excel and TEI fil
 
 import os
 import pandas as pd
+import shutil
 import xml.etree.ElementTree as ET
 
 from naming_analysis.io_utils import safe_read_json, safe_write_json
@@ -111,7 +112,36 @@ def ask_config_interactively(config_path: str) -> tuple[dict, DataType]:
             data["excel_path"] = partial.get("excel_path")
             config_data["excel_path"] = partial.get("excel_path")
         else:
-            print("❌ No Excel file was loaded. Disabling Excel-related processing.")
+            print("⚠️ No Excel file was loaded.")
+            config_data["load_excel"] = False
+
+    else:
+        print("⚠️ No Excel file selected.")
+        create_new = ask_user_choice("Would you like to create a new Excel file instead? (y/n): ", ["y", "n"])
+        if create_new == "y":
+            book_name = os.path.basename(config_path).replace("config_", "").replace(".json", "")
+            project_dir = os.path.join("data", book_name)
+            os.makedirs(project_dir, exist_ok=True)
+
+            # Zielpfad der neuen Datei
+            new_excel_path = os.path.join(project_dir, f"{book_name}_progress.xlsx")
+            template_path = os.path.join(os.getcwd(), "template_excel.xlsx")
+
+            try:
+                shutil.copy(template_path, new_excel_path)
+                df = pd.read_excel(new_excel_path)
+                df = check_required_columns(df)
+
+                data["excel"] = df
+                data["excel_path"] = new_excel_path
+                config_data["excel_path"] = new_excel_path
+                config_data["load_excel"] = True
+
+                print(f"✅ New Excel file created at: {new_excel_path}")
+            except Exception as e:
+                print(f"❌ Failed to create new Excel file: {e}")
+                config_data["load_excel"] = False
+        else:
             config_data["load_excel"] = False
 
     # TEI: manual load

@@ -52,6 +52,7 @@ def initialize_project():
         "collocations_json": os.path.join(project_dir, f"collocations_{book_name}.json"),
         "categorization_json": os.path.join(project_dir, f"categorization_{book_name}.json"),
         "config_json": config_path,
+        "progress_excel": os.path.join(project_dir, f"{book_name}_progress.xlsx"),
 
         # Globale Dateien
         "lemma_normalization_json": os.path.join("data", "lemma_normalization.json"),
