@@ -897,7 +897,7 @@ def run_visualization_menu(paths, book_name):
         hover_data=["Vers", "Token"]
     )
 
-    fig.update_traces(marker=dict(size=10, opacity=0.7))
+    fig.update_traces(marker=dict(size=18, opacity=0.7))
 
     fig.update_layout(
         title=dict(
@@ -905,19 +905,23 @@ def run_visualization_menu(paths, book_name):
             x=0.5,
             xanchor="center"
         ),
-        xaxis_title="Verse",
+        xaxis_title="Verses",
         yaxis_title=variant_label,
         font=dict(
             family="Times New Roman",
-            size=12
+            size=18
+        ),
+        xaxis=dict(
+            tickfont=dict(size=36)
+        ),
+        yaxis=dict(
+            tickfont=dict(size=36),
+            categoryorder="array",
+            categoryarray=[f"<i>{t}</i>" for t in sorted_tokens]
         ),
         height=800,
         margin=dict(l=100, r=40, t=60, b=60),
-        showlegend=(variant_type == "3"),
-        yaxis=dict(
-            categoryorder="array",
-            categoryarray=[f"<i>{t}</i>" for t in sorted_tokens]
-        )
+        showlegend=(variant_type == "3")
     )
 
     # Step 8 – Ask for output mode
