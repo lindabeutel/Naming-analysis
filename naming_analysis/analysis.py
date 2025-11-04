@@ -31,6 +31,7 @@ from naming_analysis.shared import (
 )
 from naming_analysis.io_utils import safe_read_json
 from naming_analysis.loaders import load_collocation_sheet, build_fallback_collocation_df_from_tei
+from naming_analysis.shared import prepare_naming_data
 
 def run_analysis_menu(config_data, paths, data, book_name):
     """
@@ -52,22 +53,25 @@ def run_analysis_menu(config_data, paths, data, book_name):
     while True:
         print("📊 Which type of analysis do you want to perform?")
         print("[1] Wordlist")
-        print("[2] Keywords")
-        print("[3] Collocations")
-        print("[4] Visualization")
-        print("[5] Exit analysis")
+        print("[2] Naming figure analysis")
+        print("[3] Keywords")
+        print("[4] Collocations")
+        print("[5] Visualization")
+        print("[6] Exit analysis")
 
-        choice = ask_user_choice("> ", ["1", "2", "3", "4", "5"])
+        choice = ask_user_choice("> ", ["1", "2", "3", "4", "5","6"])
 
         if choice == "1":
             run_wordlist_menu(paths, book_name)
         elif choice == "2":
-            run_keyword_menu(config_data, paths, data, book_name)
+            run_naming_figure_analysis(config_data, paths, data, book_name)
         elif choice == "3":
-            run_collocation_menu(config_data, paths, data, book_name)
+            run_keyword_menu(config_data, paths, data, book_name)
         elif choice == "4":
-            run_visualization_menu(paths, book_name)
+            run_collocation_menu(config_data, paths, data, book_name)
         elif choice == "5":
+            run_visualization_menu(paths, book_name)
+        elif choice == "6":
             print("📦 Analysis completed.")
             break
 
@@ -348,6 +352,550 @@ def generate_combined_naming_variants_epithets(figure_name: str, json_path: str,
             writer.writerow([val, count])
 
     print(f"✅ Combined wordlist for '{resolved_name}' written to: {output_path}")
+
+def run_naming_figure_analysis(_config_data, paths, data, book_name):
+    """
+    Interactive CLI orchestration for 'Naming figure analysis' (validated inputs).
+    Loads JSON/Excel via safe_read_json and prepare_naming_data,
+    then runs one of:
+      [1] Overview of naming figures
+      [2] Naming profile by figure
+      [3] Figure profile by lemma
+    """
+
+    # --- load categorization JSON safely ---
+    df_json = None
+    try:
+        json_path = paths.get("categorization_json")
+        js = safe_read_json(json_path, default=[])
+        if isinstance(js, list):
+            df_json = pd.DataFrame(js)
+        elif isinstance(js, dict):
+            for key in ("entries", "data", "items"):
+                if key in js and isinstance(js[key], list):
+                    df_json = pd.DataFrame(js[key])
+                    break
+    except Exception as e:
+        print(f"⚠️ Could not load categorization JSON: {e}")
+
+    # --- load Excel fallback into DataFrame ---
+    df_excel = None
+    try:
+        # identical to collocation loader
+        for k in ("excel", "excel_df", "df_excel"):
+            if k in data and isinstance(data[k], pd.DataFrame):
+                df_excel = data[k]
+                break
+        # ensure the in-memory Excel DataFrame actually comes from the 'lemmatisiert' sheet if available
+        excel_path = paths.get("excel_path") or data.get("excel_path")
+        if excel_path and os.path.exists(excel_path):
+            try:
+                xls = pd.ExcelFile(excel_path)
+                sheets_lower = [s.strip().lower() for s in xls.sheet_names]
+                if "lemmatisiert" in sheets_lower:
+                    # check whether current df_excel columns look like the lemmatized structure
+                    looks_lemmatized = any("bezeichnung 1" in c.lower() for c in df_excel.columns)
+                    if not looks_lemmatized:
+                        df_excel = pd.read_excel(excel_path, sheet_name="lemmatisiert", dtype=str)
+            except Exception as e:
+                print(f"⚠️ Could not verify or switch to 'lemmatisiert' sheet: {e}")
+
+        if df_excel is None:
+            excel_path = paths.get("excel_path") or data.get("excel_path")
+            if excel_path and os.path.exists(excel_path):
+                try:
+                    # prefer the sheet 'lemmatisiert' if present
+                    xls = pd.ExcelFile(excel_path)
+                    if "lemmatisiert" in [s.strip().lower() for s in xls.sheet_names]:
+                        df_excel = pd.read_excel(excel_path, sheet_name="lemmatisiert", dtype=str)
+                        print(f"ℹ️ Excel sheet 'lemmatisiert' loaded from: {excel_path} ({len(df_excel)} rows).")
+                    else:
+                        df_excel = pd.read_excel(excel_path, dtype=str)
+                        print(f"ℹ️ Excel default sheet loaded from: {excel_path} ({len(df_excel)} rows).")
+                except Exception as e:
+                    print(f"⚠️ Could not load Excel file: {e}")
+            else:
+                print("⚠️ Excel path not found or missing.")
+    except Exception as e:
+        print(f"⚠️ Could not load Excel fallback: {e}")
+
+    # --- 1) ask for target figure (validated) ---
+    target_figure = ask_valid_figure_name(paths["categorization_json"])
+    if not target_figure:
+        print("No figure name provided.")
+        return
+
+    # --- 2) sub-menu (validated numeric choice: 1, 2, 3) ---
+    print(
+        "\nWhich list should be output?\n"
+        "[1] Overview of naming figures\n"
+        "[2] Naming profile by figure\n"
+        "[3] Figure profile by lemma"
+    )
+    choice = ask_user_choice("> Select option:", ["1", "2", "3"])
+
+    # --- [1] Overview of naming figures ---
+    if choice == "1":
+        # ensure correct data source
+        src_df, src_kind = _require_and_pick_source(
+            df_json,
+            df_excel,
+            required_all=["Benannte Figur", "Nennende Figur"],
+            required_any_prefixes=["Bezeichnung", "Epitheta"],
+            book_name=book_name,
+        )
+
+        if src_df is None:
+            print("No valid data source found for overview analysis.")
+            return
+
+        analyze_overview_of_naming_figures(
+            book_name,
+            df_json,  # give JSON as-is
+            df_excel,  # give Excel as-is
+            target_figure
+        )
+        return
+
+    # --- [2] Naming profile by figure ---
+    if choice == "2":
+        try:
+            source, df, cols = prepare_naming_data(book_name, df_json, df_excel)
+            # explicit one-line reason if Excel was chosen
+            if source == "excel":
+                missing = []
+                if df_json is None or df_json.empty:
+                    missing.append("no JSON data")
+                else:
+                    if "Benannte Figur" not in df_json.columns:
+                        missing.append("'Benannte Figur'")
+                    if "Nennende Figur" not in df_json.columns:
+                        missing.append("'Nennende Figur'")
+                if missing:
+                    print(f"⚠️ JSON missing {', '.join(missing)} — loading Excel file.")
+
+            tcol = cols["target"]
+            ncol = cols["namer"]
+            df_sub = df.loc[df[tcol] == target_figure]
+            if df_sub.empty:
+                print(f"No entries found for target figure: {target_figure}")
+                return
+
+            freq = df_sub[ncol].value_counts().to_dict()
+            print("\nList of naming figures (sorted by frequency):")
+            for i, (name, count) in enumerate(
+                sorted(freq.items(), key=lambda t: (-t[1], t[0])), start=1
+            ):
+                print(f"{i} {name} ({count})")
+        except Exception as e:
+            print(f"(Preview unavailable: {e})")
+
+        # read raw input; allow empty -> abort
+        raw = input("\n✍ Please enter the name of the figure: ").strip()
+        if not raw:
+            print("No naming figure provided. Aborting.")
+            return
+        selected_namer = raw
+        analyze_naming_profile_by_figure(
+            book_name, df_json, df_excel, target_figure, selected_namer
+        )
+        return
+
+    # --- [3] Figure profile by lemma ---
+    if choice == "3":
+        # read the lemma from stdin (do NOT pass the prompt string anywhere)
+        query_lemma = input("\n✍ Please enter the lemma: ").strip()
+        if not query_lemma:
+            print("No lemma provided. Returning to analysis menu.")
+            return
+
+        # pass BOTH sources so prepare_naming_data can fall back if needed
+        analyze_figure_profile_by_lemma(
+            book_name, df_json, df_excel, target_figure, query_lemma
+        )
+        return
+
+    print("Invalid choice. Returning to main menu.")
+
+# --- helper: ensure proper source selection (json vs. excel) ---
+def _has_any_prefixed_columns(df, prefixes):
+    """Return True if df contains any column starting with any given prefix."""
+    cols = [str(c).strip().lower() for c in df.columns]
+    return any(any(c.startswith(p.lower()) for c in cols) for p in prefixes)
+
+
+def _require_and_pick_source(df_json, df_excel, required_all=None, required_any_prefixes=None, book_name=""):
+    """
+    Pick JSON if it satisfies requirements; otherwise fall back to Excel.
+    Prints a clear reason when falling back.
+    """
+    required_all = required_all or []
+    required_any_prefixes = required_any_prefixes or []
+
+    def ok(df):
+        if df is None or df.empty:
+            return False
+        if not all(req in df.columns for req in required_all):
+            return False
+        if required_any_prefixes and not _has_any_prefixed_columns(df, required_any_prefixes):
+            return False
+        return True
+
+    # prefer JSON if valid
+    if ok(df_json):
+        return df_json, "json"
+
+    # explain why fallback is needed
+    missing = []
+    if df_json is None or df_json.empty:
+        missing.append("empty JSON")
+    else:
+        for col in required_all:
+            if col not in df_json.columns:
+                missing.append(f'missing "{col}"')
+        if required_any_prefixes and not _has_any_prefixed_columns(df_json, required_any_prefixes):
+            fam = " or ".join(required_any_prefixes)
+            missing.append(f"missing family ({fam})")
+
+    print(f'⚠️ JSON does not satisfy requirements for "{book_name}": {", ".join(missing)} – loading Excel fallback.')
+
+    # try Excel
+    if ok(df_excel):
+        print("ℹ️ Excel fallback successfully loaded.")
+        return df_excel, "excel"
+
+    print(f'⚠ Neither JSON nor Excel provide required columns for "{book_name}".')
+    return None, "none"
+
+def match_name_to_lemma(target_canon, lemma, aliases=None):
+    """
+    Check if a lemma should count as a name-based mention of the target figure.
+
+    Parameters:
+        target_canon (str): canonical form of the target figure name
+        lemma (str): lemma or designation to check
+        aliases (list or None): optional list of known alias spellings
+
+    Returns:
+        bool: True if the lemma counts as a name mention of the target, else False
+
+    Logic:
+      - compares lowercase normalized forms
+      - allows direct match or alias match
+      - ignores empty/non-string values
+    """
+    if not isinstance(lemma, str) or lemma.strip() == "":
+        return False
+
+    norm_target = target_canon.lower().strip()
+    norm_lemma  = lemma.lower().strip()
+
+    # exact match
+    if norm_lemma == norm_target:
+        return True
+
+    # alias match
+    if aliases:
+        for a in aliases:
+            if isinstance(a, str) and a.lower().strip() == norm_lemma:
+                return True
+
+    return False
+
+def analyze_overview_of_naming_figures(book_name, df_json, df_excel, target_figure):
+    """
+    Build the overview table:
+      Nennende Figur | Gesamtnennungen | Namensnennungen | Anteil der Namensnennungen (%)
+
+    Rules:
+      - exactly 1 occurrence per row (regardless of how many designation/epithet fields are filled)
+      - name-based mentions detected via match_name_to_lemma(target, lemma, aliases)
+      - if no name-based matches found, ask once whether a suggested close form should be used;
+        if 'y': recount using that exact form; if 'n': write reduced table
+          (Nennende Figur | Gesamtnennungen)
+    Output:
+      data/{book_name}/analysis/{target_figure}_naming_overview.csv
+    """
+    # unify data & detect columns
+    source, df, cols = prepare_naming_data(book_name, df_json, df_excel)
+    tcol = cols["target"]
+    ncol = cols["namer"]
+    dcols = cols["designation_cols"]
+    ecols = cols["epithet_cols"]
+
+    # filter to the requested target figure
+    dft = df.loc[df[tcol] == target_figure]
+
+    # counts per naming figure
+    counts_total = {}
+    counts_name = {}
+
+    # aliases hook (extend if you have alias retrieval attached to resolve_figure_name)
+    aliases = []
+
+    # first pass: name detection through match_name_to_lemma
+    for _, row in dft.iterrows():
+        namer = row.get(ncol)
+        if not isinstance(namer, str) or namer.strip() == "":
+            continue
+
+        # exactly one occurrence per row
+        counts_total[namer] = counts_total.get(namer, 0) + 1
+
+        # collect lemmas for name-based check (designation + epithets)
+        lemmas = []
+        for c in dcols:
+            val = row.get(c)
+            if isinstance(val, str) and val.strip() != "":
+                lemmas.append(val)
+        for c in ecols:
+            val = row.get(c)
+            if isinstance(val, str) and val.strip() != "":
+                lemmas.append(val)
+
+        if any(match_name_to_lemma(target_figure, lm, aliases=aliases) for lm in lemmas):
+            counts_name[namer] = counts_name.get(namer, 0) + 1
+
+    # If no name-based mentions were found, offer a single confirmation for a suggested close match.
+    name_hits_sum = sum(counts_name.values())
+    reduced_mode = False
+    suggested = None
+
+    if name_hits_sum == 0:
+        # Suggest the closest lemma form present in the data (case-insensitive)
+        lemmas_all = set()
+        for _, row in dft.iterrows():
+            for c in dcols:
+                v = row.get(c)
+                if isinstance(v, str) and v.strip() != "":
+                    lemmas_all.add(v)
+            for c in ecols:
+                v = row.get(c)
+                if isinstance(v, str) and v.strip() != "":
+                    lemmas_all.add(v)
+
+        if lemmas_all:
+            # difflib proposal (lowercased comparison space)
+            lowered = {lm.lower(): lm for lm in lemmas_all}
+            best = difflib.get_close_matches(target_figure.lower(), list(lowered.keys()), n=1, cutoff=0.6)
+            if best:
+                suggested = lowered[best[0]]
+
+        if suggested:
+            # UI dialog (as specified)
+            print(f'{target_figure} could not be found in the "Bezeichnung" column.')
+            yn = input(f'Could "{suggested}" be a variant of the name? (y/n) ').strip().lower()
+            if yn == "y":
+                # recount name-based using the exact suggested form
+                counts_name = {}
+                for _, row in dft.iterrows():
+                    namer = row.get(ncol)
+                    if not isinstance(namer, str) or namer.strip() == "":
+                        continue
+                    # one per row still applies
+                    # name-based hit if any designation/epithet equals the suggested form (case-insensitive)
+                    hit = False
+                    for c in dcols:
+                        v = row.get(c)
+                        if isinstance(v, str) and v.lower().strip() == suggested.lower().strip():
+                            hit = True
+                            break
+                    if not hit:
+                        for c in ecols:
+                            v = row.get(c)
+                            if isinstance(v, str) and v.lower().strip() == suggested.lower().strip():
+                                hit = True
+                                break
+                    if hit:
+                        counts_name[namer] = counts_name.get(namer, 0) + 1
+            else:
+                # produce reduced table (no name-based column)
+                reduced_mode = True
+        else:
+            # no reasonable suggestion → reduced mode
+            reduced_mode = True
+
+    # Prepare rows
+    os.makedirs(os.path.join("data", book_name, "analysis"), exist_ok=True)
+    out_path = os.path.join("data", book_name, "analysis", f"naming_overview_{target_figure}.csv")
+
+    if reduced_mode:
+        # Only: Nennende Figur | Gesamtnennungen
+        with open(out_path, "w", encoding="utf-8", newline="") as f:
+            w = csv.writer(f, delimiter=";")
+            w.writerow(["Nennende Figur", "Gesamtnennungen"])
+            for namer, total in sorted(counts_total.items(), key=lambda t: (-t[1], t[0])):
+                w.writerow([namer, total])
+        print(f"✅ Naming figure overview written to: {out_path}")
+        return
+
+    # Full table with integer percent
+    rows = []
+    for namer, total in counts_total.items():
+        nhits = counts_name.get(namer, 0)
+        pct = int(round((nhits / total) * 100)) if total > 0 else 0
+        rows.append((namer, total, nhits, pct))
+    rows.sort(key=lambda t: (-t[1], t[0]))
+
+    with open(out_path, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, delimiter=";")
+        w.writerow(["Nennende Figur", "Gesamtnennungen", "Namensnennungen", "Anteil der Namensnennungen (%)"])
+        for namer, total, nhits, pct in rows:
+            w.writerow([namer, total, nhits, pct])
+
+    print(f"✅ Naming figure overview written to: {out_path}")
+
+def analyze_naming_profile_by_figure(book_name, df_json, df_excel, target_figure, selected_namer):
+    """
+    Create a list of designations used by a specific naming figure
+    for the selected target figure.
+
+    Output file:
+      data/{book_name}/analysis/{target_figure}_naming_profile_by_{selected_namer}.csv
+
+    Logic:
+      - filter rows where target == target_figure and namer == selected_namer
+      - if an unnumbered column 'Bezeichnung' exists → use only this one (raw, not lemmatized)
+      - else use numbered Bezeichnung* + Epitheta* (already lemmatized)
+      - if a verse column exists, include it
+    """
+
+    # unify data
+    source, df, cols = prepare_naming_data(book_name, df_json, df_excel)
+    tcol = cols["target"]
+    ncol = cols["namer"]
+    dcols = cols["designation_cols"]
+    ecols = cols["epithet_cols"]
+    vcol  = cols.get("verse_col")
+    has_raw = bool(cols.get("has_unnumbered_designation"))
+
+    # filter relevant rows
+    dff = df.loc[(df[tcol] == target_figure) & (df[ncol] == selected_namer)]
+
+    rows = []
+
+    for _, row in dff.iterrows():
+        # verse (optional)
+        verse = ""
+        if isinstance(vcol, str) and vcol in row:
+            val = row[vcol]
+            if isinstance(val, str):
+                verse = val
+            elif val is not None:
+                verse = str(val)
+
+        # if unnumbered 'Bezeichnung' exists → only this column
+        if has_raw:
+            raw_col = next((c for c in dcols if c.strip().lower() == "bezeichnung"), None)
+            if raw_col:
+                val = row.get(raw_col)
+                if isinstance(val, str) and val.strip() != "":
+                    rows.append((verse, val))
+            continue
+
+        # fallback: numbered designations and epithets
+        for c in dcols:
+            if c.strip().lower() == "bezeichnung":
+                continue
+            val = row.get(c)
+            if isinstance(val, str) and val.strip() != "":
+                rows.append((verse, val))
+        for c in ecols:
+            val = row.get(c)
+            if isinstance(val, str) and val.strip() != "":
+                rows.append((verse, val))
+
+    # ensure output directory
+    os.makedirs(os.path.join("data", book_name, "analysis"), exist_ok=True)
+    out_path = os.path.join(
+        "data", book_name, "analysis", f"naming_profile_by_{selected_namer}_{target_figure}.csv"
+    )
+
+    # write the result (header always included)
+    with open(out_path, "w", encoding="utf-8", newline="") as f:
+        writer = csv.writer(f, delimiter=";")
+        writer.writerow(["Vers", "Bezeichnung"])
+        for verse, bez in rows:
+            writer.writerow([verse, bez])
+
+    print(f"✅ Naming profile by figure written to: {out_path}")
+
+def analyze_figure_profile_by_lemma(book_name, df_json, df_excel, target_figure, query_lemma):
+    """
+    Aggregate which naming figures use a given lemma for the target figure.
+
+    Output file:
+      data/{book_name}/analysis/{target_figure}_figure_profile_by_{query_lemma}.csv
+
+    Logic:
+      - restrict rows to target_figure
+      - count matches of query_lemma across numbered Bezeichnung* and Epitheta* columns
+        (skip unnumbered raw 'Bezeichnung' on purpose)
+      - export: Nennende Figur | Count
+      - if no results: print 'No results found for: <lemma>' and return without writing
+    """
+    # unify data
+    source, df, cols = prepare_naming_data(book_name, df_json, df_excel)
+    tcol = cols["target"]
+    ncol = cols["namer"]
+    dcols = [c for c in cols["designation_cols"] if str(c).strip().lower() != "bezeichnung"]
+    ecols = cols["epithet_cols"]
+
+    # restrict to target
+    dft = df.loc[df[tcol] == target_figure]
+
+    q = (query_lemma or "").strip().lower()
+    if q == "":
+        print("No results found for: (empty lemma)")
+        return
+
+    counts = {}
+
+    for _, row in dft.iterrows():
+        namer = row.get(ncol)
+        if not isinstance(namer, str) or namer.strip() == "":
+            continue
+
+        hit = False
+
+        # numbered designations (skip unnumbered 'Bezeichnung')
+        for c in dcols:
+            if c.strip().lower() == "bezeichnung":
+                continue
+            val = row.get(c)
+            if isinstance(val, str) and val.strip().lower() == q:
+                hit = True
+                break
+
+        # epithets if needed
+        if not hit:
+            for c in ecols:
+                val = row.get(c)
+                if isinstance(val, str) and val.strip().lower() == q:
+                    hit = True
+                    break
+
+        if hit:
+            counts[namer] = counts.get(namer, 0) + 1
+
+    if not counts:
+        print(f"No results found for: {query_lemma}")
+        return
+
+    # ensure output directory
+    os.makedirs(os.path.join("data", book_name, "analysis"), exist_ok=True)
+    out_path = os.path.join(
+        "data", book_name, "analysis", f"figure_profile_by_{query_lemma}_{target_figure}.csv"
+    )
+
+    # write CSV
+    with open(out_path, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, delimiter=";")
+        w.writerow(["Nennende Figur", "Count"])
+        for namer, cnt in sorted(counts.items(), key=lambda t: (-t[1], t[0])):
+            w.writerow([namer, cnt])
+
+    print(f"✅ Figure profile by lemma written to: {out_path}")
 
 def run_keyword_menu(config_data, paths, data, book_name):
     """
@@ -945,7 +1493,7 @@ def run_visualization_menu(paths, book_name):
         print(f"📂 File saved at:\n{output_path}")
 
     elif output_mode == "2":
-        # Display only → use temporary file
+        # Display only → use the temporary file
         tmp_filename = f"viz_{uuid.uuid4().hex[:8]}.html"
         tmp_path = os.path.join(paths["tmp_dir"], tmp_filename)
         fig.write_html(tmp_path)
@@ -954,7 +1502,7 @@ def run_visualization_menu(paths, book_name):
         print(f"🧾 Temporary file created at: {tmp_path}")
 
     elif output_mode == "3":
-        # Save and display → use saved file
+        # Save and display → use the saved file
         fig.write_html(output_path)
         print(f"\n✅ Visualization completed.")
         print(f"📂 File saved at:\n{output_path}")

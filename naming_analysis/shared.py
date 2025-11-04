@@ -219,3 +219,160 @@ def sorted_entries(entries: list) -> list:
     ]
 
     return sorted(entries_clean, key=sort_key)
+
+def prepare_naming_data(book_name, df_json, df_excel):
+    """
+    Pick a source (prefer JSON, fallback to Excel) and detect relevant columns
+    for the 'Naming figure analysis'.
+
+    Returns a tuple (source, df_trimmed, cols):
+      - source: "json" or "excel"
+      - df_trimmed: DataFrame with only relevant columns
+      - cols: dictionary with
+          {
+            "target": <column name for 'Benannte Figur'>,
+            "namer": <column name for 'Nennende Figur'>,
+            "designation_cols": [...],       # Bezeichnung*, includes unnumbered 'Bezeichnung' if present
+            "epithet_cols": [...],           # Epitheta*
+            "verse_col": <column name or None>,
+            "has_unnumbered_designation": True/False
+          }
+
+    Raises:
+      ValueError if neither JSON nor Excel satisfies the minimum requirements.
+    """
+
+    def normalize(colname):
+        """Normalize column names: lowercase, strip, collapse spaces."""
+        return re.sub(r"\s+", " ", colname.strip().lower()) if isinstance(colname, str) else ""
+
+    def detect_columns(df):
+        """Detect mandatory and dynamic columns using tolerant matching rules."""
+        nmap = {c: normalize(c) for c in df.columns}
+
+        def match(regex):
+            rx = re.compile(regex, re.IGNORECASE)
+            return [c for c in df.columns if rx.fullmatch(c) or rx.fullmatch(nmap[c])]
+
+        # mandatory columns
+        target = None
+        namer = None
+        for c in df.columns:
+            normed = nmap[c]
+            if normed in ("benannte figur", "benannte_figur"):
+                target = c
+            if normed in ("nennende figur", "nennende_figur"):
+                namer = c
+
+        # dynamic lemma columns
+        designation_cols = match(r"bezeichnung(\s*\d+)?")
+        epithet_cols     = match(r"epitheta(\s*\d+)?")
+        verse_cols       = match(r"vers(|-?id)?")
+
+        has_unnumbered   = any(normalize(c) == "bezeichnung" for c in designation_cols)
+        has_lex          = (len(designation_cols) + len(epithet_cols)) > 0
+
+        cols = {
+            "target": target,
+            "namer": namer,
+            "designation_cols": designation_cols,
+            "epithet_cols": epithet_cols,
+            "verse_col": verse_cols[0] if verse_cols else None,
+            "has_unnumbered_designation": has_unnumbered,
+            "has_lex": has_lex,
+        }
+        return cols
+
+    def trim(df, cols):
+        """Keep only the relevant columns (remove duplicates, preserve order)."""
+        keep = []
+        if cols["target"]:
+            keep.append(cols["target"])
+        if cols["namer"]:
+            keep.append(cols["namer"])
+        keep += cols["designation_cols"]
+        keep += cols["epithet_cols"]
+        if cols["verse_col"]:
+            keep.append(cols["verse_col"])
+        # deduplicate but preserve order
+        keep = [c for c in dict.fromkeys(keep) if c in df.columns]
+        return df.loc[:, keep].copy()
+
+    # 1) try JSON first
+    if df_json is None or df_json.empty:
+        print("⚠️ No JSON data provided or JSON is empty – loading from Excel instead.")
+    else:
+        cj = detect_columns(df_json)
+
+        # structural check: columns present?
+        json_ok = cj["target"] and cj["namer"] and cj["has_lex"]
+        if not json_ok:
+            missing_parts = []
+            if not cj["target"]:
+                missing_parts.append("'Benannte Figur'")
+            if not cj["namer"]:
+                missing_parts.append("'Nennende Figur'")
+            if not cj["has_lex"]:
+                missing_parts.append("Bezeichnung*/Epitheta*")
+            print(f"⚠️ JSON missing {', '.join(missing_parts)} – loading from Excel instead.")
+        else:
+            # content-level check: 'Nennende Figur' required only if a Bezeichnung/Epitheton is present,
+            # not if the row has an Eigennennung or Erzähler instead
+            lemma_cols = [c for c in (cj["designation_cols"] + cj["epithet_cols"]) if c in df_json.columns]
+            eigennennung_col = "Eigennennung" if "Eigennennung" in df_json.columns else None
+            erzaehler_col = "Erzähler" if "Erzähler" in df_json.columns else None
+
+            if lemma_cols:
+                def _nonempty_series(s):
+                    return s.dropna().astype(str).str.strip().ne("")
+
+                has_lemma = df_json[lemma_cols].apply(_nonempty_series).any(axis=1)
+
+                has_eigennennung = (
+                    _nonempty_series(df_json[eigennennung_col]) if eigennennung_col else pd.Series(False,
+                                                                                                   index=df_json.index)
+                )
+                has_erzaehler = (
+                    _nonempty_series(df_json[erzaehler_col]) if erzaehler_col else pd.Series(False, index=df_json.index)
+                )
+
+                namer_col = cj["namer"]
+                namer_nonempty = df_json[namer_col].fillna("").astype(str).str.strip().ne("")
+
+                bad_rows = has_lemma & ~has_eigennennung & ~has_erzaehler & ~namer_nonempty
+                bad_count = int(bad_rows.sum())
+
+                if bad_count > 0:
+                    print(
+                        f"⚠️ JSON has {bad_count} row(s) with Bezeichnung/Epitheton but empty 'Nennende Figur' — loading Excel instead.")
+                else:
+                    # JSON passes both structural and content checks → accept JSON
+                    return "json", trim(df_json, cj), {
+                        "target": cj["target"],
+                        "namer": cj["namer"],
+                        "designation_cols": cj["designation_cols"],
+                        "epithet_cols": cj["epithet_cols"],
+                        "verse_col": cj["verse_col"],
+                        "has_unnumbered_designation": cj["has_unnumbered_designation"],
+                    }
+
+    # 2) fallback to Excel
+    if df_excel is not None and not df_excel.empty:
+        cx = detect_columns(df_excel)
+        x_ok = cx["target"] and cx["namer"] and cx["has_lex"]
+        if x_ok:
+            print("ℹ️ Using Excel fallback (JSON lacked required structure).")
+            return "excel", trim(df_excel, cx), {
+                "target": cx["target"],
+                "namer": cx["namer"],
+                "designation_cols": cx["designation_cols"],
+                "epithet_cols": cx["epithet_cols"],
+                "verse_col": cx["verse_col"],
+                "has_unnumbered_designation": cx["has_unnumbered_designation"],
+            }
+
+    # 3) no valid data found
+    raise ValueError(
+        f"[prepare_naming_data] Missing required columns in JSON/Excel for '{book_name}'. "
+        "Expected: 'Benannte Figur', 'Nennende Figur', and at least one of Bezeichnung*/Epitheta*."
+    )
