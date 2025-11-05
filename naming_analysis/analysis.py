@@ -31,7 +31,7 @@ from naming_analysis.shared import (
 )
 from naming_analysis.io_utils import safe_read_json
 from naming_analysis.loaders import load_collocation_sheet, build_fallback_collocation_df_from_tei
-from naming_analysis.shared import prepare_naming_data
+from naming_analysis.shared import prepare_naming_data, serialize_verse_value
 
 def run_analysis_menu(config_data, paths, data, book_name):
     """
@@ -816,7 +816,7 @@ def analyze_naming_profile_by_figure(book_name, df_json, df_excel, target_figure
         writer = csv.writer(f, delimiter=";")
         writer.writerow(["Vers", "Bezeichnung"])
         for verse, bez in rows:
-            writer.writerow([verse, bez])
+            writer.writerow([serialize_verse_value(verse), bez])
 
     print(f"✅ Naming profile by figure written to: {out_path}")
 

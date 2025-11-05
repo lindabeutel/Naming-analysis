@@ -376,3 +376,44 @@ def prepare_naming_data(book_name, df_json, df_excel):
         f"[prepare_naming_data] Missing required columns in JSON/Excel for '{book_name}'. "
         "Expected: 'Benannte Figur', 'Nennende Figur', and at least one of Bezeichnung*/Epitheta*."
     )
+
+def serialize_verse_value(value) -> str:
+    """
+    Serialize numeric or textual verse information for export
+    without altering the original formatting semantics.
+
+    - Keeps Excel-style comma decimals as-is (e.g. '17,2')
+    - Keeps integers as '20' (not '20.0')
+    - Converts JSON floats (17.20) to '17.2'
+    - Returns an empty string for None or NaN
+    """
+    if value is None:
+        return ""
+    try:
+        if pd.isna(value):
+            return ""
+    except (NameError, AttributeError):
+        pass
+
+    # preserve source formatting
+    if isinstance(value, str):
+        val = value.strip()
+        # keep comma decimals (Excel format)
+        if "," in val:
+            return val
+        # trim redundant zeros from dot-decimals
+        if "." in val:
+            val = val.rstrip("0").rstrip(".")
+        return val
+
+    # handle numeric values from JSON (int/float)
+    try:
+        f = float(value)
+        if f.is_integer():
+            return str(int(f))
+        s = str(f)
+        if "." in s:
+            s = s.rstrip("0").rstrip(".")
+        return s
+    except (ValueError, TypeError):
+        return str(value)
