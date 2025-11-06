@@ -17,6 +17,7 @@ import os
 import math
 import csv
 import difflib
+import numpy as np
 import uuid
 import webbrowser
 from collections import Counter
@@ -1301,6 +1302,23 @@ def format_kwic(context: str, variants: list[str]) -> tuple[str, str, str]:
     return context.strip(), "", ""
 
 def run_visualization_menu(paths, book_name):
+    while True:
+        print("\n📈 Which visualization do you want to run?")
+        print("[1] Verse-based naming distribution")
+        print("[2] Intra-Figure Co-Occurrence Heatmap")
+        print("[3] Back to analysis menu")
+
+        choice = ask_user_choice("> ", ["1", "2", "3"])
+
+        if choice == "1":
+            visualize_verse_naming_distribution(paths, book_name)
+        elif choice == "2":
+            visualize_intra_figure_cooccurrence_heatmap(paths, book_name)
+        elif choice == "3":
+            print("↩️ Returning to analysis menu.")
+            break
+
+def visualize_verse_naming_distribution(paths, book_name):
     """
     Interactive CLI interface for visualizing naming variants and epithets using Plotly.
 
@@ -1557,3 +1575,155 @@ def parse_token_selection(input_str: str, max_value: int) -> list[int] | None:
                 return None
 
     return sorted(result)
+
+def collect_tokens_for_cooccurrence(row: dict, include_naming_variants: bool, include_epithets: bool) -> list[str]:
+    """
+    Collects all relevant tokens (naming variants and/or epithets) from a single entry.
+
+    Parameters:
+        row (dict): One entry from the categorization JSON.
+        include_naming_variants (bool): Whether to include 'Bezeichnung 1–4'.
+        include_epithets (bool): Whether to include 'Epitheta 1–5'.
+
+    Returns:
+        list[str]: A sorted, de-duplicated list of tokens extracted from the row.
+    """
+    tokens: list[str] = []
+
+    if include_naming_variants:
+        for i in range(1, 5):
+            v = row.get(f"Bezeichnung {i}", "")
+            if isinstance(v, str) and v.strip():
+                tokens.append(v.strip())
+
+    if include_epithets:
+        for i in range(1, 6):
+            v = row.get(f"Epitheta {i}", "")
+            if isinstance(v, str) and v.strip():
+                tokens.append(v.strip())
+
+    # remove duplicates within one entry and sort alphabetically for stability
+    return sorted(set(tokens))
+
+
+def visualize_intra_figure_cooccurrence_heatmap(paths: dict, book_name: str) -> None:
+    """
+    Intra-Figure Co-Occurrence Heatmap (CLI + rendering).
+    Scope: within-entry co-occurrence (row-based), no verse window.
+    Source: categorization JSON (Bezeichnung 1–4, Epitheta 1–5).
+    Defaults (silent): min_pair_count=2, top_n=30.
+    """
+    # Step 1 – Figure selection
+    figure_name = ask_valid_figure_name(paths["categorization_json"])
+
+    # Step 2 – Labeling types
+    print("Which labeling types should be included?")
+    print("[1] Both")
+    print("[2] Only naming variants")
+    print("[3] Only epithets")
+    variant_type = ask_user_choice("> ", ["1", "2", "3"])
+    include_naming_variants = (variant_type in ("1", "2"))
+    include_epithets = (variant_type in ("1", "3"))
+
+    # Fixed defaults (silent)
+    min_pair_count = 2
+    top_n = 30
+
+    # Load data
+    entries = safe_read_json(paths["categorization_json"], default=[])
+    rows = [e for e in entries if isinstance(e, dict) and e.get("Benannte Figur") == figure_name]
+
+    # Collect tokens per row
+    token_rows = [
+        collect_tokens_for_cooccurrence(r, include_naming_variants, include_epithets)
+        for r in rows
+    ]
+    token_rows = [t for t in token_rows if len(t) >= 2]
+
+    # Count unordered pairs per row
+    from itertools import combinations
+    from collections import Counter
+    pair_counter: Counter = Counter()
+    for toks in token_rows:
+        for a, b in combinations(toks, 2):
+            pair = tuple(sorted((a, b)))
+            pair_counter[pair] += 1
+
+    # Apply threshold
+    pair_counter = Counter({p: c for p, c in pair_counter.items() if c >= min_pair_count})
+    if not pair_counter:
+        print("\nℹ️ No co-occurring pairs met the minimum threshold.")
+        return
+
+    # Top-N selection
+    top_pairs = pair_counter.most_common(top_n) if top_n and top_n > 0 else pair_counter.most_common()
+    tokens = sorted(set([t for p, _ in top_pairs for t in p]))
+    index = {t: i for i, t in enumerate(tokens)}
+
+    # Build symmetric matrix, but display only one half
+    size = len(tokens)
+    matrix = np.zeros((size, size), dtype=float)
+
+    for (a, b), c in top_pairs:
+        i, j = index[a], index[b]
+        if i > j:  # only fill the lower half
+            matrix[i, j] = c
+        elif i < j:
+            matrix[j, i] = c
+        # diagonal remains 0
+
+    # set all cells above the diagonal to NaN → invisible in Plotly
+    matrix[np.triu_indices(size, k=1)] = np.nan
+
+    fig = px.imshow(
+        matrix,
+        x=tokens,
+        y=tokens,
+        labels=dict(x="Token", y="Token", color="Co-occurrences"),
+        aspect="auto"
+    )
+    fig.update_traces(hovertemplate="Token %{y} × %{x}<br>Co-occurrences: %{z}<extra></extra>")
+
+    # Plot
+    fig = px.imshow(
+        matrix,
+        x=tokens,
+        y=tokens,
+        labels=dict(x="Token", y="Token", color="Co-occurrences"),
+        aspect="auto"
+    )
+
+    # Step 3 – Output handling (identical to existing viz)
+    print("\n📅 How should the output be handled?")
+    print("[1] Save as HTML file")
+    print("[2] Show plot in browser")
+    print("[3] Both")
+    output_mode = ask_user_choice("> ", ["1", "2", "3"])
+
+    output_dir = os.path.join("data", book_name, "visualization")
+    os.makedirs(output_dir, exist_ok=True)
+    variant_label = "cooccurrence"
+    filename = f"viz_{variant_label}_{figure_name}.html"
+    output_path = os.path.join(output_dir, filename)
+
+    if output_mode == "1":
+        fig.write_html(output_path)
+        print("\n✅ Visualization completed.")
+        print(f"📂 File saved at:\n{output_path}")
+
+    elif output_mode == "2":
+        tmp_dir = paths.get("tmp_dir", os.path.join("data", book_name, "tmp"))
+        os.makedirs(tmp_dir, exist_ok=True)
+        tmp_filename = f"viz_{uuid.uuid4().hex[:8]}.html"
+        tmp_path = os.path.join(tmp_dir, tmp_filename)
+        fig.write_html(tmp_path)
+        webbrowser.open_new_tab(f"file://{os.path.abspath(tmp_path)}")
+        print("🌐 The plot has been opened in your browser.")
+        print(f"🧾 Temporary file created at: {tmp_path}")
+
+    elif output_mode == "3":
+        fig.write_html(output_path)
+        print("\n✅ Visualization completed.")
+        print(f"📂 File saved at:\n{output_path}")
+        webbrowser.open_new_tab(f"file://{os.path.abspath(output_path)}")
+        print("🌐 The plot has been opened in your browser.")
