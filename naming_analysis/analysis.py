@@ -31,7 +31,7 @@ from naming_analysis.shared import (
     get_first_valid_text
 )
 from naming_analysis.io_utils import safe_read_json
-from naming_analysis.loaders import load_collocation_sheet, build_fallback_collocation_df_from_tei
+from naming_analysis.loaders import load_collocation_sheet, build_fallback_collocation_df_from_tei, load_naming_sources_with_excel_fallback
 from naming_analysis.shared import prepare_naming_data, serialize_verse_value
 
 def run_analysis_menu(config_data, paths, data, book_name):
@@ -71,7 +71,7 @@ def run_analysis_menu(config_data, paths, data, book_name):
         elif choice == "4":
             run_collocation_menu(config_data, paths, data, book_name)
         elif choice == "5":
-            run_visualization_menu(paths, book_name)
+            run_visualization_menu(paths, book_name, data)
         elif choice == "6":
             print("📦 Analysis completed.")
             break
@@ -1301,20 +1301,24 @@ def format_kwic(context: str, variants: list[str]) -> tuple[str, str, str]:
     # No variant matched
     return context.strip(), "", ""
 
-def run_visualization_menu(paths, book_name):
+def run_visualization_menu(paths, book_name, data):
     while True:
         print("\n📈 Which visualization do you want to run?")
         print("[1] Verse-based naming distribution")
         print("[2] Intra-Figure Co-Occurrence Heatmap")
-        print("[3] Back to analysis menu")
+        print("[3] Sunburst Visualization")
+        print("[4] Back to analysis menu")
 
-        choice = ask_user_choice("> ", ["1", "2", "3"])
+        choice = ask_user_choice("> ", ["1", "2", "3", "4"])
 
         if choice == "1":
             visualize_verse_naming_distribution(paths, book_name)
         elif choice == "2":
             visualize_intra_figure_cooccurrence_heatmap(paths, book_name)
         elif choice == "3":
+            run_sunburst_visualization(paths, book_name, data)
+
+        elif choice == "4":
             print("↩️ Returning to analysis menu.")
             break
 
@@ -1727,3 +1731,829 @@ def visualize_intra_figure_cooccurrence_heatmap(paths: dict, book_name: str) -> 
         print(f"📂 File saved at:\n{output_path}")
         webbrowser.open_new_tab(f"file://{os.path.abspath(output_path)}")
         print("🌐 The plot has been opened in your browser.")
+
+def run_sunburst_visualization(paths, book_name, data):
+    """
+    Entry point for all Sunburst visualizations.
+    Step 1: Ask user for Sunburst type
+    Step 2: Delegate to figure-centered or work-centered view
+    """
+
+    print("\n🌞 Sunburst Visualization")
+    print("[1] Figure-centered view")
+    print("[2] Work-centered overview")
+    print("[3] Back to visualization menu")
+
+    choice = ask_user_choice("> ", ["1", "2", "3"])
+
+    if choice == "1":
+        visualize_sunburst_figure_view(paths, book_name, data)
+
+    elif choice == "2":
+        visualize_sunburst_work_overview(paths, book_name, data)
+
+    elif choice == "3":
+        print("↩️ Returning.")
+        return
+
+def visualize_sunburst_figure_view(paths, book_name, data):
+    """
+    Figure-centered sunburst visualization.
+
+    Modes:
+    [1] Figure centred mode: Types → Lemma
+        path = center_figure → type → lemma
+    [2] Namer centered mode: Naming figures and/or narrator → Lemma
+        path = center_figure → namer → lemma
+    """
+
+    # --- 1) Load naming data (JSON + Excel fallback) ---
+    df_json, df_excel = load_naming_sources_with_excel_fallback(paths, data)
+    source, df, cols = prepare_naming_data(book_name, df_json, df_excel)
+
+    if df is None or df.empty:
+        print("⚠️ No naming data available after prepare_naming_data.")
+        return
+
+    fig = None
+    _ = fig  # silence linter: intentional initialization
+
+    # --- 2) Ask for figure name ---
+    figure_name = ask_valid_figure_name(paths["categorization_json"])
+
+    # --- 3) Ask for mode ---
+    print()
+    print("[1] Figure centred mode: Types → Lemma")
+    print("[2] Namer centered mode: Naming figures and/or narrator → Lemma")
+    mode_choice = ask_user_choice("> ", ["1", "2"])
+
+    # --- 4) Build aggregated data ---
+    if mode_choice == "1":
+        sunburst_df = build_sunburst_data_types_lemma(df, cols, figure_name)
+    else:
+        sunburst_df = build_sunburst_data_namer_lemma(df, cols, figure_name)
+
+    if sunburst_df is None or sunburst_df.empty:
+        print("⚠️ No data available for figure-centred sunburst.")
+        return
+
+    # --- 5) Compute percentages relative to the center figure ---
+    total_freq = sunburst_df["frequency"].sum()
+    if total_freq > 0:
+        sunburst_df["pct_of_center"] = sunburst_df["frequency"] / total_freq
+    else:
+        sunburst_df["pct_of_center"] = 0.0
+
+    # --- 6) Basic sorting for our own reference (Plotly behält seine Struktur) ---
+    sunburst_df["type_group"] = pd.Categorical(
+        sunburst_df["type_group"],
+        categories=["Naming variants", "Epithets"],
+        ordered=True,
+    )
+
+    sunburst_df = sunburst_df.sort_values(
+        ["type_group", "lemma"],
+        ascending=[True, True],
+    ).reset_index(drop=True)
+
+    if mode_choice == "1":
+        fig = px.sunburst(
+            sunburst_df,
+            path=["center_figure", "type_group", "lemma"],
+            values="frequency",
+            color="color_group",
+            color_discrete_map={
+                "Name": "#F28E2B",
+                "Antonomasia": "#FFBE7D",
+                "Epithet": "#3B83BD",
+            },
+        )
+
+        if fig.data:
+            trace = fig.data[0]
+
+            labels = list(trace["labels"])
+            colors = list(trace["marker"]["colors"])
+
+            # 1) Ring-Farben patchen
+            for i, lab in enumerate(labels):
+                if lab == "Naming variants":
+                    colors[i] = "#F7A94A"  # mid-orange für den Ring
+                elif lab == "Epithets":
+                    colors[i] = "#3B83BD"  # blau für den Ring
+
+            trace["marker"]["colors"] = colors
+
+            group_totals = (
+                sunburst_df.groupby("type_group", observed=False)["frequency"]
+                .sum()
+                .to_dict()
+            )
+
+            # 2) Lookup nur über lemma
+            #    baue eine Map: lemma -> (group, category, lemma, freq, pct)
+            lemma_map = {}
+            for _, row in sunburst_df.iterrows():
+                lemma_map[row["lemma"]] = [
+                    row["type_group"],  # Group: Naming variants / Epithets
+                    row["color_group"],  # Category: Name / Antonomasia / Epithet
+                    row["lemma"],
+                    row["frequency"],
+                    row["pct_of_center"],
+                ]
+
+            # 3) customdata in TRACE-Reihenfolge aufbauen
+            customdata = []
+            for lab in labels:
+                if lab == figure_name:
+                    # Zentrum: gesamte Frequenz & 100 %
+                    info = ["", "", lab, float(total_freq), 1.0]
+
+                elif lab in group_totals:
+                    # Mittlerer Ring: Naming variants / Epithets
+                    cnt = float(group_totals.get(lab, 0.0))
+                    share = (cnt / total_freq) if total_freq > 0 else 0.0
+                    info = [lab, "", lab, cnt, share]
+
+                else:
+                    # Äußerer Ring: Lemma
+                    info = lemma_map.get(lab)
+                    if info is None:
+                        info = ["", "", lab, 0, 0.0]
+
+                customdata.append(info)
+
+            trace["customdata"] = customdata
+            trace["hovertemplate"] = (
+                "Figure: %{root}<br>"
+                "Group: %{customdata[0]}<br>"
+                "Category: %{customdata[1]}<br>"
+                "Lemma: %{customdata[2]}<br>"
+                "Count: %{customdata[3]}<br>"
+                "Share (center): %{customdata[4]:.1%}<extra></extra>"
+            )
+
+    else:
+        # center_figure → namer → lemma (namer-centered view)
+
+        # 1) Anzeige-Name für die mittlere Schicht (z.B. "#crîsten" statt "Ruolant/#crîsten")
+        sunburst_df["namer_display"] = sunburst_df["namer"].apply(
+            lambda v: (
+                v[max(v.rfind("/"), v.rfind("#")) + 1:].strip()
+                if isinstance(v, str) and max(v.rfind("/"), v.rfind("#")) != -1
+                else v
+            )
+        )
+
+        # 2) Summe pro Nennende Figur (für den mittleren Ring)
+        per_namer_raw = (
+            sunburst_df.groupby("namer_display", dropna=False)["frequency"]
+            .sum()
+            .to_dict()
+        )
+        total_all = float(sum(per_namer_raw.values())) or 0.0
+
+        # 3) Lookup (namer_display, lemma) -> (type, freq) NUR für Typ-Info
+        pair_map: dict[tuple[str, str], str] = {}
+        for _, row in sunburst_df.iterrows():
+            key = (row["namer_display"], row["lemma"])
+            # hier stehen "Eigenname", "Antonomasie" oder "Epitheton"
+            pair_map[key] = row["type"]
+
+        # 4) Sunburst bauen: center_figure → namer_display → lemma
+        fig = px.sunburst(
+            sunburst_df,
+            path=["center_figure", "namer_display", "lemma"],
+            values="frequency",
+            color="color_group",
+            color_discrete_map={
+                "Name": "#F28E2B",
+                "Antonomasia": "#FFBE7D",
+                "Epithet": "#3B83BD",
+            },
+        )
+
+        if fig.data:
+            trace = fig.data[0]
+            labels = list(trace["labels"])
+            parents = list(trace["parents"])
+            values = list(trace["values"])
+
+            customdata = []
+
+            for lab, par, val in zip(labels, parents, values):
+                # Root-Knoten (Center-Figur)
+                if lab == figure_name and (par is None or par == ""):
+                    freq_center = float(total_all)
+                    customdata.append(
+                        ["", "", lab, freq_center, 1.0]
+                    )
+                    continue
+
+                # Mittlerer Ring: lab = namer_display
+                if par == figure_name:
+                    freq_namer = float(per_namer_raw.get(lab, val) or 0.0)
+                    share_namer = (freq_namer / total_all) if total_all > 0 else 0.0
+                    customdata.append([lab, "", "", freq_namer, share_namer])
+                    continue
+
+                # Äußerer Ring: parent = namer_display, label = lemma
+                type_label = ""
+                if isinstance(par, str):
+                    candidates = [par]
+                    if "/" in par:
+                        _, short = par.split("/", 1)
+                        candidates.append(short.strip())
+                else:
+                    candidates = [par]
+
+                for cand in candidates:
+                    key = (cand, lab)
+                    if key in pair_map:
+                        raw_val = pair_map[key]
+                        # pair_map kann entweder nur den Typ oder (Typ, freq) enthalten
+                        if isinstance(raw_val, tuple):
+                            type_label = raw_val[0]  # nur "Eigenname"/"Antonomasie"/"Epitheton"
+                        else:
+                            type_label = raw_val
+                        break
+
+                if not type_label:
+                    mask = (sunburst_df["namer_display"] == par) & (sunburst_df["lemma"] == lab)
+                    matched_rows = sunburst_df.loc[mask]
+
+                    if not matched_rows.empty:
+                        cg = matched_rows["color_group"].iloc[0]
+                        if cg == "Name":
+                            type_label = "Name"
+                        elif cg == "Antonomasia":
+                            type_label = "Antonomasia"
+                        elif cg == "Epithet":
+                            type_label = "Epithet"
+
+                freq = float(val or 0.0)
+                share = (freq / total_all) if total_all > 0 else 0.0
+
+                display_namer = (
+                    par.split("/", 1)[1].strip()
+                    if isinstance(par, str) and "/" in par
+                    else par
+                )
+
+                customdata.append([display_namer, type_label, lab, freq, share])
+
+            trace["customdata"] = customdata
+            trace["hovertemplate"] = (
+                "Center figure: %{root}<br>"
+                "Namer: %{customdata[0]}<br>"
+                "Type: %{customdata[1]}<br>"
+                "Lemma: %{customdata[2]}<br>"
+                "Count: %{customdata[3]}<br>"
+                "Share (center): %{customdata[4]:.1%}<extra></extra>"
+            )
+
+    if fig is None:
+        print("⚠️ No figure could be created for this configuration.")
+        return
+
+    fig.update_layout(
+        title=f"Sunburst – {figure_name} ({book_name})",
+        margin=dict(t=60, l=0, r=0, b=0),
+    )
+
+    # --- 7) Output mode (save / show / both) ---
+    print()
+    print("📅 How should the output be handled?")
+    print("[1] Save as HTML file")
+    print("[2] Show plot in browser")
+    print("[3] Both")
+    output_mode = ask_user_choice("> ", ["1", "2", "3"])
+
+    output_dir = os.path.join("data", book_name, "visualization")
+    os.makedirs(output_dir, exist_ok=True)
+
+    # sanitize figure_name for filename
+    safe_figure = "".join(
+        c if c.isalnum() or c in ("_", "-") else "_" for c in str(figure_name)
+    )
+    variant_label = "sunburst_figure_types" if mode_choice == "1" else "sunburst_figure_namers"
+    filename = f"viz_{variant_label}_{safe_figure}.html"
+    output_path = os.path.join(output_dir, filename)
+
+    if output_mode == "1":
+        # Save only
+        fig.write_html(output_path)
+        print("\n✅ Visualization completed.")
+        print(f"📂 File saved at:\n{output_path}")
+
+    elif output_mode == "2":
+        # Display only → use the temporary file
+        tmp_filename = f"viz_{uuid.uuid4().hex[:8]}.html"
+        tmp_path = os.path.join(paths["tmp_dir"], tmp_filename)
+        fig.write_html(tmp_path)
+        webbrowser.open_new_tab(f"file://{os.path.abspath(tmp_path)}")
+        print("🌐 The plot has been opened in your browser.")
+        print(f"🧾 Temporary file created at: {tmp_path}")
+
+    elif output_mode == "3":
+        # Save and display
+        fig.write_html(output_path)
+        print("\n✅ Visualization completed.")
+        print(f"📂 File saved at:\n{output_path}")
+        webbrowser.open_new_tab(f"file://{os.path.abspath(output_path)}")
+        print("🌐 The plot has been opened in your browser.")
+
+def visualize_sunburst_work_overview(paths, book_name, data):
+    """
+    Work-centered sunburst visualization.
+
+    Steps:
+    1. Load raw naming data (JSON + Excel fallback) via load_naming_sources_with_excel_fallback.
+    2. Normalize via prepare_naming_data(book_name, df_json, df_excel).
+    3. Ask for Top-K (default: 12).
+    4. Build aggregated DataFrame (root = work, ring 1 = figure, ring 2 = type).
+    5. Create Plotly sunburst.
+    6. Ask for output mode (save / show / both) and handle export.
+    """
+
+    # --- 1) load naming data via central loader ---
+    df_json, df_excel = load_naming_sources_with_excel_fallback(paths, data)
+
+    # --- 2) normalization via prepare_naming_data ---
+    source, df, cols = prepare_naming_data(book_name, df_json, df_excel)
+    if df is None or df.empty:
+        print("⚠️ No naming data available after prepare_naming_data.")
+        return
+
+    # --- 3) Top-K selection (CLI) ---
+    print()
+    print("ℹ Top figures will be selected automatically based on total naming frequency.")
+    default_top_k = 12
+    top_k = default_top_k
+
+    while True:
+        raw = input(
+            f"Enter number of top figures to include  [Press Enter to use default: {default_top_k}]:\n> "
+        ).strip()
+
+        if raw == "":
+            # keep default_top_k
+            break
+
+        try:
+            value = int(raw)
+            if value <= 0:
+                print("Please enter a positive integer or press Enter for the default.")
+                continue
+
+            top_k = value
+            break
+
+        except ValueError:
+            print("Please enter a valid integer or press Enter for the default.")
+
+    # --- 4) build aggregated data for work-centered sunburst ---
+    sunburst_df = build_sunburst_data_work_overview(df, cols, top_k, book_name)
+    if sunburst_df is None or sunburst_df.empty:
+        print("⚠️ No data available for work-centered sunburst overview.")
+        return
+
+    fig = px.sunburst(
+        sunburst_df,
+        path=["root", "figure", "type"],  # Work → Figur → Typ
+        values="value",                   # aggregierte Häufigkeit
+        color="type",
+        color_discrete_map={
+            "Naming variants": "#F28E2B",
+            "Epithets": "#3B83BD",
+        },
+    )
+
+    # --- 6) output mode (save / show / both) ---
+    print()
+    print("📅 How should the output be handled?")
+    print("[1] Save as HTML file")
+    print("[2] Show plot in browser")
+    print("[3] Both")
+    output_mode = ask_user_choice("> ", ["1", "2", "3"])
+
+    output_dir = os.path.join("data", book_name, "visualization")
+    os.makedirs(output_dir, exist_ok=True)
+
+    variant_label = "sunburst_work"
+    filename = f"viz_{variant_label}_{book_name}.html"
+    output_path = os.path.join(output_dir, filename)
+
+    if output_mode == "1":
+        fig.write_html(output_path)
+        print("\n✅ Visualization completed.")
+        print(f"📂 File saved at:\n{output_path}")
+
+    elif output_mode == "2":
+        tmp_filename = f"viz_{uuid.uuid4().hex[:8]}.html"
+        tmp_path = os.path.join(paths["tmp_dir"], tmp_filename)
+        fig.write_html(tmp_path)
+        webbrowser.open_new_tab(f"file://{os.path.abspath(tmp_path)}")
+        print("🌐 The plot has been opened in your browser.")
+        print(f"🧾 Temporary file created at: {tmp_path}")
+
+    elif output_mode == "3":
+        fig.write_html(output_path)
+        print("\n✅ Visualization completed.")
+        print(f"📂 File saved at:\n{output_path}")
+        webbrowser.open_new_tab(f"file://{os.path.abspath(output_path)}")
+        print("🌐 The plot has been opened in your browser.")
+
+def resolve_name_lemmas_for_figure(df, cols, figure_name):
+    """
+    Resolve which lemmas should be treated as the proper name (Eigenname)
+    of a given figure for visualization purposes.
+
+    Logic:
+    1. Collect all lemmas (designations and epithets) for the target figure.
+    2. Use match_name_to_lemma to find any direct name-based matches.
+    3. If none found:
+        - Suggest the closest lemma via difflib
+        - Ask the user whether this is a variant of the name.
+    4. Returns a set of lemmas treated as 'Eigenname' ONLY for this visualization run.
+    """
+
+    target_col = cols.get("target")
+    designation_cols_all = cols.get("designation_cols", [])
+    designation_cols = [
+        c for c in designation_cols_all
+        if str(c).strip().lower() != "bezeichnung"
+    ]
+    epithet_cols = cols.get("epithet_cols", [])
+
+    if not target_col:
+        return set()
+
+    dff = df[df[target_col].astype(str).str.strip() == str(figure_name).strip()].copy()
+    dff = dff.reset_index(drop=True)
+
+    lemmas_all = set()
+    name_lemmas = set()
+
+    # 1) Direct name matching
+    for _, row in dff.iterrows():
+        # designations
+        for col in designation_cols:
+            val = row.get(col)
+            if not isinstance(val, str):
+                continue
+            lemma = val.strip()
+            if not lemma:
+                continue
+            lemmas_all.add(lemma)
+            try:
+                if match_name_to_lemma(figure_name, lemma, aliases=None):
+                    name_lemmas.add(lemma)
+            except (TypeError, ValueError, AttributeError):
+                pass
+
+        # epithets (optional for matching)
+        for col in epithet_cols:
+            val = row.get(col)
+            if not isinstance(val, str):
+                continue
+            lemma = val.strip()
+            if not lemma:
+                continue
+            lemmas_all.add(lemma)
+            try:
+                if match_name_to_lemma(figure_name, lemma, aliases=None):
+                    name_lemmas.add(lemma)
+            except (TypeError, ValueError, AttributeError):
+                pass
+
+    # 2) If direct matches exist: done
+    if name_lemmas:
+        return name_lemmas
+
+    # 3) Suggest a close match if none found
+    if not lemmas_all:
+        return set()
+
+    lowered = {lm.lower(): lm for lm in lemmas_all}
+    best = difflib.get_close_matches(figure_name.lower(), list(lowered.keys()), n=1, cutoff=0.6)
+
+    if not best:
+        return set()
+
+    suggested = lowered[best[0]]
+
+    print(f'{figure_name} could not be found as a name-based lemma.')
+    yn = input(f'Could "{suggested}" be a variant of the name? (y/n) ').strip().lower()
+
+    if yn == "y":
+        return {suggested}
+
+    return set()
+
+def build_sunburst_data_types_lemma(df, cols, figure_name):
+    """
+    Figure-centered: Type → Lemma.
+    Center = figure_name.
+    """
+    target_col = cols.get("target")
+
+    # use only normalized designation columns (Bezeichnung 1–4)
+    designation_cols_all = cols.get("designation_cols", [])
+    designation_cols = [
+        c for c in designation_cols_all
+        if str(c).strip().lower() != "bezeichnung"
+    ]
+
+    epithet_cols = cols.get("epithet_cols", [])
+
+    if target_col is None:
+        raise ValueError("Column mapping 'target' is missing in cols.")
+
+    # Determine which lemmas count as proper names
+    name_lemmas = resolve_name_lemmas_for_figure(df, cols, figure_name)
+
+    dff = df[df[target_col].astype(str).str.strip() == str(figure_name).strip()].copy()
+    dff = dff.reset_index(drop=True)
+
+    counts = Counter()
+
+    for _, row in dff.iterrows():
+        used_lemmas = set()
+
+        # --- designations ---
+        for col in designation_cols:
+            val = row.get(col)
+            if not isinstance(val, str):
+                continue
+            lemma = val.strip()
+            if not lemma or lemma in used_lemmas:
+                continue
+            used_lemmas.add(lemma)
+
+            # Internal type logic
+            if lemma in name_lemmas:
+                type_label = "Eigenname"
+            else:
+                type_label = "Antonomasie"
+
+            counts[(type_label, lemma)] += 1
+
+        # --- epithets ---
+        for col in epithet_cols:
+            val = row.get(col)
+            if not isinstance(val, str):
+                continue
+            lemma = val.strip()
+            if not lemma or lemma in used_lemmas:
+                continue
+            used_lemmas.add(lemma)
+
+            counts[("Epitheton", lemma)] += 1
+
+    # --- BUILD OUTPUT ROWS ---
+    rows = []
+    for (type_label, lemma), freq in counts.items():
+
+        # Map to type_group (ring 1)
+        if type_label in ("Eigenname", "Antonomasie"):
+            type_group = "Naming variants"
+        else:
+            type_group = "Epithets"
+
+        # Map to color_group (visual category)
+        if type_label == "Eigenname":
+            color_group = "Name"
+        elif type_label == "Antonomasie":
+            color_group = "Antonomasia"
+        else:
+            color_group = "Epithet"
+
+        rows.append(
+            {
+                "center_figure": figure_name,
+                "type_group": type_group,
+                "color_group": color_group,
+                "lemma": lemma,
+                "frequency": freq,
+            }
+        )
+
+    return pd.DataFrame(rows)
+
+def build_sunburst_data_namer_lemma(df, cols, figure_name):
+    """
+    Figure-centered: Namer → Type → Lemma.
+    Center = figure_name.
+    """
+    target_col = cols.get("target")
+    namer_col = cols.get("namer")
+    designation_cols_all = cols.get("designation_cols", [])
+    designation_cols = [
+        c for c in designation_cols_all
+        if str(c).strip().lower() != "bezeichnung"
+    ]
+    epithet_cols = cols.get("epithet_cols", [])
+
+    if target_col is None:
+        raise ValueError("Column mapping 'target' is missing in cols.")
+    if namer_col is None:
+        raise ValueError("Column mapping 'namer' is missing in cols.")
+
+    # Try to find an Erzähler column
+    narrator_col = None
+    for key in ("narrator", "narrator_col"):
+        if key in cols:
+            narrator_col = cols[key]
+            break
+    if narrator_col is None:
+        for c in df.columns:
+            if str(c).strip().lower() in ("erzähler", "erzaehler", "narrator"):
+                narrator_col = c
+                break
+
+    # NEW: Name-matching logic
+    name_lemmas = resolve_name_lemmas_for_figure(df, cols, figure_name)
+
+    dff = df[df[target_col].astype(str).str.strip() == str(figure_name).strip()].copy()
+    dff = dff.reset_index(drop=True)
+
+    counts = Counter()
+
+    for _, row in dff.iterrows():
+        raw_namer = row.get(namer_col)
+        namer = raw_namer.strip() if isinstance(raw_namer, str) else ""
+
+        if not namer and narrator_col is not None:
+            raw_narr = row.get(narrator_col)
+            namer = raw_narr.strip() if isinstance(raw_narr, str) else ""
+
+        if not namer:
+            continue
+
+        used_lemmas = set()
+
+        # --- designations ---
+        for col in designation_cols:
+            val = row.get(col)
+            if not isinstance(val, str):
+                continue
+            lemma = val.strip()
+            if not lemma or lemma in used_lemmas:
+                continue
+            used_lemmas.add(lemma)
+
+            type_label = "Antonomasie"
+
+            if lemma in name_lemmas:
+                type_label = "Eigenname"
+            else:
+                try:
+                    if match_name_to_lemma(figure_name, lemma, aliases=None):
+                        type_label = "Eigenname"
+                except (TypeError, ValueError, AttributeError):
+                    pass
+
+            counts[(namer, type_label, lemma)] += 1
+
+        # --- epithets ---
+        for col in epithet_cols:
+            val = row.get(col)
+            if not isinstance(val, str):
+                continue
+            lemma = val.strip()
+            if not lemma or lemma in used_lemmas:
+                continue
+
+            used_lemmas.add(lemma)
+            counts[(namer, "Epitheton", lemma)] += 1
+
+    rows = []
+    for (namer, type_label, lemma), freq in counts.items():
+        # Map internal type_label (Eigenname / Antonomasie / Epitheton)
+        # to English group labels for the sunburst
+        if type_label in ("Eigenname", "Antonomasie"):
+            type_group = "Naming variants"
+        else:
+            type_group = "Epithets"
+
+        if type_label == "Eigenname":
+            color_group = "Name"
+        elif type_label == "Antonomasie":
+            color_group = "Antonomasia"
+        else:
+            color_group = "Epithet"
+
+        rows.append(
+            {
+                "center_figure": figure_name,
+                "namer": namer,  # ← neu: nennende Figur
+                "type_group": type_group,  # ring 1 (Naming variants / Epithets)
+                "color_group": color_group,  # Name / Antonomasia / Epithet
+                "type": type_label,  # ← neu: interne Typ-Bezeichnung
+                "lemma": lemma,
+                "frequency": freq,
+            }
+        )
+
+    return pd.DataFrame(rows)
+
+def build_sunburst_data_work_overview(df, cols, top_k, book_name):
+    """
+    Work-centered: Work → Figure → Type.
+    """
+    target_col = cols.get("target")
+    designation_cols = cols.get("designation_cols", [])
+    epithet_cols = cols.get("epithet_cols", [])
+
+    if target_col is None:
+        raise ValueError("Column mapping 'target' is missing in cols.")
+
+    total_counts = Counter()
+    type_counts = Counter()
+
+    for _, row in df.iterrows():
+        raw_target = row.get(target_col)
+        figure = raw_target.strip() if isinstance(raw_target, str) else ""
+        if not figure:
+            continue
+
+        total_counts[figure] += 1
+        types_in_row = set()
+
+        # designations
+        for col in designation_cols:
+            val = row.get(col)
+            if not isinstance(val, str):
+                continue
+            lemma = val.strip()
+            if not lemma:
+                continue
+            type_label = "Antonomasie"
+            try:
+                if match_name_to_lemma(figure, lemma, aliases=None):
+                    type_label = "Eigenname"
+            except (TypeError, ValueError, AttributeError):
+                pass
+            types_in_row.add(type_label)
+
+        # epithets
+        for col in epithet_cols:
+            val = row.get(col)
+            if not isinstance(val, str):
+                continue
+            lemma = val.strip()
+            if not lemma:
+                continue
+            types_in_row.add("Epitheton")
+
+        for t in types_in_row:
+            type_counts[(figure, t)] += 1
+
+    if not total_counts:
+        return pd.DataFrame(
+            columns=[
+                "root",
+                "figure",
+                "type",
+                "value",
+                "total_for_figure",
+                "pct_of_figure",
+            ]
+        )
+
+    sorted_figures = sorted(
+        total_counts.items(),
+        key=lambda item: (-item[1], str(item[0]).lower()),
+    )
+
+    if top_k is not None and top_k > 0:
+        top_figures = {name for name, _ in sorted_figures[:top_k]}
+    else:
+        top_figures = {name for name, _ in sorted_figures}
+
+    per_figure_sums = Counter()
+    for (figure, t), count in type_counts.items():
+        if figure in top_figures:
+            per_figure_sums[figure] += count
+
+    rows = []
+    for (figure, t), count in type_counts.items():
+        if figure not in top_figures:
+            continue
+
+        total = per_figure_sums.get(figure, 0)
+        pct = count / total if total > 0 else 0.0
+
+        rows.append(
+            {
+                "root": book_name,
+                "figure": figure,
+                "type": t,
+                "value": count,
+                "total_for_figure": total,
+                "pct_of_figure": pct,
+            }
+        )
+
+    return pd.DataFrame(rows)
