@@ -364,61 +364,8 @@ def run_naming_figure_analysis(_config_data, paths, data, book_name):
       [3] Figure profile by lemma
     """
 
-    # --- load categorization JSON safely ---
-    df_json = None
-    try:
-        json_path = paths.get("categorization_json")
-        js = safe_read_json(json_path, default=[])
-        if isinstance(js, list):
-            df_json = pd.DataFrame(js)
-        elif isinstance(js, dict):
-            for key in ("entries", "data", "items"):
-                if key in js and isinstance(js[key], list):
-                    df_json = pd.DataFrame(js[key])
-                    break
-    except Exception as e:
-        print(f"⚠️ Could not load categorization JSON: {e}")
-
-    # --- load Excel fallback into DataFrame ---
-    df_excel = None
-    try:
-        # identical to collocation loader
-        for k in ("excel", "excel_df", "df_excel"):
-            if k in data and isinstance(data[k], pd.DataFrame):
-                df_excel = data[k]
-                break
-        # ensure the in-memory Excel DataFrame actually comes from the 'lemmatisiert' sheet if available
-        excel_path = paths.get("excel_path") or data.get("excel_path")
-        if excel_path and os.path.exists(excel_path):
-            try:
-                xls = pd.ExcelFile(excel_path)
-                sheets_lower = [s.strip().lower() for s in xls.sheet_names]
-                if "lemmatisiert" in sheets_lower:
-                    # check whether current df_excel columns look like the lemmatized structure
-                    looks_lemmatized = any("bezeichnung 1" in c.lower() for c in df_excel.columns)
-                    if not looks_lemmatized:
-                        df_excel = pd.read_excel(excel_path, sheet_name="lemmatisiert", dtype=str)
-            except Exception as e:
-                print(f"⚠️ Could not verify or switch to 'lemmatisiert' sheet: {e}")
-
-        if df_excel is None:
-            excel_path = paths.get("excel_path") or data.get("excel_path")
-            if excel_path and os.path.exists(excel_path):
-                try:
-                    # prefer the sheet 'lemmatisiert' if present
-                    xls = pd.ExcelFile(excel_path)
-                    if "lemmatisiert" in [s.strip().lower() for s in xls.sheet_names]:
-                        df_excel = pd.read_excel(excel_path, sheet_name="lemmatisiert", dtype=str)
-                        print(f"ℹ️ Excel sheet 'lemmatisiert' loaded from: {excel_path} ({len(df_excel)} rows).")
-                    else:
-                        df_excel = pd.read_excel(excel_path, dtype=str)
-                        print(f"ℹ️ Excel default sheet loaded from: {excel_path} ({len(df_excel)} rows).")
-                except Exception as e:
-                    print(f"⚠️ Could not load Excel file: {e}")
-            else:
-                print("⚠️ Excel path not found or missing.")
-    except Exception as e:
-        print(f"⚠️ Could not load Excel fallback: {e}")
+    # --- 0) Load naming data via central loader (JSON → Excel fallback) ---
+    df_json, df_excel = load_naming_sources_with_excel_fallback(paths, data)
 
     # --- 1) ask for target figure (validated) ---
     target_figure = ask_valid_figure_name(paths["categorization_json"])

@@ -337,3 +337,92 @@ def load_ignored_lemmas(path="ignored_lemmas.json"):
     """
     data = safe_read_json(path, default=[])
     return set(data) if isinstance(data, list) else set(data.keys())
+
+def load_naming_sources_with_excel_fallback(paths, data):
+    """
+    Load raw naming sources for naming analyses (JSON → Excel fallback).
+    Returns:
+        (df_json, df_excel)
+    """
+
+    df_json = None
+    df_excel = None
+
+    # --- 1) Load JSON (preferred source) ---
+    try:
+        json_path = paths.get("categorization_json")
+        js = safe_read_json(json_path, default=[])
+
+        if isinstance(js, list):
+            df_json = pd.DataFrame(js)
+
+        elif isinstance(js, dict):
+            for key in ("entries", "data", "items"):
+                if key in js and isinstance(js[key], list):
+                    df_json = pd.DataFrame(js[key])
+                    break
+
+    except Exception as e:
+        print(f"⚠️ Could not load categorization JSON: {e}")
+        df_json = None
+
+    # --- 2) Excel Fallback (automatic) ---
+    try:
+        # 2.1 try in-memory Excel first
+        for k in ("excel", "excel_df", "df_excel"):
+            if k in data and isinstance(data[k], pd.DataFrame):
+                df_excel = data[k]
+                break
+
+        excel_path = paths.get("excel_path") or data.get("excel_path")
+
+        if excel_path and os.path.exists(excel_path):
+            try:
+                xls = pd.ExcelFile(excel_path)
+                sheets_lower = [s.strip().lower() for s in xls.sheet_names]
+
+                if "lemmatisiert" in sheets_lower and df_excel is not None:
+                    looks_lemmatized = any(
+                        "bezeichnung 1" in str(c).lower() for c in df_excel.columns
+                    )
+                    if not looks_lemmatized:
+                        df_excel = pd.read_excel(
+                            excel_path, sheet_name="lemmatisiert", dtype=str
+                        )
+
+            except Exception as e:
+                print(f"⚠️ Could not verify or switch to 'lemmatisiert' sheet: {e}")
+
+        # 2.2 If no valid in-memory Excel → load from file
+        if df_excel is None:
+            excel_path = paths.get("excel_path") or data.get("excel_path")
+            if excel_path and os.path.exists(excel_path):
+                try:
+                    xls = pd.ExcelFile(excel_path)
+                    sheets_lower = [s.strip().lower() for s in xls.sheet_names]
+
+                    if "lemmatisiert" in sheets_lower:
+                        df_excel = pd.read_excel(
+                            excel_path, sheet_name="lemmatisiert", dtype=str
+                        )
+                        print(
+                            f"ℹ️ Excel sheet 'lemmatisiert' loaded from: "
+                            f"{excel_path} ({len(df_excel)} rows)."
+                        )
+                    else:
+                        df_excel = pd.read_excel(excel_path, dtype=str)
+                        print(
+                            f"ℹ️ Excel default sheet loaded from: "
+                            f"{excel_path} ({len(df_excel)} rows)."
+                        )
+
+                except Exception as e:
+                    print(f"⚠️ Could not load Excel file: {e}")
+            else:
+                print("⚠️ Excel path not found or missing.")
+
+    except Exception as e:
+        print(f"⚠️ Could not load Excel fallback: {e}")
+        df_excel = None
+
+    return df_json, df_excel
