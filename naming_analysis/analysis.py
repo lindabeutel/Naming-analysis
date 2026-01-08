@@ -1623,25 +1623,30 @@ def visualize_intra_figure_cooccurrence_heatmap(paths: dict, book_name: str) -> 
             matrix[j, i] = c
         # diagonal remains 0
 
-    # set all cells above the diagonal to NaN → invisible in Plotly
-    matrix[np.triu_indices(size, k=1)] = np.nan
+    # convert absolute counts to percent shares
+    total = float(np.nansum(matrix))  # sum over visible cells only
+    if total > 0:
+        matrix_pct = (matrix / total) * 100.0
+    else:
+        matrix_pct = matrix.copy()
 
     fig = px.imshow(
-        matrix,
+        matrix_pct,
         x=tokens,
         y=tokens,
-        labels=dict(x="Token", y="Token", color="Co-occurrences"),
-        aspect="auto"
+        labels=dict(x="Token", y="Token", color="Co-occurrences (%)"),
+        aspect="auto",
+        range_color=(0, 100)
     )
-    fig.update_traces(hovertemplate="Token %{y} × %{x}<br>Co-occurrences: %{z}<extra></extra>")
 
-    # Plot
-    fig = px.imshow(
-        matrix,
-        x=tokens,
-        y=tokens,
-        labels=dict(x="Token", y="Token", color="Co-occurrences"),
-        aspect="auto"
+    # hover: percent + absolute value
+    fig.update_traces(
+        customdata=matrix,
+        hovertemplate=(
+            "Token %{y} × %{x}<br>"
+            "Share: %{z:.1f}%<br>"
+            "Count: %{customdata}<extra></extra>"
+        )
     )
 
     # Step 3 – Output handling (identical to existing viz)
