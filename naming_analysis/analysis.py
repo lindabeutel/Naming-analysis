@@ -13,6 +13,8 @@ It includes:
 All analytical operations are performed on categorized JSON data,
 optionally filtered by figures or type.
 """
+from __future__ import annotations
+
 import os
 import math
 import csv
@@ -21,14 +23,24 @@ import numpy as np
 import uuid
 import webbrowser
 from collections import Counter
-from typing import List
+from datetime import datetime
+from itertools import combinations
+from pathlib import Path
+from plotly.colors import n_colors
+from typing import Any, List
 
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+import plotly.io as pio
 
 from naming_analysis.shared import (
     ask_user_choice,
-    get_first_valid_text
+    get_first_valid_text,
+    hex_color_to_rgba,
+    hex_color_to_rgb_tuple,
+    pick_accessible_text_color,
+    rgb_tuple_to_plotly_color
 )
 from naming_analysis.io_utils import safe_read_json
 from naming_analysis.loaders import load_collocation_sheet, build_fallback_collocation_df_from_tei, load_naming_sources_with_excel_fallback
@@ -1269,6 +1281,393 @@ def run_visualization_menu(paths, book_name, data):
             print("↩️ Returning to analysis menu.")
             break
 
+# ============================================================
+# GLOBAL VISUAL STYLE CONFIGURATION (FAIR-compliant)
+# Applies to all visualization functions defined below
+# ============================================================
+
+GLOBAL_VISUAL_STYLE: dict[str, Any] = {
+    "typography": {
+        # "font_family": "Times New Roman",
+        "font_family": "Cormorant Garamond Medium",
+        "base_size": 18,
+        "tick_size": 36,
+        "legend_size": 18,
+    },
+    "background": {
+        "transparent": "rgba(0,0,0,0)",
+    },
+    "layout": {
+        "margins": {"l": 60, "r": 30, "t": 20, "b": 60},
+        "show_title_default": True,
+        "show_legend_default": True,
+        "show_axis_labels_default": True,
+        "title_x": 0.5,
+        "title_xanchor": "center",
+    },
+    "export": {
+        "dpi": 300,
+        "formats": ("png", "svg", "html"),
+    },
+    "colors": {
+        "categories": {
+            # Naming variants (group level)
+            "Naming variants": "#8C6A4A",
+
+            # Naming variants (subcategories)
+            "Eigenname": "#EFE4D4",
+            "Antonomasie": "#F9C691",
+
+            # Counterpole
+            "Epitheta": "#2F4A6D",
+
+            # Epitheta (leaf/lexeme level) — optional but useful for consistent leaf styling
+            "Epitheta_lexeme": "#6A97B8",
+
+            # --- aliases (UI terminology, English) ---
+            # Keep UI labels compatible with the same semantic categories
+            "Name": "#EFE4D4",
+            "Antonomasia": "#F9C691",
+            "Epithet": "#2F4A6D",
+            "Epithets": "#2F4A6D",
+        },
+
+        "levels": {
+            "CORE": "#0D1E26",
+            "STRUCTURE": "#A6B4A0",
+            "NEUTRAL_TEXT": "#2D2926",
+            "AUXILIARY": "#A3A39A",
+        },
+    },
+}
+
+def apply_global_visual_style(fig, *, tick_font_size=None, show_grid=None, has_axes: bool = True):
+    """
+    Apply global visual defaults to a Plotly figure.
+
+    This function sets only presentation defaults (typography, background, margins, legend styling).
+    It must not encode plot-specific semantics or data logic.
+    """
+    style: dict[str, Any] = GLOBAL_VISUAL_STYLE
+
+    typography: dict[str, Any] = style["typography"]
+    layout_cfg: dict[str, Any] = style["layout"]
+    levels: dict[str, Any] = style["colors"]["levels"]
+
+    tick_size = tick_font_size if tick_font_size is not None else typography["tick_size"]
+
+    fig.update_layout(
+        font={
+            "family": typography["font_family"],
+            "size": typography["base_size"],
+            "color": levels["NEUTRAL_TEXT"],
+        },
+        paper_bgcolor=style["background"]["transparent"],
+        plot_bgcolor=style["background"]["transparent"],
+        margin=layout_cfg["margins"],
+        legend={
+            "font": {"family": typography["font_family"], "size": typography["legend_size"]}
+        },
+    )
+
+    if show_grid is None:
+        show_grid = layout_cfg.get("show_grid_default", True)
+
+    if has_axes:
+        fig.update_xaxes(
+            tickfont={"family": typography["font_family"], "size": tick_size, "color": levels["NEUTRAL_TEXT"]},
+            title_font={"family": typography["font_family"], "size": typography["base_size"], "color": levels["NEUTRAL_TEXT"]},
+            showgrid=show_grid,
+            gridcolor=levels["AUXILIARY"],
+            zeroline=False,
+        )
+        fig.update_yaxes(
+            tickfont={"family": typography["font_family"], "size": tick_size, "color": levels["NEUTRAL_TEXT"]},
+            title_font={"family": typography["font_family"], "size": typography["base_size"], "color": levels["NEUTRAL_TEXT"]},
+            showgrid=show_grid,
+            gridcolor=levels["AUXILIARY"],
+            zeroline=False,
+        )
+
+    return fig
+
+def apply_global_visual_visibility(fig, *, show_title=None, show_legend=None, show_axis_labels=None):
+    """
+    Toggle visibility of title, legend, and axis labels in a consistent way.
+
+    If an argument is None, the global default from GLOBAL_VISUAL_STYLE["layout"] is used.
+    """
+    layout_cfg: dict[str, Any] = GLOBAL_VISUAL_STYLE["layout"]
+
+    if show_title is None:
+        show_title = layout_cfg["show_title_default"]
+    if show_legend is None:
+        show_legend = layout_cfg["show_legend_default"]
+    if show_axis_labels is None:
+        show_axis_labels = layout_cfg["show_axis_labels_default"]
+
+    if not show_title:
+        fig.update_layout(title=None)
+    else:
+        fig.update_layout(title={"x": layout_cfg["title_x"], "xanchor": layout_cfg["title_xanchor"]})
+
+    fig.update_layout(showlegend=show_legend)
+
+    if not show_axis_labels:
+        fig.update_xaxes(title_text=None)
+        fig.update_yaxes(title_text=None)
+
+    return fig
+
+def build_global_visual_export_filename(prefix: str = "viz") -> str:
+    """
+    Default export filename stub for Modebar exports (no extension).
+    Format: viz_YYYY_MM_DD_HHMM
+    """
+    return f"{prefix}_{datetime.now():%Y_%m_%d_%H%M}"
+
+
+def apply_global_visual_modebar_export(
+    fig,
+    output_path: str | Path,
+    *,
+    filename_stub: str | None = None,
+) -> None:
+    """
+    Write an interactive Plotly HTML file with a customized export overlay.
+
+    - Keeps Plotly interactivity + standard Modebar.
+    - Adds two export buttons (SVG + PNG A4@300dpi).
+    - Ensures updatemenus (dropdowns etc.) are NOT included in exported images by
+      temporarily hiding them during export.
+    - Positions the overlay buttons dynamically so they won't cover the Modebar
+      (independent of desktop size / zoom). Repositions on resize + redraw.
+
+    Notes:
+    - This affects only exports inside the HTML.
+    - The HTML remains interactive (updatemenus restored after export).
+    """
+    out_path = Path(output_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if filename_stub is None:
+        filename_stub = build_global_visual_export_filename("viz")
+
+    # A4 landscape @ 300 dpi
+    png_width = 3508
+    png_height = 2480
+
+    config: dict[str, Any] = {
+        "displaylogo": False,
+        "responsive": True,
+        "modeBarButtonsToRemove": ["toImage"],  # remove default camera button
+    }
+
+    post_script = f"""
+(function () {{
+  function whenPlotIsReady(cb) {{
+    var tries = 0;
+    var maxTries = 200; // ~20s @ 100ms
+    var timer = setInterval(function () {{
+      tries += 1;
+      var gd = document.getElementById('{{plot_id}}');
+      if (gd && gd._fullLayout) {{
+        clearInterval(timer);
+        cb(gd);
+        return;
+      }}
+      if (tries >= maxTries) {{
+        clearInterval(timer);
+        console.warn("Plot not ready – custom export overlay was not added.");
+      }}
+    }}, 100);
+  }}
+
+  function getUpdatemenus(gd) {{
+    var lay = (gd && gd.layout) ? gd.layout : null;
+    return (lay && lay.updatemenus) ? lay.updatemenus : [];
+  }}
+
+  function setUpdatemenus(gd, menus) {{
+    return Plotly.relayout(gd, {{ 'updatemenus': menus }});
+  }}
+
+  function hideMenusThenDownload(gd, dlOpts) {{
+    var currentMenus = getUpdatemenus(gd);
+
+    var oldMargin = (gd.layout && gd.layout.margin) ? gd.layout.margin : {{}};
+    var oldTitle  = (gd.layout && gd.layout.title)  ? gd.layout.title  : null;
+
+    var newMargin = Object.assign({{}}, oldMargin, {{
+      t: Math.max(oldMargin.t || 0, 120)
+    }});
+
+    var newTitle = oldTitle
+      ? Object.assign({{}}, oldTitle, {{ pad: {{ t: 10 }} }})
+      : oldTitle;
+
+    return Plotly.relayout(gd, {{
+        updatemenus: [],
+        margin: newMargin,
+        title: newTitle
+      }})
+      .then(function () {{
+        return Plotly.downloadImage(gd, dlOpts);
+      }})
+      .then(function () {{
+        return Plotly.relayout(gd, {{
+          updatemenus: currentMenus,
+          margin: oldMargin,
+          title: oldTitle
+        }});
+      }})
+      .catch(function (err) {{
+        try {{
+          Plotly.relayout(gd, {{
+            updatemenus: currentMenus,
+            margin: oldMargin,
+            title: oldTitle
+          }});
+        }} catch (e) {{}}
+        console.error(err);
+      }});
+  }}
+
+  function ensureContainerPositioning(container) {{
+    // Ensure absolute positioning works (Plotly already uses relative in most cases,
+    // but make it explicit and safe).
+    var cs = window.getComputedStyle(container);
+    if (!cs.position || cs.position === "static") {{
+      container.style.position = "relative";
+    }}
+  }}
+
+  function positionOverlay(container, wrap, gd) {{
+    // Position overlay to the LEFT of the modebar (no overlap), dynamic per viewport.
+    var modebar = container.querySelector('.modebar');
+
+    // If no modebar found yet, keep a conservative fallback.
+    if (!modebar) {{
+      wrap.style.top = "8px";
+      wrap.style.right = "160px";
+      return;
+    }}
+
+    var mb = modebar.getBoundingClientRect();
+    var c = container.getBoundingClientRect();
+
+    // right(px) = containerRight - modebarLeft + gap
+    var gap = 10;
+    var rightPx = Math.max(8, (c.right - mb.left) + gap);
+
+    wrap.style.top = "8px";
+    wrap.style.right = rightPx + "px";
+  }}
+
+  function addOverlayButtons(gd) {{
+    // Prevent duplicates
+    if (gd.__globalExportOverlayAdded) return;
+    gd.__globalExportOverlayAdded = true;
+
+    var container = gd; // graph div
+    ensureContainerPositioning(container);
+
+    var wrap = document.createElement("div");
+    wrap.style.position = "absolute";
+    wrap.style.top = "8px";
+    wrap.style.right = "160px"; // fallback, will be recomputed
+    wrap.style.zIndex = "9999";
+    wrap.style.display = "flex";
+    wrap.style.gap = "8px";
+    wrap.style.alignItems = "center";
+
+    function makeBtn(label) {{
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = label;
+      b.style.fontFamily = "Times New Roman, serif";
+      b.style.fontSize = "12px";
+      b.style.padding = "4px 8px";
+      b.style.border = "1px solid rgba(0,0,0,0.25)";
+      b.style.borderRadius = "4px";
+      b.style.background = "rgba(255,255,255,0.95)";
+      b.style.cursor = "pointer";
+      b.onmouseenter = function () {{ b.style.background = "rgba(245,245,245,0.98)"; }};
+      b.onmouseleave = function () {{ b.style.background = "rgba(255,255,255,0.95)"; }};
+      return b;
+    }}
+
+    var btnSvg = makeBtn("Download plot as SVG");
+    btnSvg.addEventListener("click", function () {{
+      hideMenusThenDownload(gd, {{
+        format: "svg",
+        filename: "{filename_stub}"
+      }});
+    }});
+
+    var btnPng = makeBtn("Download plot as PNG (A4, 300 dpi)");
+    btnPng.addEventListener("click", function () {{
+      var targetW = {png_width};
+      var targetH = {png_height};
+    
+      // current plot size (as rendered in the browser)
+      var currentW = (gd && gd._fullLayout && gd._fullLayout.width) ? gd._fullLayout.width : 1169;
+      var currentH = (gd && gd._fullLayout && gd._fullLayout.height) ? gd._fullLayout.height : 827;
+    
+      // scale to fit inside A4@300dpi while preserving proportions
+      var s = Math.min(targetW / currentW, targetH / currentH);
+      if (!isFinite(s) || s <= 0) s = 3;
+      if (s > 8) s = 8;
+    
+      hideMenusThenDownload(gd, {{
+        format: "png",
+        filename: "{filename_stub}",
+        scale: 3
+      }});
+    }});
+
+
+    wrap.appendChild(btnSvg);
+    wrap.appendChild(btnPng);
+    container.appendChild(wrap);
+
+    // Initial positioning (now that wrap is in DOM)
+    positionOverlay(container, wrap, gd);
+
+    // Reposition on resize
+    window.addEventListener("resize", function () {{
+      positionOverlay(container, wrap, gd);
+    }});
+
+    // Reposition after Plotly redraws (modebar can change layout)
+    gd.on("plotly_afterplot", function () {{
+      positionOverlay(container, wrap, gd);
+    }});
+
+    // Also poll a bit at start to catch late modebar creation
+    var tries = 0;
+    var t = setInterval(function () {{
+      tries += 1;
+      positionOverlay(container, wrap, gd);
+      if (tries >= 30) clearInterval(t);
+    }}, 150);
+  }}
+
+  whenPlotIsReady(function (gd) {{
+    addOverlayButtons(gd);
+  }});
+}})();
+"""
+
+    html = pio.to_html(
+        fig,
+        full_html=True,
+        include_plotlyjs="cdn",
+        config=config,
+        post_script=post_script,
+    )
+    out_path.write_text(html, encoding="utf-8")
+
 def visualize_verse_naming_distribution(paths, book_name):
     """
     Interactive CLI interface for visualizing naming variants and epithets using Plotly.
@@ -1322,14 +1721,23 @@ def visualize_verse_naming_distribution(paths, book_name):
     else:
         selected_cols = naming_cols + epithet_cols
 
+    meta_cols = ["Nennende Figur", "Erzähler", "Eigennennung"]
+
     all_entries = []
     for col in selected_cols:
-        temp = df_figure[["Vers", col]].dropna().rename(columns={col: "Token"})
+        keep_cols = ["Vers", col] + [c for c in meta_cols if c in df_figure.columns]
+        temp = df_figure[keep_cols].dropna(subset=["Vers", col]).rename(columns={col: "Token"})
         all_entries.append(temp)
 
-    df_combined = pd.concat(all_entries)
+    df_combined = pd.concat(all_entries, ignore_index=True)
+
     df_combined["Token"] = df_combined["Token"].astype(str).str.strip()
     df_combined["Vers"] = pd.to_numeric(df_combined["Vers"], errors="coerce")
+
+    # normalize meta cols (safe even if some cols are missing)
+    for c in meta_cols:
+        if c in df_combined.columns:
+            df_combined[c] = df_combined[c].astype(str).str.strip()
 
     # Step 4 – Count frequencies
     naming_values = [
@@ -1358,7 +1766,10 @@ def visualize_verse_naming_distribution(paths, book_name):
         for i, (token, freq) in enumerate(naming_list, 1):
             print(f"{i}. {token} – {freq}")
         while True:
-            input_str = input("\n✍ Which naming variants should be included? (e.g., 1–3, 5)\n> ").strip()
+            input_str = input(
+                "\n✍ Which naming variants should be included? (e.g., 1–3, 5)\n"
+                "Note: Selecting more than 14 entries in total may reduce visual clarity.\n> "
+            ).strip()
             indices = parse_token_selection(input_str, len(naming_list))
             if indices:
                 selected_naming = [naming_list[i - 1][0] for i in indices]
@@ -1370,7 +1781,10 @@ def visualize_verse_naming_distribution(paths, book_name):
         for i, (token, freq) in enumerate(epithet_list, 1):
             print(f"{i}. {token} – {freq}")
         while True:
-            input_str = input("\n✍ Which epithets should be included? (e.g., 1–3, 5)\n> ").strip()
+            input_str = input(
+                "\n✍ Which epithets should be included? (e.g., 1–3, 5)\n"
+                "Note: Selecting more than 14 entries in total may reduce visual clarity.\n> "
+            ).strip()
             indices = parse_token_selection(input_str, len(epithet_list))
             if indices:
                 selected_epithets = [epithet_list[i - 1][0] for i in indices]
@@ -1386,6 +1800,9 @@ def visualize_verse_naming_distribution(paths, book_name):
     # Step 6 – Filter for plot and prepare HTML display labels
     df_plot = df_combined[df_combined["Token"].isin(tokens_to_plot)].copy()
 
+    # Ensure renderable points: drop rows without a valid verse number
+    df_plot = df_plot.dropna(subset=["Vers"])
+
     plot_token_counts = Counter(df_plot["Token"])
     sorted_tokens = [token for token, _ in plot_token_counts.most_common()]
 
@@ -1398,47 +1815,249 @@ def visualize_verse_naming_distribution(paths, book_name):
 
     if variant_type == "3":
         df_plot["Category"] = df_plot["Token"].apply(
-            lambda x: "Naming variant" if x in selected_naming else "Epitheton"
+            lambda x: "Naming variant" if x in selected_naming else "Epithet"
         )
-        color_column = "Category"
-    else:
-        color_column = "Token_html"
 
     # Step 7 – Create interactive plot
-    fig = px.scatter(
-        df_plot,
-        x="Vers",
-        y="Token_html",
-        color=color_column,
-        title=f"Visualization for '{figure_name}'",
-        hover_data=["Vers", "Token"]
+    trace_tokens: list[str | None] = []
+
+    if variant_type == "3":
+        fig = go.Figure()
+
+        color_map = {
+            "Naming variant": GLOBAL_VISUAL_STYLE["colors"]["categories"]["Naming variants"],
+            "Epithet": GLOBAL_VISUAL_STYLE["colors"]["categories"]["Epitheta"],
+        }
+
+        # Ensure stable ordering by frequency
+        token_order = sorted_tokens
+
+        # Legend dummies (keep legend compact: 2 entries only)
+        fig.add_trace(
+            go.Scatter(
+                x=[None],
+                y=[None],
+                mode="markers",
+                marker={"size": 18, "opacity": 0.7, "color": color_map["Naming variant"]},
+                name="Naming variant",
+                legendgroup="Naming variant",
+                showlegend=True,
+                hoverinfo="skip",
+            )
+        )
+        trace_tokens.append(None)
+
+        fig.add_trace(
+            go.Scatter(
+                x=[None],
+                y=[None],
+                mode="markers",
+                marker={"size": 18, "opacity": 0.7, "color": color_map["Epitheton"]},
+                name="Epitheton",
+                legendgroup="Epitheton",
+                showlegend=True,
+                hoverinfo="skip",
+            )
+        )
+        trace_tokens.append(None)
+
+        # One trace per token (enables correct Show-N token visibility)
+        for token in token_order:
+            df_token = df_plot[df_plot["Token"] == token].copy()
+            if df_token.empty:
+                continue
+
+            token_html = f"<i>{token}</i>"
+            category = df_token["Category"].iloc[0]
+            marker_color = color_map.get(category, GLOBAL_VISUAL_STYLE["colors"]["levels"]["AUXILIARY"])
+
+            fig.add_trace(
+                go.Scatter(
+                    x=df_token["Vers"],
+                    y=[token_html] * len(df_token),
+                    mode="markers",
+                    marker={"opacity": 0.7, "color": marker_color},
+                    name=token_html,  # token identifier for Show-N toggles
+                    legendgroup=category,
+                    showlegend=False,  # legend handled by dummy traces above
+                    meta=token_html,
+                    hovertemplate="Vers: %{x}<br>Token: %{meta}<extra></extra>",
+                )
+            )
+            trace_tokens.append(token)  # raw token id for visibility control
+
+        fig.update_layout(title=f"{variant_label} for '{figure_name}'")
+    else:
+        fig = go.Figure()
+        trace_tokens = []  # keep consistent type; not used in this branch
+
+        base_color = (
+            GLOBAL_VISUAL_STYLE["colors"]["categories"]["Naming variants"]
+            if variant_type == "1"
+            else GLOBAL_VISUAL_STYLE["colors"]["categories"]["Epitheta"]
+        )
+
+        token_order = sorted_tokens
+        for token in token_order:
+            df_token = df_plot[df_plot["Token"] == token].copy()
+            if df_token.empty:
+                continue
+
+            token_html = f"<i>{token}</i>"
+
+            fig.add_trace(
+                go.Scatter(
+                    x=df_token["Vers"],
+                    y=[token_html] * len(df_token),
+                    mode="markers",
+                    marker={"size": 18, "opacity": 0.7, "color": base_color},
+                    name=token_html,  # keep for Show-N visibility logic if needed later
+                    showlegend=False,  # IMPORTANT: no token legend
+                    meta=token_html,
+                    hovertemplate="Vers: %{x}<br>Token: %{meta}<extra></extra>",
+                )
+            )
+
+    # Plot-specific axis/category ordering and labels (A4-readable default: up to 14)
+    max_n = len(sorted_tokens)
+    default_show_n = min(14, max_n)
+
+    top_tokens = sorted_tokens[:default_show_n]
+    top_categories = [f"<i>{t}</i>" for t in top_tokens]
+
+    fig.update_yaxes(
+        type="category",
+        categoryorder="array",
+        categoryarray=top_categories,
+        tickmode="array",
+        tickvals=top_categories,
+        ticktext=top_categories,
+        title_text=variant_label,
     )
 
-    fig.update_traces(marker=dict(size=18, opacity=0.7))
+    fig.update_xaxes(title_text="Verses")
+
+    # Apply global visual defaults and visibility rules
+    apply_global_visual_style(fig)
+    apply_global_visual_visibility(fig, show_legend=(variant_type == "3"))
+
+    # Keep plot-specific height (optional)
+    fig.update_layout(height=800)
+
+    # --- Interactive "Show N" toggles (14, 28, 42, ... up to max selected) ---
+    def compute_tick_size(token_count: int) -> int:
+        # 14 tokens are calibrated for tick size 36; reduce proportionally beyond that
+        if token_count <= 14:
+            return 36
+        size = int(round(36 * 14 / token_count))
+        return max(12, size)
+
+    def compute_marker_size(token_count: int) -> int:
+        """
+        Scale marker size proportionally to tick font size.
+        Calibrated for A4 readability at 14 tokens.
+        """
+        if token_count <= 14:
+            return 18
+        size = int(round(18 * 14 / token_count))
+        return max(6, size)
+
+    show_steps = list(range(14, max_n + 1, 14))
+
+    if not show_steps:
+        show_steps = [max_n]
+    elif show_steps[-1] != max_n:
+        show_steps.append(max_n)
+
+    # Hide traces beyond the default Top-N view (robust: use trace_tokens if available)
+    if variant_type == "3":
+        # use trace_tokens
+        initial_visible = []
+        top_set = set(top_tokens)
+
+        for tok in trace_tokens:
+            if tok is None:
+                initial_visible.append(True)
+            else:
+                initial_visible.append(tok in top_set)
+
+        for i, tr in enumerate(fig.data):
+            tr.visible = initial_visible[i]
+    else:
+        # px.scatter branch → name-based logic
+        visible_by_name = {f"<i>{t}</i>": (t in top_tokens) for t in sorted_tokens}
+
+        initial_visible = []
+        for tr in fig.data:
+            trace_name = str(getattr(tr, "name", None))
+            initial_visible.append(visible_by_name.get(trace_name, True))
+
+        for i, tr in enumerate(fig.data):
+            tr.visible = initial_visible[i]
+
+    buttons = []
+    for n in show_steps:
+        current_tokens = sorted_tokens[:n]
+        current_categories = [f"<i>{t}</i>" for t in current_tokens]
+        current_tick_size = compute_tick_size(n)
+        current_marker_size = compute_marker_size(n)
+
+        if variant_type == "3":
+            current_set = set(current_tokens)
+            visible_list = [(tok is None) or (tok in current_set) for tok in trace_tokens]
+        else:
+            visible_map = {f"<i>{t}</i>": (t in current_tokens) for t in sorted_tokens}
+            visible_list = []
+            for tr in fig.data:
+                trace_name = str(getattr(tr, "name", None))
+                visible_list.append(visible_map.get(trace_name, True))
+
+        buttons.append({
+            "label": f"Show {n}",
+            "method": "update",
+            "args": [
+                {
+                    "visible": visible_list,
+                    "marker.size": current_marker_size,
+                },
+                {
+                    "yaxis": {
+                        "type": "category",
+                        "categoryorder": "array",
+                        "categoryarray": current_categories,
+                        "tickmode": "array",
+                        "tickvals": current_categories,
+                        "ticktext": current_categories,
+                        "tickfont": {"size": current_tick_size},
+                    }
+                },
+            ],
+        })
 
     fig.update_layout(
-        title=dict(
-            text=f"Visualization for {variant_label} '{figure_name}'",
-            x=0.5,
-            xanchor="center"
-        ),
-        xaxis_title="Verses",
-        yaxis_title=variant_label,
-        font=dict(
-            family="Times New Roman",
-            size=18
-        ),
-        xaxis=dict(
-            tickfont=dict(size=36)
-        ),
-        yaxis=dict(
-            tickfont=dict(size=36),
-            categoryorder="array",
-            categoryarray=[f"<i>{t}</i>" for t in sorted_tokens]
-        ),
-        height=800,
-        margin=dict(l=100, r=40, t=60, b=60),
-        showlegend=(variant_type == "3")
+        updatemenus=[
+            {
+                "type": "dropdown",
+                "direction": "down",
+                "x": 0.0,
+                "y": 1.18,
+                "xanchor": "left",
+                "yanchor": "top",
+                "showactive": True,
+                "buttons": buttons,
+            }
+        ]
+    )
+
+    # Ensure the initial tick size matches the default Top-14 view
+    fig.update_yaxes(tickfont={"size": compute_tick_size(default_show_n)})
+
+    # Ensure marker size matches the default Top-N view
+    default_marker_size = compute_marker_size(default_show_n)
+
+    fig.update_traces(
+        marker={"size": default_marker_size},
+        selector=dict(mode="markers")
     )
 
     # Step 8 – Ask for output mode
@@ -1457,7 +2076,7 @@ def visualize_verse_naming_distribution(paths, book_name):
     # Step 9 – Output
     if output_mode == "1":
         # Save only
-        fig.write_html(output_path)
+        apply_global_visual_modebar_export(fig, output_path)
         print(f"\n✅ Visualization completed.")
         print(f"📂 File saved at:\n{output_path}")
 
@@ -1465,14 +2084,14 @@ def visualize_verse_naming_distribution(paths, book_name):
         # Display only → use the temporary file
         tmp_filename = f"viz_{uuid.uuid4().hex[:8]}.html"
         tmp_path = os.path.join(paths["tmp_dir"], tmp_filename)
-        fig.write_html(tmp_path)
+        apply_global_visual_modebar_export(fig, tmp_path)
         webbrowser.open_new_tab(f"file://{os.path.abspath(tmp_path)}")
         print(f"🌐 The plot has been opened in your browser.")
         print(f"🧾 Temporary file created at: {tmp_path}")
 
     elif output_mode == "3":
         # Save and display → use the saved file
-        fig.write_html(output_path)
+        apply_global_visual_modebar_export(fig, output_path)
         print(f"\n✅ Visualization completed.")
         print(f"📂 File saved at:\n{output_path}")
         webbrowser.open_new_tab(f"file://{os.path.abspath(output_path)}")
@@ -1592,8 +2211,6 @@ def visualize_intra_figure_cooccurrence_heatmap(paths: dict, book_name: str) -> 
     token_rows = [t for t in token_rows if len(t) >= 2]
 
     # Count unordered pairs per row
-    from itertools import combinations
-    from collections import Counter
     pair_counter: Counter = Counter()
     for toks in token_rows:
         for a, b in combinations(toks, 2):
@@ -1607,36 +2224,56 @@ def visualize_intra_figure_cooccurrence_heatmap(paths: dict, book_name: str) -> 
         return
 
     # Top-N selection
-    top_pairs = pair_counter.most_common(top_n) if top_n and top_n > 0 else pair_counter.most_common()
+    top_pairs = pair_counter.most_common(top_n)
     tokens = sorted(set([t for p, _ in top_pairs for t in p]))
     index = {t: i for i, t in enumerate(tokens)}
 
-    # Build symmetric matrix, but display only one half
+    # Build symmetric full matrix (both halves)
     size = len(tokens)
     matrix = np.zeros((size, size), dtype=float)
 
     for (a, b), c in top_pairs:
         i, j = index[a], index[b]
-        if i > j:  # only fill the lower half
-            matrix[i, j] = c
-        elif i < j:
-            matrix[j, i] = c
-        # diagonal remains 0
+        if i == j:
+            continue  # diagonal stays 0
+        matrix[i, j] = c
+        matrix[j, i] = c
 
     # convert absolute counts to percent shares
-    total = float(np.nansum(matrix))  # sum over visible cells only
+    # NOTE: With full symmetry, each undirected pair is represented twice in the matrix.
+    # Using sum(matrix) keeps the heatmap normalized to 100% over all displayed cells.
+    total = float(np.sum(matrix))
     if total > 0:
         matrix_pct = (matrix / total) * 100.0
     else:
         matrix_pct = matrix.copy()
 
+    levels = GLOBAL_VISUAL_STYLE["colors"]["levels"]
+
+    # Cool, fine-grained sequential scale derived purely from STRUCTURE → AUXILIARY → CORE
+    # No categorical semantics attached (tonal interpolation only)
+
+    c_structure = hex_color_to_rgb_tuple(levels["STRUCTURE"])
+    c_auxiliary = hex_color_to_rgb_tuple(levels["AUXILIARY"])
+    c_core = hex_color_to_rgb_tuple(levels["CORE"])
+
+    heatmap_colorscale = (
+            [rgb_tuple_to_plotly_color(c) for c in n_colors(c_structure, c_auxiliary, 24, colortype="tuple")]
+            + [rgb_tuple_to_plotly_color(c) for c in n_colors(c_auxiliary, c_core, 24, colortype="tuple")][1:]
+    )
+    # Robust upper cap to preserve contrast under skewed distributions
+    # Same rule applied across all heatmaps (comparability preserved)
+    z_cap = float(np.nanpercentile(matrix_pct, 99))
+    z_cap = min(100.0, max(10.0, z_cap))  # safety bounds
+
     fig = px.imshow(
         matrix_pct,
         x=tokens,
         y=tokens,
-        labels=dict(x="Token", y="Token", color="Co-occurrences (%)"),
+        labels=dict(x="Label", y="Label", color="Co-occurrence share (%)"),
         aspect="auto",
-        range_color=(0, 100)
+        range_color=(0, z_cap),
+        color_continuous_scale=heatmap_colorscale,
     )
 
     # hover: percent + absolute value
@@ -1648,6 +2285,19 @@ def visualize_intra_figure_cooccurrence_heatmap(paths: dict, book_name: str) -> 
             "Count: %{customdata}<extra></extra>"
         )
     )
+
+    fig.update_layout(
+        title={
+            "text": f"Intra-figure co-occurrence of {figure_name}",
+            "pad": {"t": 10},
+        }
+    )
+
+    apply_global_visual_style(fig, tick_font_size=22, show_grid=False)
+    apply_global_visual_visibility(fig, show_legend=False)
+
+    # Heatmap-specific: ensure enough top margin for title after global style is applied
+    fig.update_layout(margin={**GLOBAL_VISUAL_STYLE["layout"]["margins"], "t": 100})
 
     # Step 3 – Output handling (identical to existing viz)
     print("\n📅 How should the output be handled?")
@@ -1662,8 +2312,10 @@ def visualize_intra_figure_cooccurrence_heatmap(paths: dict, book_name: str) -> 
     filename = f"viz_{variant_label}_{figure_name}.html"
     output_path = os.path.join(output_dir, filename)
 
+    filename_stub = os.path.splitext(filename)[0]
+
     if output_mode == "1":
-        fig.write_html(output_path)
+        apply_global_visual_modebar_export(fig, output_path, filename_stub=filename_stub)
         print("\n✅ Visualization completed.")
         print(f"📂 File saved at:\n{output_path}")
 
@@ -1672,13 +2324,13 @@ def visualize_intra_figure_cooccurrence_heatmap(paths: dict, book_name: str) -> 
         os.makedirs(tmp_dir, exist_ok=True)
         tmp_filename = f"viz_{uuid.uuid4().hex[:8]}.html"
         tmp_path = os.path.join(tmp_dir, tmp_filename)
-        fig.write_html(tmp_path)
+        apply_global_visual_modebar_export(fig, tmp_path, filename_stub=filename_stub)
         webbrowser.open_new_tab(f"file://{os.path.abspath(tmp_path)}")
         print("🌐 The plot has been opened in your browser.")
         print(f"🧾 Temporary file created at: {tmp_path}")
 
     elif output_mode == "3":
-        fig.write_html(output_path)
+        apply_global_visual_modebar_export(fig, output_path, filename_stub=filename_stub)
         print("\n✅ Visualization completed.")
         print(f"📂 File saved at:\n{output_path}")
         webbrowser.open_new_tab(f"file://{os.path.abspath(output_path)}")
@@ -1727,8 +2379,7 @@ def visualize_sunburst_figure_view(paths, book_name, data):
         print("⚠️ No naming data available after prepare_naming_data.")
         return
 
-    fig = None
-    _ = fig  # silence linter: intentional initialization
+    # fig will be created conditionally below
 
     # --- 2) Ask for figure name ---
     figure_name = ask_valid_figure_name(paths["categorization_json"])
@@ -1769,75 +2420,110 @@ def visualize_sunburst_figure_view(paths, book_name, data):
     ).reset_index(drop=True)
 
     if mode_choice == "1":
+        # center_figure → type_group → lemma (types-centered view)
+
+        categories = GLOBAL_VISUAL_STYLE["colors"]["categories"]
+        levels = GLOBAL_VISUAL_STYLE["colors"]["levels"]
+
+        # Defensive category lookups (keeps refactors stable)
+        name_color = categories.get("Name", "#EFE4D4")
+        naming_variants_ring = categories.get("Naming variants", "#8C6A4A")
+        epithets_ring = categories.get("Epithets", "#2F4A6D")
+        epithets_lexeme = categories.get("Epitheta_lexeme", epithets_ring)
+
         fig = px.sunburst(
             sunburst_df,
             path=["center_figure", "type_group", "lemma"],
             values="frequency",
             color="color_group",
             color_discrete_map={
-                "Name": "#F28E2B",
-                "Antonomasia": "#FFBE7D",
-                "Epithet": "#3B83BD",
+                "Name": categories.get("Name", "#EFE4D4"),
+                "Antonomasia": categories.get("Antonomasia", "#F9C691"),
+                "Epithet": categories.get("Epithet", "#2F4A6D"),
             },
         )
 
         if fig.data:
             trace = fig.data[0]
 
+            # Segment borders (lines)
+            trace.update(
+                marker=dict(
+                    line=dict(
+                        color=levels.get("AUXILIARY", "#A3A39A"),
+                        width=1.0,
+                    )
+                )
+            )
+
             labels = list(trace["labels"])
+            parents = list(trace["parents"])
             colors = list(trace["marker"]["colors"])
 
-            # 1) Ring-Farben patchen
-            for i, lab in enumerate(labels):
+            # --- Color patching: root + group rings + epithet leaves ---
+            for i, (lab, par) in enumerate(zip(labels, parents)):
+                # Root node (center figure)
+                if lab == figure_name and (par is None or par == ""):
+                    colors[i] = name_color
+                    continue
+
+                # Middle ring groups
                 if lab == "Naming variants":
-                    colors[i] = "#F7A94A"  # mid-orange für den Ring
-                elif lab == "Epithets":
-                    colors[i] = "#3B83BD"  # blau für den Ring
+                    colors[i] = naming_variants_ring
+                    continue
+                if lab == "Epithets":
+                    colors[i] = epithets_ring
+                    continue
+
+                # Leaves under Epithets
+                if par == "Epithets":
+                    colors[i] = epithets_lexeme
 
             trace["marker"]["colors"] = colors
 
+            # --- WCAG-ish text color per segment (expects shared.py to handle hex + rgba) ---
+            text_colors = [
+                pick_accessible_text_color(
+                    bg,
+                    dark_text_hex=levels.get("NEUTRAL_TEXT", "#2D2926"),
+                    light_text_hex="#FFFFFF",
+                )
+                for bg in colors
+            ]
+            trace["textfont"] = {"color": text_colors}
+
+            # --- Hover data ---
             group_totals = (
                 sunburst_df.groupby("type_group", observed=False)["frequency"]
                 .sum()
                 .to_dict()
             )
 
-            # 2) Lookup nur über lemma
-            #    baue eine Map: lemma -> (group, category, lemma, freq, pct)
-            lemma_map = {}
+            lemma_map: dict[str, list[object]] = {}
             for _, row in sunburst_df.iterrows():
-                lemma_map[row["lemma"]] = [
-                    row["type_group"],  # Group: Naming variants / Epithets
-                    row["color_group"],  # Category: Name / Antonomasia / Epithet
-                    row["lemma"],
-                    row["frequency"],
-                    row["pct_of_center"],
+                lemma_map[str(row["lemma"])] = [
+                    str(row["type_group"]),  # Group
+                    str(row["color_group"]),  # Category
+                    str(row["lemma"]),  # Lemma
+                    float(row["frequency"]),
+                    float(row["pct_of_center"]),
                 ]
 
-            # 3) customdata in TRACE-Reihenfolge aufbauen
-            customdata = []
+            customdata: list[list[object]] = []
             for lab in labels:
                 if lab == figure_name:
-                    # Zentrum: gesamte Frequenz & 100 %
-                    info = ["", "", lab, float(total_freq), 1.0]
-
+                    customdata.append(["", "", str(lab), float(total_freq), 1.0])
                 elif lab in group_totals:
-                    # Mittlerer Ring: Naming variants / Epithets
                     cnt = float(group_totals.get(lab, 0.0))
                     share = (cnt / total_freq) if total_freq > 0 else 0.0
-                    info = [lab, "", lab, cnt, share]
-
+                    customdata.append([str(lab), "", str(lab), cnt, share])
                 else:
-                    # Äußerer Ring: Lemma
-                    info = lemma_map.get(lab)
-                    if info is None:
-                        info = ["", "", lab, 0, 0.0]
-
-                customdata.append(info)
+                    info = lemma_map.get(str(lab), ["", "", str(lab), 0.0, 0.0])
+                    customdata.append(info)
 
             trace["customdata"] = customdata
             trace["hovertemplate"] = (
-                "Figure: %{root}<br>"
+                "Center figure: %{root}<br>"
                 "Group: %{customdata[0]}<br>"
                 "Category: %{customdata[1]}<br>"
                 "Lemma: %{customdata[2]}<br>"
@@ -1846,9 +2532,8 @@ def visualize_sunburst_figure_view(paths, book_name, data):
             )
 
     else:
-        # center_figure → namer → lemma (namer-centered view)
+        # center_figure → namer_display → lemma (namer-centered view)
 
-        # 1) Anzeige-Name für die mittlere Schicht (z.B. "#crîsten" statt "Ruolant/#crîsten")
         sunburst_df["namer_display"] = sunburst_df["namer"].apply(
             lambda v: (
                 v[max(v.rfind("/"), v.rfind("#")) + 1:].strip()
@@ -1857,7 +2542,6 @@ def visualize_sunburst_figure_view(paths, book_name, data):
             )
         )
 
-        # 2) Summe pro Nennende Figur (für den mittleren Ring)
         per_namer_raw = (
             sunburst_df.groupby("namer_display", dropna=False)["frequency"]
             .sum()
@@ -1865,94 +2549,73 @@ def visualize_sunburst_figure_view(paths, book_name, data):
         )
         total_all = float(sum(per_namer_raw.values())) or 0.0
 
-        # 3) Lookup (namer_display, lemma) -> (type, freq) NUR für Typ-Info
-        pair_map: dict[tuple[str, str], str] = {}
-        for _, row in sunburst_df.iterrows():
-            key = (row["namer_display"], row["lemma"])
-            # hier stehen "Eigenname", "Antonomasie" oder "Epitheton"
-            pair_map[key] = row["type"]
+        categories = GLOBAL_VISUAL_STYLE["colors"]["categories"]
+        levels = GLOBAL_VISUAL_STYLE["colors"]["levels"]
 
-        # 4) Sunburst bauen: center_figure → namer_display → lemma
         fig = px.sunburst(
             sunburst_df,
             path=["center_figure", "namer_display", "lemma"],
             values="frequency",
             color="color_group",
             color_discrete_map={
-                "Name": "#F28E2B",
-                "Antonomasia": "#FFBE7D",
-                "Epithet": "#3B83BD",
+                "Name": categories.get("Name", "#EFE4D4"),
+                "Antonomasia": categories.get("Antonomasia", "#F9C691"),
+                "Epithet": categories.get("Epithet", "#2F4A6D"),
             },
         )
 
         if fig.data:
             trace = fig.data[0]
+
+            # Segment borders (same visual language as other sunburst)
+            trace.update(
+                marker=dict(
+                    line=dict(
+                        color="rgba(45,41,38,0.25)",
+                        width=0.7,
+                    )
+                )
+            )
+
             labels = list(trace["labels"])
             parents = list(trace["parents"])
             values = list(trace["values"])
+            colors = list(trace["marker"]["colors"])
 
-            customdata = []
+            # Leaf-type lookup (robust + typed)
+            df_leaf_type = (
+                sunburst_df.loc[:, ["namer_display", "lemma", "color_group"]]
+                .dropna(subset=["namer_display", "lemma"])
+                .drop_duplicates(subset=["namer_display", "lemma"])
+            )
+            leaf_type_by_pair: dict[tuple[str, str], str] = {
+                (str(r.namer_display), str(r.lemma)): str(r.color_group)
+                for r in df_leaf_type.itertuples(index=False)
+            }
 
+            # --- Customdata ---
+            customdata: list[list[object]] = []
             for lab, par, val in zip(labels, parents, values):
-                # Root-Knoten (Center-Figur)
+                # Root
                 if lab == figure_name and (par is None or par == ""):
-                    freq_center = float(total_all)
-                    customdata.append(
-                        ["", "", lab, freq_center, 1.0]
-                    )
+                    customdata.append(["", "", str(lab), float(total_all), 1.0])
                     continue
 
-                # Mittlerer Ring: lab = namer_display
+                # Namer ring
                 if par == figure_name:
                     freq_namer = float(per_namer_raw.get(lab, val) or 0.0)
                     share_namer = (freq_namer / total_all) if total_all > 0 else 0.0
-                    customdata.append([lab, "", "", freq_namer, share_namer])
+                    customdata.append([str(lab), "", "", freq_namer, share_namer])
                     continue
 
-                # Äußerer Ring: parent = namer_display, label = lemma
-                type_label = ""
-                if isinstance(par, str):
-                    candidates = [par]
-                    if "/" in par:
-                        _, short = par.split("/", 1)
-                        candidates.append(short.strip())
-                else:
-                    candidates = [par]
+                # Leaf
+                par_str = "" if par is None else str(par)
+                lab_str = "" if lab is None else str(lab)
 
-                for cand in candidates:
-                    key = (cand, lab)
-                    if key in pair_map:
-                        raw_val = pair_map[key]
-                        # pair_map kann entweder nur den Typ oder (Typ, freq) enthalten
-                        if isinstance(raw_val, tuple):
-                            type_label = raw_val[0]  # nur "Eigenname"/"Antonomasie"/"Epitheton"
-                        else:
-                            type_label = raw_val
-                        break
-
-                if not type_label:
-                    mask = (sunburst_df["namer_display"] == par) & (sunburst_df["lemma"] == lab)
-                    matched_rows = sunburst_df.loc[mask]
-
-                    if not matched_rows.empty:
-                        cg = matched_rows["color_group"].iloc[0]
-                        if cg == "Name":
-                            type_label = "Name"
-                        elif cg == "Antonomasia":
-                            type_label = "Antonomasia"
-                        elif cg == "Epithet":
-                            type_label = "Epithet"
-
+                type_ui = leaf_type_by_pair.get((par_str, lab_str), "")
                 freq = float(val or 0.0)
                 share = (freq / total_all) if total_all > 0 else 0.0
-
-                display_namer = (
-                    par.split("/", 1)[1].strip()
-                    if isinstance(par, str) and "/" in par
-                    else par
-                )
-
-                customdata.append([display_namer, type_label, lab, freq, share])
+                customdata.append([par_str, type_ui, lab_str, freq, share])
 
             trace["customdata"] = customdata
             trace["hovertemplate"] = (
@@ -1964,13 +2627,41 @@ def visualize_sunburst_figure_view(paths, book_name, data):
                 "Share (center): %{customdata[4]:.1%}<extra></extra>"
             )
 
-    if fig is None:
+            # --- Minimal color patching: center + namer ring (STRUCTURE with alpha) ---
+            structure_rgba = hex_color_to_rgba(levels.get("STRUCTURE", "#A6B4A0"), 0.55)
+            name_color = categories.get("Name", "#EFE4D4")
+
+            for i, (lab, par) in enumerate(zip(labels, parents)):
+                if lab == figure_name and (par is None or par == ""):
+                    colors[i] = name_color
+                elif par == figure_name:
+                    colors[i] = structure_rgba
+
+            trace["marker"]["colors"] = colors
+
+            # WCAG-ish text colors
+            text_colors = [
+                pick_accessible_text_color(
+                    bg,
+                    dark_text_hex=levels.get("NEUTRAL_TEXT", "#2D2926"),
+                    light_text_hex="#FFFFFF",
+                )
+                for bg in colors
+            ]
+            trace["textfont"] = {"color": text_colors}
+
+    if "fig" not in locals() or fig is None:
         print("⚠️ No figure could be created for this configuration.")
         return
 
+    apply_global_visual_style(fig, has_axes=False)
+    apply_global_visual_visibility(fig, show_axis_labels=False)
+
     fig.update_layout(
-        title=f"Sunburst – {figure_name} ({book_name})",
-        margin=dict(t=60, l=0, r=0, b=0),
+        title={
+        "text": f"Sunburst – {figure_name} ({book_name})",
+        "pad": {"t": 10},        },
+        margin = {"t": 80, "l": 20, "r": 20, "b": 20},
     )
 
     # --- 7) Output mode (save / show / both) ---
@@ -1989,27 +2680,43 @@ def visualize_sunburst_figure_view(paths, book_name, data):
         c if c.isalnum() or c in ("_", "-") else "_" for c in str(figure_name)
     )
     variant_label = "sunburst_figure_types" if mode_choice == "1" else "sunburst_figure_namers"
-    filename = f"viz_{variant_label}_{safe_figure}.html"
-    output_path = os.path.join(output_dir, filename)
+
+    filename_stub = f"viz_{variant_label}_{safe_figure}"
+    output_path = os.path.join(output_dir, f"{filename_stub}.html")
 
     if output_mode == "1":
-        # Save only
-        fig.write_html(output_path)
+        apply_global_visual_modebar_export(
+            fig,
+            output_path,
+            filename_stub=filename_stub,
+        )
         print("\n✅ Visualization completed.")
         print(f"📂 File saved at:\n{output_path}")
 
     elif output_mode == "2":
         # Display only → use the temporary file
-        tmp_filename = f"viz_{uuid.uuid4().hex[:8]}.html"
-        tmp_path = os.path.join(paths["tmp_dir"], tmp_filename)
-        fig.write_html(tmp_path)
+        tmp_stub = f"viz_{uuid.uuid4().hex[:8]}"
+
+        tmp_dir = paths.get("tmp_dir") or output_dir
+        os.makedirs(tmp_dir, exist_ok=True)
+
+        tmp_path = os.path.join(tmp_dir, f"{tmp_stub}.html")
+        apply_global_visual_modebar_export(
+            fig,
+            tmp_path,
+            filename_stub=tmp_stub,
+        )
         webbrowser.open_new_tab(f"file://{os.path.abspath(tmp_path)}")
         print("🌐 The plot has been opened in your browser.")
         print(f"🧾 Temporary file created at: {tmp_path}")
 
     elif output_mode == "3":
         # Save and display
-        fig.write_html(output_path)
+        apply_global_visual_modebar_export(
+            fig,
+            output_path,
+            filename_stub=filename_stub,
+        )
         print("\n✅ Visualization completed.")
         print(f"📂 File saved at:\n{output_path}")
         webbrowser.open_new_tab(f"file://{os.path.abspath(output_path)}")
@@ -2032,7 +2739,7 @@ def visualize_sunburst_work_overview(paths, book_name, data):
     df_json, df_excel = load_naming_sources_with_excel_fallback(paths, data)
 
     # --- 2) normalization via prepare_naming_data ---
-    source, df, cols = prepare_naming_data(book_name, df_json, df_excel)
+    _source, df, cols = prepare_naming_data(book_name, df_json, df_excel)
     if df is None or df.empty:
         print("⚠️ No naming data available after prepare_naming_data.")
         return
@@ -2070,15 +2777,91 @@ def visualize_sunburst_work_overview(paths, book_name, data):
         print("⚠️ No data available for work-centered sunburst overview.")
         return
 
+    # --- 5) Create Plotly sunburst (work overview) ---
+
+    categories = GLOBAL_VISUAL_STYLE["colors"]["categories"]
+    levels = GLOBAL_VISUAL_STYLE["colors"]["levels"]
+
+    # Use your poster palette (defensive: falls Keys fehlen)
+    eigenname_color = categories.get("Eigenname", "#EFE4D4")
+    antonomasie_color = categories.get("Antonomasie", "#F9C691")
+    epitheton_color = categories.get("Epitheta", categories.get("Epitheton", "#2F4A6D"))
+
+    type_color_map = {
+        # German dataset labels
+        "Eigenname": eigenname_color,
+        "Antonomasie": antonomasie_color,
+        "Epitheton": epitheton_color,
+        "Epitheta": epitheton_color,
+
+        # optional English aliases (falls später mal genutzt)
+        "Name": eigenname_color,
+        "Antonomasia": antonomasie_color,
+        "Epithet": epitheton_color,
+        "Epithets": epitheton_color,
+    }
+
     fig = px.sunburst(
         sunburst_df,
-        path=["root", "figure", "type"],  # Work → Figur → Typ
-        values="value",                   # aggregierte Häufigkeit
+        path=["root", "figure", "type"],
+        values="value",
         color="type",
-        color_discrete_map={
-            "Naming variants": "#F28E2B",
-            "Epithets": "#3B83BD",
-        },
+        color_discrete_map=type_color_map,
+    )
+
+    apply_global_visual_style(fig, has_axes=False)
+    apply_global_visual_visibility(fig, show_axis_labels=False)
+
+    # --- Optional: enforce colors on the trace (Plotly can fall back to defaults) ---
+    if fig.data:
+        trace = fig.data[0]
+
+        labels = list(trace["labels"])
+        parents = list(trace["parents"])
+        colors = list(trace["marker"]["colors"])
+
+        root_label = str(book_name)
+
+        # "Abschwächung" wie Namer-Ring: STRUCTURE + Alpha
+        fig_ring_color = hex_color_to_rgba(levels["STRUCTURE"], 0.55)
+
+        # Root eher ruhig (z.B. Eigenname/Background)
+        root_color = eigenname_color
+
+        for i, (lab, par) in enumerate(zip(labels, parents)):
+            # Root node (work)
+            if str(lab) == root_label and (par is None or par == ""):
+                colors[i] = root_color
+
+            # Ring 1: figures (children of root)
+            elif str(par) == root_label:
+                colors[i] = fig_ring_color
+
+            # Ring 2: types -> already handled by color_discrete_map
+            # (Optional fallback, falls Plotly doch Default setzt)
+            elif str(lab) in type_color_map:
+                colors[i] = type_color_map[str(lab)]
+
+        trace["marker"]["colors"] = colors
+
+        # separators / "lines between fields"
+        trace.update(
+            marker=dict(
+                line=dict(
+                    color="rgba(45,41,38,0.22)",  # NEUTRAL_TEXT w/ alpha
+                    width=0.8,
+                )
+            )
+        )
+
+    apply_global_visual_style(fig, has_axes=False)
+    apply_global_visual_visibility(fig, show_axis_labels=False)
+
+    fig.update_layout(
+        title={
+        "text": f"Sunburst – {book_name} (work overview)",
+        "pad": {"t": 10},        },
+        margin = {"t": 80, "l": 20, "r": 20, "b": 20},
     )
 
     # --- 6) output mode (save / show / both) ---
@@ -2093,24 +2876,41 @@ def visualize_sunburst_work_overview(paths, book_name, data):
     os.makedirs(output_dir, exist_ok=True)
 
     variant_label = "sunburst_work"
-    filename = f"viz_{variant_label}_{book_name}.html"
-    output_path = os.path.join(output_dir, filename)
+    filename_stub = f"viz_{variant_label}_{book_name}"
+    output_path = os.path.join(output_dir, f"{filename_stub}.html")
 
     if output_mode == "1":
-        fig.write_html(output_path)
+        apply_global_visual_modebar_export(
+            fig,
+            output_path,
+            filename_stub=filename_stub,
+        )
         print("\n✅ Visualization completed.")
         print(f"📂 File saved at:\n{output_path}")
 
     elif output_mode == "2":
-        tmp_filename = f"viz_{uuid.uuid4().hex[:8]}.html"
-        tmp_path = os.path.join(paths["tmp_dir"], tmp_filename)
-        fig.write_html(tmp_path)
+        tmp_stub = f"viz_{uuid.uuid4().hex[:8]}"
+
+        tmp_dir = paths.get("tmp_dir") or output_dir
+        os.makedirs(tmp_dir, exist_ok=True)
+
+        tmp_path = os.path.join(tmp_dir, f"{tmp_stub}.html")
+
+        apply_global_visual_modebar_export(
+            fig,
+            tmp_path,
+            filename_stub=tmp_stub,
+        )
         webbrowser.open_new_tab(f"file://{os.path.abspath(tmp_path)}")
         print("🌐 The plot has been opened in your browser.")
         print(f"🧾 Temporary file created at: {tmp_path}")
 
     elif output_mode == "3":
-        fig.write_html(output_path)
+        apply_global_visual_modebar_export(
+            fig,
+            output_path,
+            filename_stub=filename_stub,
+        )
         print("\n✅ Visualization completed.")
         print(f"📂 File saved at:\n{output_path}")
         webbrowser.open_new_tab(f"file://{os.path.abspath(output_path)}")

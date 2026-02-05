@@ -9,6 +9,12 @@ import re
 import pandas as pd
 
 from copy import deepcopy
+from plotly.colors import hex_to_rgb, label_rgb
+
+_RGBA_RE = re.compile(
+    r"^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})(?:\s*,\s*([01](?:\.\d+)?))?\s*\)$",
+    re.IGNORECASE,
+)
 
 def normalize_text(text):
     """
@@ -417,3 +423,138 @@ def serialize_verse_value(value) -> str:
         return s
     except (ValueError, TypeError):
         return str(value)
+
+def hex_color_to_rgb_tuple(hex_color: str) -> tuple[int, int, int]:
+    """
+    Convert a hexadecimal color code to an RGB tuple.
+
+    Parameters
+    ----------
+    hex_color : str
+        Hexadecimal color code in the form '#RRGGBB'.
+
+    Returns
+    -------
+    tuple[int, int, int]
+        RGB color as a tuple of integers in the range 0–255.
+
+    Notes
+    -----
+    This utility is format-agnostic and can be reused across different
+    visualization backends. It does not encode any visualization semantics.
+    """
+
+    r, g, b = hex_to_rgb(hex_color)
+    return int(r), int(g), int(b)
+
+def rgb_tuple_to_plotly_color(rgb: tuple[int, int, int]) -> str:
+    """
+    Convert an RGB tuple to a Plotly-compatible color string.
+
+    Parameters
+    ----------
+    rgb : tuple[int, int, int]
+        RGB color as a tuple of integers in the range 0–255.
+
+    Returns
+    -------
+    str
+        Color string in the form 'rgb(r,g,b)', suitable for Plotly colorscales.
+
+    Notes
+    -----
+    This function provides a minimal adapter layer between numeric RGB values
+    and Plotly's expected color string format. It contains no plot-specific
+    logic beyond output formatting.
+    """
+
+    # returns 'rgb(r,g,b)' which px.imshow accepts in a scale list
+    return label_rgb(rgb)
+
+def plotly_color_to_rgb_tuple(color: str) -> tuple[int, int, int]:
+    """
+    Convert Plotly color strings (hex, rgb(...), rgba(...)) to an RGB tuple (0–255).
+    Accepts '#RRGGBB', 'rgb(r,g,b)', 'rgba(r,g,b,a)'.
+    """
+    c = str(color).strip()
+
+    if c.startswith("#"):
+        return hex_color_to_rgb_tuple(c)
+
+    m = _RGBA_RE.match(c)
+    if not m:
+        raise ValueError(f"Unsupported color format: {color!r}")
+
+    r = max(0, min(255, int(m.group(1))))
+    g = max(0, min(255, int(m.group(2))))
+    b = max(0, min(255, int(m.group(3))))
+    return r, g, b
+
+def hex_color_to_rgba(hex_color: str, alpha: float) -> str:
+    """
+    Convert a hex color to an rgba() string with the given alpha value.
+
+    Parameters
+    ----------
+    hex_color : str
+        Hexadecimal color code '#RRGGBB'.
+    alpha : float
+        Opacity value in the range 0.0–1.0.
+
+    Returns
+    -------
+    str
+        Plotly-compatible rgba() color string.
+
+    Notes
+    -----
+    This function is purely technical and does not encode visualization
+    semantics. It is safe to reuse across different plot types.
+    """
+    r, g, b = hex_color_to_rgb_tuple(hex_color)
+    return f"rgba({r},{g},{b},{alpha})"
+
+def srgb_channel_to_linear(c: float) -> float:
+    if c <= 0.04045:
+        return c / 12.92
+    return ((c + 0.055) / 1.055) ** 2.4
+
+def relative_luminance_from_rgb(rgb: tuple[int, int, int]) -> float:
+    """
+    WCAG relative luminance from integer RGB (0–255).
+    """
+    def to_linear(v: int) -> float:
+        s = v / 255.0
+        return s / 12.92 if s <= 0.04045 else ((s + 0.055) / 1.055) ** 2.4
+
+    r, g, b = rgb
+    r_lin, g_lin, b_lin = to_linear(r), to_linear(g), to_linear(b)
+    return 0.2126 * r_lin + 0.7152 * g_lin + 0.0722 * b_lin
+
+def contrast_ratio_rgb(fg: tuple[int, int, int], bg: tuple[int, int, int]) -> float:
+    """
+    WCAG contrast ratio for two RGB tuples.
+    """
+    l1 = relative_luminance_from_rgb(fg)
+    l2 = relative_luminance_from_rgb(bg)
+    lighter, darker = max(l1, l2), min(l1, l2)
+    return (lighter + 0.05) / (darker + 0.05)
+
+def pick_accessible_text_color(
+    background_color: str,
+    *,
+    dark_text_hex: str,
+    light_text_hex: str = "#FFFFFF",
+) -> str:
+    """
+    Pick the better (higher-contrast) text color for a given background.
+    Background can be '#RRGGBB', 'rgb(...)', or 'rgba(...)'.
+    """
+    bg_rgb = plotly_color_to_rgb_tuple(background_color)
+    dark_rgb = plotly_color_to_rgb_tuple(dark_text_hex)
+    light_rgb = plotly_color_to_rgb_tuple(light_text_hex)
+
+    cr_dark = contrast_ratio_rgb(dark_rgb, bg_rgb)
+    cr_light = contrast_ratio_rgb(light_rgb, bg_rgb)
+
+    return light_text_hex if cr_light >= cr_dark else dark_text_hex
