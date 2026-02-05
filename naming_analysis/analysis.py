@@ -1288,8 +1288,7 @@ def run_visualization_menu(paths, book_name, data):
 
 GLOBAL_VISUAL_STYLE: dict[str, Any] = {
     "typography": {
-        # "font_family": "Times New Roman",
-        "font_family": "Cormorant Garamond Medium",
+        "font_family": "Times New Roman",
         "base_size": 18,
         "tick_size": 36,
         "legend_size": 18,
