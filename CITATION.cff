@@ -7,11 +7,12 @@ authors:
   - family-names: Beutel-Thurow
     given-names: Linda
     affiliation: "Department of German Studies, Paris Lodron University of Salzburg"
-    # ORCID optional – replace with your actual ORCID if available
-    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    orcis: "https://orcid.org/0009-0001-1074-1588"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
 
 version: "0.0.1-alpha"
 date-released: 2026-01-01  # placeholder – update at actual release
+doi: 10.5281/zenodo.1234567 # placeholder – update at actual release
 
 license: "CC-BY-NC-SA-4.0"
 
