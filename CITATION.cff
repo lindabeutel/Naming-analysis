@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: "Naming-analysis"
+message: "If you use this software in academic work, please cite it as follows."
+type: software
+
+authors:
+  - family-names: Beutel-Thurow
+    given-names: Linda
+    affiliation: "Paris Lodron University of Salzburg"
+    # ORCID optional – replace with your actual ORCID if available
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+
+version: "0.0.1-alpha"
+date-released: 2026-01-01  # placeholder – update at actual release
+
+license: "CC-BY-NC-SA-4.0"
+
+repository-code: "https://github.com/lindabeutel/Naming-analysis"
+
+abstract: >
+  Naming-analysis is a Digital Humanities pipeline for the semi-automated
+  extraction, normalization, categorization, and visualization of naming
+  variants and collocations in Middle High German epic texts.
