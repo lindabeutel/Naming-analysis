@@ -6,7 +6,7 @@ type: software
 authors:
   - family-names: Beutel-Thurow
     given-names: Linda
-    affiliation: "Department of German Studies (Germanistik), Paris Lodron University of Salzburg"
+    affiliation: "Department of German Studies, Paris Lodron University of Salzburg"
     # ORCID optional – replace with your actual ORCID if available
     # orcid: "https://orcid.org/0000-0000-0000-0000"
 
