@@ -1,33 +1,51 @@
 """
 controller.py
 
-This module coordinates the execution flow of the naming analysis pipeline.
-It organizes project setup, data collection, progress saving, and optional export or analysis.
+Orchestrates the naming-analysis workflow.
 
-The functions here are designed to be used directly from the main entry point (run.py).
+Responsibilities:
+- Initialize a project session (book selection, paths, config, and input data)
+- Execute the data-collection workflow (naming variants, collocations, categorization)
+- Persist intermediate progress
+- Optionally trigger export and/or analysis menus
+
+This module is called from the main entry point (run.py).
 """
+import sys
 
+# Project setup / configuration
 from naming_analysis.project_setup import initialize_project
-from naming_analysis.loaders import load_or_extend_naming_variants_dict
+from naming_analysis.config import ask_config_interactively
+
+# Data loading
 from naming_analysis.loaders import (
+    load_or_extend_naming_variants_dict,
     load_lemma_normalization,
     load_ignored_lemmas,
-    load_lemma_categories
-)
-from naming_analysis.collection import run_data_collection
-from naming_analysis.savers import save_progress
-from naming_analysis.io_utils import load_missing_naming_variants
-from naming_analysis.exporter import export_all_data_to_new_excel
-from naming_analysis.analysis import run_analysis_menu
-from naming_analysis.shared import ask_user_choice
-from naming_analysis.loaders import (
+    load_lemma_categories,
     load_collocations_json,
-    load_json_annotations
+    load_json_annotations,
 )
 
-def setup_project_session():
+# Data collection and persistence
+from naming_analysis.collection import run_data_collection
+from naming_analysis.savers import save_progress
+
+# Export and analysis
+from naming_analysis.exporter import export_all_data_to_new_excel
+from naming_analysis.analysis import run_analysis_menu
+
+# Shared utilities
+from naming_analysis.shared import ask_user_choice
+from naming_analysis.io_utils import load_missing_naming_variants
+
+def setup_project_session() -> tuple[str, dict, dict, dict, int, dict, dict]:
     """
-    Initializes the session by selecting a book, loading paths, config and data.
+    Initialize a project session: select a book, load paths, read configuration, and load input data.
+
+    Notes:
+        Depending on the configured mode ("analyze" / "export"), this function may run the
+        corresponding menu and terminate the program early.
 
     Returns:
         tuple:
@@ -35,13 +53,13 @@ def setup_project_session():
             config_data (dict)
             data (dict)
             paths (dict)
-            active_last_verse (int)
-            mode_flags (dict): contains the mode booleans for each operation
+            last_verse (int): last processed verse for the selected workflow
+            mode_flags (dict): boolean flags controlling the selected operations
+            naming_variants_dict (dict): reference dictionary for naming-variant lookup/extension
     """
     book_name, naming_variants_last_verse, collocations_last_verse, categorization_last_verse, paths = initialize_project()
     naming_variants_dict = load_or_extend_naming_variants_dict()
 
-    from naming_analysis.config import ask_config_interactively
     config_data, data = ask_config_interactively(paths["config_json"])
     paths["original_excel"] = data.get("excel_path")
 
@@ -53,7 +71,7 @@ def setup_project_session():
 
     if config_data.get("modus") == "analyze":
         run_analysis_menu(config_data, paths, data, book_name)
-        exit(0)
+        sys.exit(0)
 
     elif config_data.get("modus") == "export":
         options = {
@@ -61,14 +79,13 @@ def setup_project_session():
             "kollokationen": config_data.get("fill_collocations", True),
             "kategorisierung": config_data.get("do_categorization", True)
         }
-        paths["original_excel"] = data.get("excel_path")
         export_all_data_to_new_excel(book_name, paths, options)
 
         analyze = ask_user_choice("Do you want to run an analysis now? (y/n): ", ["y", "n"])
         if analyze == "y":
             run_analysis_menu(config_data, paths, data, book_name)
 
-        exit(0)
+        sys.exit(0)
 
     if mode_flags["check_naming_variants"]:
         last_verse = naming_variants_last_verse
@@ -81,24 +98,40 @@ def setup_project_session():
 
     return book_name, config_data, data, paths, last_verse, mode_flags, naming_variants_dict
 
-def run_data_workflow(book_name, config_data, data, paths, last_verse, mode_flags, naming_variants_dict):
+def run_data_workflow(
+    data,
+    paths,
+    last_verse,
+    mode_flags,
+    naming_variants_dict
+) -> tuple[dict, dict, dict]:
     """
-    Executes the data collection workflow using the selected mode(s).
+    Execute the data-collection workflow for the selected mode(s).
+
+    Depending on the active flags, this function updates naming variants,
+    collocations, and/or categorization data and persists intermediate progress.
 
     Returns:
-        tuple: (missing_naming_variants, collocation_data, categorized_entries)
+        tuple:
+            missing_naming_variants (dict)
+            collocation_data (dict)
+            categorized_entries (dict)
     """
+    # Input handles: tabular data (Excel) and parsed TEI/XML root
     df = data.get("excel")
     root = data.get("xml")
 
+    # Core inputs, mode flags, and optional resources for the data-collection step
     missing_naming_variants = load_missing_naming_variants(paths["missing_naming_variants_json"])
     collocation_data = load_collocations_json(paths["collocations_json"])
     categorized_entries = load_json_annotations(paths["categorization_json"])
 
+    # Create snapshots of the current state before running the data-collection step
     previous_naming_variants = missing_naming_variants.copy()
     previous_collocations = collocation_data.copy()
     previous_categorized_entries = categorized_entries.copy()
 
+    # Optional resources, only required for categorization mode
     lemma_normalization = None
     ignored_lemmas = None
     lemma_categories = None
@@ -116,6 +149,7 @@ def run_data_workflow(book_name, config_data, data, paths, last_verse, mode_flag
         paths=paths,
         missing_naming_variants=missing_naming_variants,
         collocation_data=collocation_data,
+        # Mode flags control which sub-workflows are executed in this run
         check_naming_variants=mode_flags["check_naming_variants"],
         perform_collocations=mode_flags["perform_collocations"],
         perform_categorization=mode_flags["perform_categorization"],
@@ -125,6 +159,7 @@ def run_data_workflow(book_name, config_data, data, paths, last_verse, mode_flag
         categorized_entries=categorized_entries
     )
 
+    # Persist updated data and compare it against the pre-run snapshots
     save_progress(
         missing_naming_variants=missing_naming_variants,
         last_processed_verse=last_verse,
@@ -142,18 +177,29 @@ def run_data_workflow(book_name, config_data, data, paths, last_verse, mode_flag
 
     return missing_naming_variants, collocation_data, categorized_entries
 
-def finalize_and_prompt(results, data, paths, book_name, config_data):
+def finalize_and_prompt(results, data, paths, book_name, config_data) -> None:
     """
-    Offers the user optional export and analysis steps after data collection is complete.
+    Prompt the user for optional export and analysis steps after data collection.
+
+    Parameters:
+        results:
+            Placeholder for the return value of `run_data_workflow(...)`.
+            This parameter is intentionally unused here and exists to keep the
+            call signature compatible with the main execution flow in `run.py`,
+            where the workflow result is assigned but not required for prompting.
+        data (dict): Loaded input data (Excel, XML).
+        paths (dict): Project paths.
+        book_name (str): Name of the current text.
+        config_data (dict): Active configuration.
     """
-    print("\n📤 Export results:")
+    print("\nExport results:")
     print(" [1] Naming variants")
     print(" [2] Collocations")
     print(" [3] Categorizations")
     print(" [4] All of the above")
     print(" [0] No export")
 
-    export = ask_user_choice("👉 Please select one or more (e.g., '1,3' or '4'): ",
+    export = ask_user_choice("Please select one or more (e.g., '1,3' or '4'): ",
                              ["0", "1", "2", "3", "4", "1,2", "1,3", "2,3", "1,2,3"])
 
     if export != "0":

@@ -4,16 +4,16 @@ from naming_analysis.controller import (
     finalize_and_prompt
 )
 
-def main():
-    # 🔹 1. Setup: Projekt, Konfiguration und Pfade
+def main() -> None:
+    """Run the naming-analysis workflow: setup → data processing → optional export/analysis."""
+    # 1) Setup: project, configuration, and paths
     book_name, config_data, data, paths, last_verse, mode_flags, naming_variants_dict = setup_project_session()
 
-    # 🔹 2. Datenerhebung je nach Modus
-    results = run_data_workflow(book_name, config_data, data, paths, last_verse, mode_flags, naming_variants_dict)
+    # 2) Data processing (depends on selected mode)
+    results = run_data_workflow(data, paths, last_verse, mode_flags, naming_variants_dict)
 
-    # 🔹 3. Optional: Export und Analyse
+    # 3) Optional: export and analysis prompt
     finalize_and_prompt(results, data, paths, book_name, config_data)
-
 
 if __name__ == "__main__":
     main()
