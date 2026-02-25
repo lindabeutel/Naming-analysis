@@ -110,6 +110,13 @@ Not included:
 TEI files should preferably be obtained from the MHDBDB, as the
 collection logic is tailored to its TEI structure.
 
+Depending on the specific encoding, adjustments to verse counting 
+may be necessary. For example, in works such as _Parzival_, verse 
+numbering restarts within each book (e.g., every 29 verses the attribute 
+`.//tei:l[@n]` begins again at 1). In such cases, a more robust 
+identification via `xml:id` should be used to ensure consistent verse 
+tracking across structural divisions.
+
 The datasets contained in the data/ directory are sufficient to 
 reproduce all analytical and visualization outputs. No TEI source 
 files are required for analysis execution. The dataset is evolving
