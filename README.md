@@ -109,8 +109,9 @@ Not included:
 TEI files should preferably be obtained from the MHDBDB, as the
 collection logic is tailored to its TEI structure.
 
-The `data/` directory included in the repository does not represent a
-finalized or authoritative data state. The dataset has evolved
+The datasets contained in the data/ directory are sufficient to 
+reproduce all analytical and visualization outputs. No TEI source 
+files are required for analysis execution. The dataset is evolving
 dynamically during research.
 
 ------------------------------------------------------------------------
