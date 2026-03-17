@@ -3,6 +3,14 @@
 ## Semi-Automatic Collection and Analysis of Naming Variants in Middle High German Epic
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18770138.svg)](https://doi.org/10.5281/zenodo.18770138)
+
+------------------------------------------------------------------------
+
+## Visualizations
+
+Interactive visualizations accompanying the dissertation are available at:
+👉 **[lindabeutel.github.io/Naming-analysis](https://lindabeutel.github.io/Naming-analysis/)**
+
 ------------------------------------------------------------------------
 
 ## Abstract
