@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Naming Poetics of Middle High German Epic · Visualizations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Variables ─────────────────────────────────────────────── */
+    :root {
+      --ink:        #1a1410;
+      --ink-mid:    #3a2e26;
+      --ink-soft:   #6b5c4e;
+      --ink-faint:  #a89880;
+      --parchment:  #f7f2eb;
+      --warm-white: #fdfaf5;
+      --gold:       #8C6A4A;
+      --gold-light: #EFE4D4;
+      --navy:       #2F4A6D;
+      --navy-light: #6A97B8;
+      --rule:       rgba(140, 106, 74, 0.25);
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'EB Garamond', Georgia, serif;
+      --font-meta:    'Crimson Pro', Georgia, serif;
+    }
+
+    /* ─── Reset & Base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--warm-white);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ─── Grain overlay ─────────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ─── Layout ────────────────────────────────────────────────── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 80px 40px 120px;
+    }
+
+    /* ─── Header ────────────────────────────────────────────────── */
+    header {
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 48px;
+      margin-bottom: 64px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .header-eyebrow {
+      font-family: var(--font-meta);
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 300;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .header-subtitle {
+      font-family: var(--font-meta);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--ink-soft);
+      font-style: italic;
+      max-width: 520px;
+    }
+
+    /* ─── Section headers ───────────────────────────────────────── */
+    .section {
+      margin-bottom: 64px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .section:nth-child(2) { animation-delay: 0.1s; }
+    .section:nth-child(3) { animation-delay: 0.2s; }
+    .section:nth-child(4) { animation-delay: 0.3s; }
+    .section:nth-child(5) { animation-delay: 0.4s; }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .section-label h2 {
+      font-family: var(--font-meta);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    /* ─── Cards ─────────────────────────────────────────────────── */
+    .cards {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--parchment);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 28px 32px;
+      transition: border-color 0.25s, background 0.25s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--gold);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.25s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(140, 106, 74, 0.5);
+      background: #f9f4ec;
+      transform: translateX(4px);
+    }
+
+    .card:hover::after {
+      transform: scaleY(1);
+    }
+
+    .card-type {
+      font-family: var(--font-meta);
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .card-title em { font-style: italic; color: var(--gold); }
+
+    .card-desc {
+      font-family: var(--font-meta);
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--ink-soft);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .card-arrow {
+      position: absolute;
+      right: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: var(--ink-faint);
+      transition: color 0.25s, right 0.25s;
+    }
+
+    .card:hover .card-arrow {
+      color: var(--gold);
+      right: 22px;
+    }
+
+    /* ─── Figure tag ────────────────────────────────────────────── */
+    .tag {
+      display: inline-block;
+      font-family: var(--font-meta);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 2px;
+      margin-right: 6px;
+      margin-top: 10px;
+    }
+
+    .tag-figure {
+      background: var(--gold-light);
+      color: var(--gold);
+      border: 1px solid rgba(140,106,74,0.3);
+    }
+
+    .tag-book {
+      background: rgba(47,74,109,0.08);
+      color: var(--navy);
+      border: 1px solid rgba(47,74,109,0.2);
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding-top: 32px;
+      margin-top: 80px;
+      font-family: var(--font-meta);
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--ink-faint);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    footer em { font-style: italic; }
+
+    /* ─── Animations ─────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .page { padding: 48px 24px 80px; }
+      .card { padding: 22px 44px 22px 22px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Header ──────────────────────────────────────────────────── -->
+  <header>
+    <p class="header-eyebrow">Linda Beutel-Thurow · Dissertation · German Studies · Paris Lodron University Salzburg</p>
+    <h1>Naming Poetics of<br><em>Middle High German</em> Epic.<br>Visualizations.</h1>
+    <p class="header-subtitle">Interactive visualizations accompanying the dissertation.</p>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION – Visualizations
+       
+       HOW TO ADD A NEW CARD:
+       Copy one <a class="card"> block, place it inside <div class="cards">,
+       and fill in the following fields:
+
+         href="..."
+           → Relative path to your .html file, e.g.:
+               data/Trojanerkrieg/visualization/viz_naming_Paris.html
+
+         .card-type  (small uppercase label, shown above the title)
+           → Visualization type. Examples:
+               Scatter · Naming variants &amp; epithets
+               Scatter · Epithets
+               Scatter · Combined
+               Sunburst · Figure view · Types → Lemma
+               Sunburst · Figure view · Namers → Lemma
+               Sunburst · Book overview
+               Heatmap · Intra-figure co-occurrence
+
+         .card-title  (larger display title)
+           → Descriptive title for the visualization.
+               Use <em>...</em> to italicize figure or work names, e.g.:
+               Token Distribution for <em>Paris</em>
+
+         .card-desc  (short italic description line)
+           → One sentence describing what the visualization shows.
+
+         .tag  (one or more tags below the description)
+           → Use tag-figure for figure names, tag-book for work titles.
+               <span class="tag tag-figure">Paris</span>
+               <span class="tag tag-book">Trojanerkrieg</span>
+               Available tag classes: tag-figure · tag-book
+
+       HOW TO ADD A NEW SECTION:
+       Copy the entire <section class="section"> block and place it
+       after the existing one. Update the <h2> section label and
+       replace the cards inside <div class="cards">.
+  ══════════════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-label"><h2>Visualizations</h2></div>
+    <div class="cards">
+
+      <a class="card" href="data/Trojanerkrieg/visualization/viz_naming_Paris.html">
+        <p class="card-type">Scatter · Naming variants</p>
+        <p class="card-title">Verse-Naming-Distribution for <em>Paris</em></p>
+        <p class="card-desc">Verse-based scatter plot of all naming variants across the text.</p>
+        <div>
+          <span class="tag tag-figure">Paris</span>
+          <span class="tag tag-book">Trojanerkrieg</span>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── Footer ──────────────────────────────────────────────────── -->
+  <footer>
+    <span>Linda Beutel-Thurow· Dissertation · <em>Naming Poetics of Middle High German Epic</em></span>
+    <span>Paris Lodron Universität Salzburg</span>
+  </footer>
+
+</div>
+</body>
+</html>
