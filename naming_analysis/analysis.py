@@ -4402,10 +4402,29 @@ def apply_global_visual_modebar_export(
       if (!isFinite(s) || s <= 0) s = 3;
       if (s > 8) s = 8;
 
-      hideMenusThenDownload(gd, {{
-        format: "png",
-        filename: "{filename_stub}",
-        scale: 3
+      var oldPaperBg = (gd.layout && gd.layout.paper_bgcolor) ? gd.layout.paper_bgcolor : null;
+      var oldPlotBg  = (gd.layout && gd.layout.plot_bgcolor)  ? gd.layout.plot_bgcolor  : null;
+
+      Plotly.relayout(gd, {{
+        paper_bgcolor: "white",
+        plot_bgcolor:  "white"
+      }}).then(function () {{
+        return hideMenusThenDownload(gd, {{
+          format: "png",
+          filename: "{filename_stub}",
+          scale: 3
+        }});
+      }}).then(function () {{
+        return Plotly.relayout(gd, {{
+          paper_bgcolor: oldPaperBg !== null ? oldPaperBg : "rgba(0,0,0,0)",
+          plot_bgcolor:  oldPlotBg  !== null ? oldPlotBg  : "rgba(0,0,0,0)"
+        }});
+      }}).catch(function (err) {{
+        Plotly.relayout(gd, {{
+          paper_bgcolor: oldPaperBg !== null ? oldPaperBg : "rgba(0,0,0,0)",
+          plot_bgcolor:  oldPlotBg  !== null ? oldPlotBg  : "rgba(0,0,0,0)"
+        }});
+        console.error(err);
       }});
     }});
 
