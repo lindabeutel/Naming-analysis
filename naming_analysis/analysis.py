@@ -2530,6 +2530,7 @@ def run_sunburst_visualization(paths, book_name, data):
         print("\nSunburst Visualization")
         print("[1] Figure-centered view")
         print("[2] Book-centered overview")
+        print("[3] Back to visualization menu")
 
         choice = ask_user_choice("> ", ["1", "2", "3"])
 
@@ -2539,8 +2540,8 @@ def run_sunburst_visualization(paths, book_name, data):
         elif choice == "2":
             visualize_sunburst_book_overview(paths, book_name, data)
 
-        else:
-            print("Returning.")
+        elif choice == "3":
+            print("Returning to visualization menu.")
             return
 
 def visualize_sunburst_figure_view(paths, book_name, data):
@@ -3393,19 +3394,15 @@ def build_sunburst_data_types_lemma(df, cols, figure_name):
     }
 
     for (type_label, lemma), freq in counts.items():
-
-        # Determine ring-level grouping for the current type.
         type_group = type_group_map.get(type_label, "Epithets")
-
-        # Leaf-level category key used for color mapping.
         color_group = type_label
-
+        safe_lemma = f"{lemma} " if lemma == figure_name else lemma
         rows.append(
             {
                 "center_figure": figure_name,
                 "type_group": type_group,
                 "color_group": color_group,
-                "lemma": lemma,
+                "lemma": safe_lemma,
                 "frequency": freq,
             }
         )

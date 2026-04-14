@@ -426,6 +426,10 @@ def load_naming_sources_with_excel_fallback(paths, data):
         df_json = None
 
     # --- 2) Excel Fallback (automatic) ---
+    # JSON is the preferred source; if it loaded successfully, skip Excel entirely.
+    if df_json is not None and not df_json.empty:
+        return df_json, None
+
     try:
         # 2.1 try in-memory Excel first
         for k in ("excel", "excel_df", "df_excel"):
