@@ -2869,6 +2869,14 @@ def visualize_sunburst_figure_view(paths, book_name, data):
                 for r in df_leaf_type.itertuples(index=False)
             }
 
+            # Row count per namer (= actual number of mentions, not token sum)
+            namer_mentions = (
+                sunburst_df.drop_duplicates(subset=["namer_display"])
+                .set_index("namer_display")["namer_row_count"]
+                .to_dict()
+            )
+            total_mentions = float(sum(namer_mentions.values())) or 0.0
+
             # Build hover payload
             customdata: list[list[object]] = []
             for lab, par, val in zip(labels, parents, values):
@@ -2880,9 +2888,9 @@ def visualize_sunburst_figure_view(paths, book_name, data):
 
                 # Namer ring
                 if par == figure_name:
-                    freq_namer = float(per_namer_raw.get(lab, val) or 0.0)
-                    share_namer = (freq_namer / total_all) if total_all > 0 else 0.0
-                    customdata.append([str(lab), "", "", freq_namer, share_namer])
+                    mentions = float(namer_mentions.get(lab, 0))
+                    share_namer = (mentions / total_mentions) if total_mentions > 0 else 0.0
+                    customdata.append([str(lab), "", "", mentions, share_namer])
                     continue
 
                 # Leaf node
@@ -3545,6 +3553,7 @@ def build_sunburst_data_namer_lemma(df, cols, figure_name):
     # ----------------------------------------------------------------------
 
     counts = Counter()
+    namer_row_counts: Counter = Counter()
 
     for _, row in dff.iterrows():
 
@@ -3560,6 +3569,9 @@ def build_sunburst_data_namer_lemma(df, cols, figure_name):
         # Skip rows without a resolvable namer.
         if not namer:
             continue
+
+        # Track row count per namer (one row = one mention)
+        namer_row_counts[namer] += 1
 
         # Deduplicate per row separately for naming variants and epithets.
         used_naming_lemmas = set()
@@ -3637,12 +3649,13 @@ def build_sunburst_data_namer_lemma(df, cols, figure_name):
         rows.append(
             {
                 "center_figure": figure_name,
-                "namer": namer,  # ← neu: nennende Figur
-                "type_group": type_group,  # ring 1 (Naming variants / Epithets)
-                "color_group": color_group,  # Name / Antonomasia / Epithet
-                "type": type_label,  # ← neu: interne Typ-Bezeichnung
+                "namer": namer,
+                "type_group": type_group,
+                "color_group": color_group,
+                "type": type_label,
                 "lemma": lemma,
                 "frequency": freq,
+                "namer_row_count": namer_row_counts.get(namer, 0),
             }
         )
 
