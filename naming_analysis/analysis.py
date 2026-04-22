@@ -2584,6 +2584,17 @@ def visualize_sunburst_figure_view(paths, book_name, data):
         - Hover data includes group, category, lemma, frequency,
           and share relative to the center figure.
 
+    Methodological note (mode 2):
+    The namer ring hover count is deliberately overridden in
+    post-processing. Plotly's default ring value aggregates leaf
+    frequencies (token counts), but the analytically relevant
+    figure is the number of mentions per namer (row count).
+    A single mention can contain multiple lemmas, which is why
+    these two values diverge. The visual sector size still
+    reflects the Plotly default; only the hover value is corrected.
+    A methodological note is embedded in the rendered figure to
+    make this explicit to viewers.
+
     Output handling:
         - Delegates export logic to export_visualization_output(...).
         - Supports save, show in browser (temporary file), or both.
@@ -2869,7 +2880,8 @@ def visualize_sunburst_figure_view(paths, book_name, data):
                 for r in df_leaf_type.itertuples(index=False)
             }
 
-            # Row count per namer (= actual number of mentions, not token sum)
+            # Override Plotly's default namer ring value with the actual
+            # mention count (row count per namer). See docstring.
             namer_mentions = (
                 sunburst_df.drop_duplicates(subset=["namer_display"])
                 .set_index("namer_display")["namer_row_count"]
@@ -2936,6 +2948,28 @@ def visualize_sunburst_figure_view(paths, book_name, data):
                 levels.get("LIGHT_TEXT"),
             )
 
+            # Methodological note: explain why ring value may differ
+            # from the sum of its leaf values
+            fig.add_annotation(
+                text=(
+                    "Note: The namer ring count is overridden in post-processing "
+                    "to show the number of mentions (= rows per namer). "
+                    "Leaves show individual lemma frequencies, which may sum to "
+                    "a higher value because a single mention can contain multiple "
+                    "lemmas. The visual sector size still reflects the Plotly default "
+                    "(sum of leaf frequencies)."
+                ),
+                xref="paper",
+                yref="paper",
+                x=0.5,
+                y=-0.08,
+                xanchor="center",
+                yanchor="top",
+                showarrow=False,
+                font={"size": 11, "color": levels.get("NEUTRAL_TEXT")},
+                align="center",
+            )
+
     # ======================================================================
     # [10] Global styling and layout
     # ======================================================================
@@ -2947,11 +2981,14 @@ def visualize_sunburst_figure_view(paths, book_name, data):
     apply_global_visual_style(fig, has_axes=False)
     apply_global_visual_visibility(fig, show_axis_labels=False)
 
+    # Bottom margin: extra space in mode 2 for methodological note
+    bottom_margin = 80 if mode_choice == "2" else 20
+
     fig.update_layout(
         title={
-        "text": f"Sunburst – {figure_name} ({book_name})",
-        "pad": {"t": 10},        },
-        margin = {"t": 80, "l": 20, "r": 20, "b": 20},
+            "text": f"Sunburst – {figure_name} ({book_name})",
+            "pad": {"t": 10}, },
+        margin={"t": 80, "l": 20, "r": 20, "b": bottom_margin},
     )
 
     # ======================================================================
