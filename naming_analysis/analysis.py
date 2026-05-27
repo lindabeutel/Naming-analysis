@@ -1866,6 +1866,8 @@ def visualize_verse_naming_distribution(paths, book_name):
     for col in selected_cols:
         keep_cols = ["Vers", col] + [c for c in meta_cols if c in df_figure.columns]
         temp = df_figure[keep_cols].dropna(subset=["Vers", col]).rename(columns={col: "Token"})
+        # Mark source category at construction time (single source of truth)
+        temp["Category"] = "Naming variants" if col in naming_cols else "Epithets"
         all_entries.append(temp)
 
     df_combined = pd.concat(all_entries, ignore_index=True)
@@ -1941,13 +1943,22 @@ def visualize_verse_naming_distribution(paths, book_name):
     # ======================================================================
     # [6] Filter and prepare plotting data
     # ======================================================================
-
-    df_plot = df_combined[df_combined["Token"].isin(tokens_to_plot)].copy()
+    # Category-aware filter: a token is only retained if it was selected
+    # under the matching source category. This prevents cross-contamination
+    # for tokens that occur both as naming variant (Antonomasie) and as
+    # epithet (e.g., 'hövesch' for Paris).
+    mask = (
+            (df_combined["Token"].isin(selected_naming) & (df_combined["Category"] == "Naming variants"))
+            | (df_combined["Token"].isin(selected_epithets) & (df_combined["Category"] == "Epithets"))
+    )
+    df_plot = df_combined.loc[mask].copy()
 
     # Remove rows without valid verse numbers (non-renderable points)
     df_plot = df_plot.dropna(subset=["Vers"])
 
-    # Determine token order by descending frequency in filtered set
+    # Determine token order by descending frequency in filtered set.
+    # Tokens that occur in both categories are still treated as a single
+    # y-axis row here; per-category disambiguation (if any) happens in [7].
     plot_token_counts = Counter(df_plot["Token"])
     sorted_tokens = [token for token, _ in plot_token_counts.most_common()]
 
@@ -1958,12 +1969,6 @@ def visualize_verse_naming_distribution(paths, book_name):
         categories=[f"<i>{t}</i>" for t in sorted_tokens],
         ordered=True
     )
-
-    # Add categorical unit labels in combined mode
-    if variant_type == "3":
-        df_plot["Category"] = df_plot["Token"].apply(
-            lambda x: "Naming variants" if x in selected_naming else "Epithets"
-        )
 
     # ======================================================================
     # [7] Create Plotly figure and traces
