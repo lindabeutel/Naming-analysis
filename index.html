@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Naming Poetics of Middle High German Epic · Visualizations</title>
+  <title>Naming Poetics of Middle High German Epic · Visualizations and Tables</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
@@ -290,46 +290,6 @@
     <p class="header-subtitle">Interactive visualizations accompanying the dissertation.</p>
   </header>
 
-  <!-- ══════════════════════════════════════════════════════════════
-       SECTION – Visualizations
-       
-       HOW TO ADD A NEW CARD:
-       Copy one <a class="card"> block, place it inside <div class="cards">,
-       and fill in the following fields:
-
-         href="..."
-           → Relative path to your .html file, e.g.:
-               data/Trojanerkrieg/visualization/viz_naming_Paris.html
-
-         .card-type  (small uppercase label, shown above the title)
-           → Visualization type. Examples:
-               Scatter · Naming variants &amp; epithets
-               Scatter · Epithets
-               Scatter · Combined
-               Sunburst · Figure view · Types → Lemma
-               Sunburst · Figure view · Namers → Lemma
-               Sunburst · Book overview
-               Heatmap · Intra-figure co-occurrence
-
-         .card-title  (larger display title)
-           → Descriptive title for the visualization.
-               Use <em>...</em> to italicize figure or work names, e.g.:
-               Token Distribution for <em>Paris</em>
-
-         .card-desc  (short italic description line)
-           → One sentence describing what the visualization shows.
-
-         .tag  (one or more tags below the description)
-           → Use tag-figure for figure names, tag-book for work titles.
-               <span class="tag tag-figure">Paris</span>
-               <span class="tag tag-book">Trojanerkrieg</span>
-               Available tag classes: tag-figure · tag-book
-
-       HOW TO ADD A NEW SECTION:
-       Copy the entire <section class="section"> block and place it
-       after the existing one. Update the <h2> section label and
-       replace the cards inside <div class="cards">.
-  ══════════════════════════════════════════════════════════════════ -->
   <section class="section">
     <div class="section-label"><h2>Visualizations</h2></div>
     <div class="cards">
@@ -381,47 +341,14 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════
-       SECTION – Tabellen
-
-       Die Cards verlinken auf den generischen Viewer "table.html".
-       Die anzuzeigende CSV wird per Query-Parameter übergeben — es
-       braucht also KEINE neue HTML-Datei pro Tabelle, nur eine neue Card.
-
-       HOW TO ADD A NEW TABLE CARD:
-       Copy one <a class="card"> block below and set href so:
-
-         href="table.html?csv=<PFAD>&title=<TITEL>&desc=<BESCHREIBUNG>&eyebrow=<LABEL>"
-
-           csv      → Relativer Pfad zur CSV-Datei, z.B.:
-                        data/Trojanerkrieg/tables/epitheta_Paris.csv
-           title    → Überschrift der Tabellenseite. <em>…</em> ist erlaubt,
-                      muss in der URL aber kodiert werden:
-                        %3Cem%3EParis%3C%2Fem%3E   ergibt   <em>Paris</em>
-           desc     → Kurzbeschreibung (eine Zeile).
-           eyebrow  → Kleines Label über dem Titel (z.B. "Tabelle · Epitheta").
-
-         Alle Werte mit encodeURIComponent kodieren (Leerzeichen → %20,
-         Umlaute, & usw.). Tipp im Browser-Konsolenfenster:
-           encodeURIComponent('data/Trojanerkrieg/tables/epitheta_Paris.csv')
-
-       Hinweise zur CSV:
-         • Erste Zeile = Spaltenüberschriften.
-         • Trennzeichen ( , ; Tab ) wird automatisch erkannt.
-         • Spalten, deren Werte alle Zahlen sind (auch 1.234,5 oder 4,2%),
-           werden automatisch rechtsbündig gesetzt und numerisch sortiert.
-         • Wichtig: Damit die CSV geladen werden kann, muss die Seite über
-           einen Server ausgeliefert werden (Hosting oder lokal z.B.
-           `python3 -m http.server`), nicht per Doppelklick (file://).
-  ══════════════════════════════════════════════════════════════════ -->
   <section class="section">
     <div class="section-label"><h2>Tables</h2></div>
     <div class="cards">
 
-      <a class="card" href="data/Trojanerkrieg/analysis/wordlist_Benannte_Figur_Trojanerkrieg.csv">
+      <a class="card" href="table.html?csv=data/Trojanerkrieg/analysis/wordlist_Benannte_Figur_Trojanerkrieg.csv">
         <p class="card-type">Table · Named Entities</p>
-        <p class="card-title">List of all <em>Named Entities</em> <span style="font-style:italic;color:var(--ink-faint);font-size:0.8em;">(Beispiel)</span></p>
-        <p class="card-desc">Total number of mentions of the named entities.</p>
+        <p class="card-title">List of all <em>Named Entities</em></p>
+        <p class="card-desc">Total numbers of mentions of the named entities.</p>
         <div>
           <span class="tag tag-figure">All named entities</span>
           <span class="tag tag-book">Trojanerkrieg</span>
