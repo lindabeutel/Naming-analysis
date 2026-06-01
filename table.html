@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
-    /* ─── Variables (identisch zur Index-Seite) ─────────────────── */
+    /* ─── Variables ─────────────────── */
     :root {
       --ink:        #1a1410;
       --ink-mid:    #3a2e26;
@@ -265,7 +265,7 @@
   </header>
 
   <div class="controls">
-    <input type="text" class="search" id="search" placeholder="Filtern …" aria-label="Tabelle filtern" />
+    <input type="text" class="search" id="search" placeholder="Filter …" aria-label="Filter table" />
     <span class="caption" id="caption"></span>
   </div>
 
@@ -439,11 +439,11 @@
     error: function (err) {
       stateEl.classList.add('error');
       stateEl.innerHTML =
-        'Die Datei <code>' + csvPath + '</code> konnte nicht geladen werden.<br><br>' +
-        'Häufigster Grund: Die Seite wurde direkt per <code>file://</code> geöffnet. ' +
-        'CSV-Dateien lassen sich aus Sicherheitsgründen nur laden, wenn die Seite über einen ' +
-        'Server ausgeliefert wird (lokal z.&nbsp;B. <code>python3 -m http.server</code>, ' +
-        'oder über dein Hosting).<br><br><em>' + (err && err.message ? err.message : '') + '</em>';
+        'The file <code>' + csvPath + '</code> could not be loaded.<br><br>' +
+        'Most common reason: The page was opened directly via <code>file://</code>. ' +
+        'For security reasons, CSV files can only be loaded if the page is served via a ' +
+        'server (e.g., locally <code>python3 -m http.server</code>, ' +
+        'or via your hosting).<br><br><em>' + (err && err.message ? err.message : '') + '</em>';
     }
   });
 
