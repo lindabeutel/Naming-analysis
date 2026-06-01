@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
   <style>
-    /* ─── Variables ─────────────────────────────────────────────── */
     :root {
       --ink:        #1a1410;
       --ink-mid:    #3a2e26;
@@ -21,17 +20,13 @@
       --navy:       #2F4A6D;
       --navy-light: #6A97B8;
       --rule:       rgba(140, 106, 74, 0.25);
-
       --font-display: 'Cormorant Garamond', Georgia, serif;
       --font-body:    'EB Garamond', Georgia, serif;
       --font-meta:    'Crimson Pro', Georgia, serif;
     }
 
-    /* ─── Reset & Base ──────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
-
     body {
       background-color: var(--warm-white);
       color: var(--ink);
@@ -40,8 +35,6 @@
       line-height: 1.7;
       min-height: 100vh;
     }
-
-    /* ─── Grain overlay ─────────────────────────────────────────── */
     body::before {
       content: '';
       position: fixed;
@@ -51,8 +44,6 @@
       z-index: 0;
       opacity: 0.6;
     }
-
-    /* ─── Layout ────────────────────────────────────────────────── */
     .page {
       position: relative;
       z-index: 1;
@@ -65,10 +56,9 @@
     header {
       border-bottom: 1px solid var(--rule);
       padding-bottom: 48px;
-      margin-bottom: 64px;
+      margin-bottom: 48px;
       animation: fadeUp 0.8s ease both;
     }
-
     .header-eyebrow {
       font-family: var(--font-meta);
       font-size: 13px;
@@ -78,7 +68,6 @@
       color: var(--ink-faint);
       margin-bottom: 20px;
     }
-
     h1 {
       font-family: var(--font-display);
       font-size: clamp(2rem, 5vw, 3.2rem);
@@ -88,12 +77,7 @@
       margin-bottom: 16px;
       letter-spacing: -0.01em;
     }
-
-    h1 em {
-      font-style: italic;
-      color: var(--gold);
-    }
-
+    h1 em { font-style: italic; color: var(--gold); }
     .header-subtitle {
       font-family: var(--font-meta);
       font-size: 16px;
@@ -103,24 +87,116 @@
       max-width: 520px;
     }
 
-    /* ─── Section headers ───────────────────────────────────────── */
+    /* ─── Filter bar ────────────────────────────────────────────── */
+    .filter-bar {
+      margin-bottom: 48px;
+      animation: fadeUp 0.8s ease 0.05s both;
+    }
+    .filter-search {
+      width: 100%;
+      font-family: var(--font-body);
+      font-size: 17px;
+      color: var(--ink);
+      background: var(--parchment);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 11px 16px;
+      margin-bottom: 16px;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .filter-search:focus {
+      outline: none;
+      border-color: rgba(140, 106, 74, 0.55);
+      background: #f9f4ec;
+    }
+    .filter-search::placeholder { color: var(--ink-faint); font-style: italic; }
+
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .filter-tag {
+      display: inline-block;
+      font-family: var(--font-meta);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid transparent;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      background: none;
+      font: inherit;
+    }
+    .filter-tag.type-figure {
+      background: var(--gold-light);
+      color: var(--gold);
+      border-color: rgba(140,106,74,0.3);
+    }
+    .filter-tag.type-figure:hover,
+    .filter-tag.type-figure.active {
+      background: var(--gold);
+      color: var(--warm-white);
+      border-color: var(--gold);
+    }
+    .filter-tag.type-book {
+      background: rgba(47,74,109,0.08);
+      color: var(--navy);
+      border-color: rgba(47,74,109,0.2);
+    }
+    .filter-tag.type-book:hover,
+    .filter-tag.type-book.active {
+      background: var(--navy);
+      color: var(--warm-white);
+      border-color: var(--navy);
+    }
+    .filter-tag.type-all {
+      background: transparent;
+      color: var(--ink-faint);
+      border-color: var(--rule);
+    }
+    .filter-tag.type-all:hover,
+    .filter-tag.type-all.active {
+      background: var(--ink-faint);
+      color: var(--warm-white);
+      border-color: var(--ink-faint);
+    }
+    .filter-count {
+      font-family: var(--font-meta);
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--ink-faint);
+      font-style: italic;
+      margin-left: auto;
+    }
+    .empty-state {
+      display: none;
+      font-family: var(--font-meta);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--ink-soft);
+      font-style: italic;
+      padding: 32px 0 0;
+    }
+
+    /* ─── Sections ──────────────────────────────────────────────── */
     .section {
       margin-bottom: 64px;
       animation: fadeUp 0.8s ease both;
     }
-
-    .section:nth-child(2) { animation-delay: 0.1s; }
-    .section:nth-child(3) { animation-delay: 0.2s; }
-    .section:nth-child(4) { animation-delay: 0.3s; }
-    .section:nth-child(5) { animation-delay: 0.4s; }
-
+    .section:nth-child(3) { animation-delay: 0.1s; }
+    .section:nth-child(4) { animation-delay: 0.2s; }
+    .section.section-hidden { display: none; }
     .section-label {
       display: flex;
       align-items: center;
       gap: 14px;
       margin-bottom: 24px;
     }
-
     .section-label::before {
       content: '';
       display: block;
@@ -129,7 +205,6 @@
       background: var(--gold);
       flex-shrink: 0;
     }
-
     .section-label h2 {
       font-family: var(--font-meta);
       font-size: 12px;
@@ -140,11 +215,7 @@
     }
 
     /* ─── Cards ─────────────────────────────────────────────────── */
-    .cards {
-      display: grid;
-      gap: 16px;
-    }
-
+    .cards { display: grid; gap: 16px; }
     .card {
       display: block;
       text-decoration: none;
@@ -157,7 +228,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .card::after {
       content: '';
       position: absolute;
@@ -168,17 +238,13 @@
       transform-origin: bottom;
       transition: transform 0.25s ease;
     }
-
     .card:hover {
       border-color: rgba(140, 106, 74, 0.5);
       background: #f9f4ec;
       transform: translateX(4px);
     }
-
-    .card:hover::after {
-      transform: scaleY(1);
-    }
-
+    .card:hover::after { transform: scaleY(1); }
+    .card.card-hidden { display: none; }
     .card-type {
       font-family: var(--font-meta);
       font-size: 11px;
@@ -188,7 +254,6 @@
       color: var(--ink-faint);
       margin-bottom: 8px;
     }
-
     .card-title {
       font-family: var(--font-display);
       font-size: 1.25rem;
@@ -197,9 +262,7 @@
       margin-bottom: 6px;
       line-height: 1.3;
     }
-
     .card-title em { font-style: italic; color: var(--gold); }
-
     .card-desc {
       font-family: var(--font-meta);
       font-size: 15px;
@@ -208,7 +271,6 @@
       font-style: italic;
       line-height: 1.5;
     }
-
     .card-arrow {
       position: absolute;
       right: 28px;
@@ -218,13 +280,9 @@
       color: var(--ink-faint);
       transition: color 0.25s, right 0.25s;
     }
+    .card:hover .card-arrow { color: var(--gold); right: 22px; }
 
-    .card:hover .card-arrow {
-      color: var(--gold);
-      right: 22px;
-    }
-
-    /* ─── Figure tag ────────────────────────────────────────────── */
+    /* ─── Tags (display only) ───────────────────────────────────── */
     .tag {
       display: inline-block;
       font-family: var(--font-meta);
@@ -236,13 +294,11 @@
       margin-right: 6px;
       margin-top: 10px;
     }
-
     .tag-figure {
       background: var(--gold-light);
       color: var(--gold);
       border: 1px solid rgba(140,106,74,0.3);
     }
-
     .tag-book {
       background: rgba(47,74,109,0.08);
       color: var(--navy);
@@ -264,39 +320,69 @@
       flex-wrap: wrap;
       gap: 8px;
     }
-
     footer em { font-style: italic; }
 
-    /* ─── Animations ─────────────────────────────────────────────── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
-    /* ─── Responsive ─────────────────────────────────────────────── */
     @media (max-width: 600px) {
       .page { padding: 48px 24px 80px; }
       .card { padding: 22px 44px 22px 22px; }
+      .filter-count { margin-left: 0; width: 100%; }
     }
   </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- ── Header ──────────────────────────────────────────────────── -->
   <header>
     <p class="header-eyebrow">Linda Beutel-Thurow · Dissertation · German Studies · Paris Lodron University Salzburg</p>
     <h1>Naming Poetics of<br><em>Middle High German</em> Epic.<br>Visualizations.</h1>
     <p class="header-subtitle">Interactive visualizations accompanying the dissertation.</p>
   </header>
 
+  <!-- ══════════════════════════════════════════════════════════════
+       FILTER BAR
+       Filter works automatically from data-tags on each .card.
+       Each card carries:  data-tags="paris trojanerkrieg"  (lowercase, space-separated)
+       Tag buttons are built by JS at page load — no manual config needed.
+       To add a new tag: add it to data-tags of the relevant card(s).
+  ══════════════════════════════════════════════════════════════════ -->
+  <div class="filter-bar">
+    <input
+      type="text"
+      class="filter-search"
+      id="filterSearch"
+      placeholder="Search visualizations and tables …"
+      aria-label="Filter cards"
+    />
+    <div class="filter-tags" id="filterTags">
+      <!-- built by JS -->
+    </div>
+    <p class="empty-state" id="emptyState">No entries match your filter.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION – Visualizations
+
+       HOW TO ADD A NEW CARD:
+       1. Copy an <a class="card"> block.
+       2. Set href, card-type, card-title, card-desc, .tag spans.
+       3. Set data-tags="tag1 tag2 …"  — lowercase, space-separated.
+          Use the same spelling as existing tags so filter buttons
+          stay consistent (e.g. "paris", "trojanerkrieg").
+       4. Always include target="_blank" rel="noopener".
+  ══════════════════════════════════════════════════════════════════ -->
   <section class="section">
     <div class="section-label"><h2>Visualizations</h2></div>
     <div class="cards">
 
-      <a class="card" href="data/Trojanerkrieg/visualization/viz_sunburst_figure_types_Paris.html" target="_blank"
-         rel="noopener">
-        <p class="card-type">Sunburst · Naming variants · Epithtes</p>
+      <a class="card"
+         href="data/Trojanerkrieg/visualization/viz_sunburst_figure_types_Paris.html"
+         target="_blank" rel="noopener"
+         data-tags="paris trojanerkrieg sunburst">
+        <p class="card-type">Sunburst · Naming variants · Epithets</p>
         <p class="card-title">Sunburst of all naming variants and epithets for <em>Paris</em></p>
         <p class="card-desc">Sunburst chart showing all naming variants and epithets for Paris.</p>
         <div>
@@ -306,11 +392,13 @@
         <span class="card-arrow">→</span>
       </a>
 
-      <a class="card" href="data/Trojanerkrieg/visualization/viz_intra_figure_cooccurrence_Paris.html"target="_blank"
-         rel="noopener">
-        <p class="card-type">Heatmap · Naming variants · Epithtes</p>
+      <a class="card"
+         href="data/Trojanerkrieg/visualization/viz_intra_figure_cooccurrence_Paris.html"
+         target="_blank" rel="noopener"
+         data-tags="paris trojanerkrieg heatmap">
+        <p class="card-type">Heatmap · Naming variants · Epithets</p>
         <p class="card-title">Intra figure co-occurrence for <em>Paris</em></p>
-        <p class="card-desc">Heatmap showing co-occurence share.</p>
+        <p class="card-desc">Heatmap showing co-occurrence share.</p>
         <div>
           <span class="tag tag-figure">Paris</span>
           <span class="tag tag-book">Trojanerkrieg</span>
@@ -318,7 +406,10 @@
         <span class="card-arrow">→</span>
       </a>
 
-      <a class="card" href="data/Trojanerkrieg/visualization/viz_naming_Paris.html" target="_blank" rel="noopener">
+      <a class="card"
+         href="data/Trojanerkrieg/visualization/viz_naming_Paris.html"
+         target="_blank" rel="noopener"
+         data-tags="paris trojanerkrieg scatter">
         <p class="card-type">Scatter · Naming variants</p>
         <p class="card-title">Verse-Naming-Distribution for <em>Paris</em></p>
         <p class="card-desc">Verse-based scatter plot of all naming variants across the text.</p>
@@ -329,8 +420,10 @@
         <span class="card-arrow">→</span>
       </a>
 
-      <a class="card" href="data/Trojanerkrieg/visualization/viz_sunburst_figure_namers_Paris.html" target="_blank"
-         rel="noopener">
+      <a class="card"
+         href="data/Trojanerkrieg/visualization/viz_sunburst_figure_namers_Paris.html"
+         target="_blank" rel="noopener"
+         data-tags="paris trojanerkrieg sunburst">
         <p class="card-type">Sunburst · Figure namers</p>
         <p class="card-title">Sunburst of figures naming <em>Paris</em></p>
         <p class="card-desc">Sunburst chart displaying all figures naming Paris.</p>
@@ -344,15 +437,23 @@
     </div>
   </section>
 
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION – Tables
+
+       Same rules as above. For table cards href always points to
+       table.html?csv=… — see existing examples.
+  ══════════════════════════════════════════════════════════════════ -->
   <section class="section">
     <div class="section-label"><h2>Tables</h2></div>
     <div class="cards">
 
-      <a class="card" href="table.html?csv=data/Trojanerkrieg/analysis/wordlist_Benannte_Figur_Trojanerkrieg.csv"
-         target="_blank" rel="noopener">
+      <a class="card"
+         href="table.html?csv=data/Trojanerkrieg/analysis/wordlist_Benannte_Figur_Trojanerkrieg.csv&amp;title=Benannte%20Figuren%20im%20%3Cem%3ETrojanerkrieg%3C%2Fem%3E&amp;desc=H%C3%A4ufigkeit%20der%20Namensnennungen%20aller%20benannten%20Figuren.&amp;eyebrow=Tabelle%20%C2%B7%20Benannte%20Figuren"
+         target="_blank" rel="noopener"
+         data-tags="trojanerkrieg named-entities">
         <p class="card-type">Table · Named Entities</p>
         <p class="card-title">List of all <em>Named Entities</em></p>
-        <p class="card-desc">Total numbers of mentions of the named entities.</p>
+        <p class="card-desc">Total number of mentions of the named entities.</p>
         <div>
           <span class="tag tag-figure">All named entities</span>
           <span class="tag tag-book">Trojanerkrieg</span>
@@ -360,8 +461,10 @@
         <span class="card-arrow">→</span>
       </a>
 
-      <a class="card" href="table.html?csv=data/Trojanerkrieg/analysis/wordlist_naming_variants_Paris.csv"
-         target="_blank" rel="noopener">
+      <a class="card"
+         href="table.html?csv=data/Trojanerkrieg/analysis/wordlist_naming_variants_Paris.csv&amp;title=Naming%20variants%20for%20%3Cem%3EParis%3C%2Fem%3E&amp;desc=Total%20number%20of%20naming%20variants.&amp;eyebrow=Tabelle%20%C2%B7%20Naming%20variants"
+         target="_blank" rel="noopener"
+         data-tags="paris trojanerkrieg naming-variants">
         <p class="card-type">Table · Naming variants</p>
         <p class="card-title">Wordlist of naming variants for <em>Paris</em></p>
         <p class="card-desc">Total numbers of naming variants.</p>
@@ -372,11 +475,13 @@
         <span class="card-arrow">→</span>
       </a>
 
-      <a class="card" href="table.html?csv=data/Trojanerkrieg/analysis/wordlist_epithets_Paris.csv"
-         target="_blank" rel="noopener">
+      <a class="card"
+         href="table.html?csv=data/Trojanerkrieg/analysis/wordlist_epithets_Paris.csv&amp;title=Epithets%20for%20%3Cem%3EParis%3C%2Fem%3E&amp;desc=Total%20number%20of%20epithets.&amp;eyebrow=Tabelle%20%C2%B7%20Epithets"
+         target="_blank" rel="noopener"
+         data-tags="paris trojanerkrieg epithets">
         <p class="card-type">Table · Epithets</p>
         <p class="card-title">Wordlist of Epithets for <em>Paris</em></p>
-        <p class="card-desc">Total numbers of Epithets.</p>
+        <p class="card-desc">Total numbers of epithets.</p>
         <div>
           <span class="tag tag-figure">Paris</span>
           <span class="tag tag-book">Trojanerkrieg</span>
@@ -384,11 +489,13 @@
         <span class="card-arrow">→</span>
       </a>
 
-      <a class="card" href="table.html?csv=data/Trojanerkrieg/analysis/keywords_Bezeichnung_Paris_Trojanerkrieg.csv"
-         target="_blank" rel="noopener">
+      <a class="card"
+         href="table.html?csv=data/Trojanerkrieg/analysis/keywords_Bezeichnung_Paris_Trojanerkrieg.csv&amp;title=Keyword-List%20naming%20variants%20%3Cem%3EParis%3C%2Fem%3E&amp;desc=Naming%20variants%20keywords.&amp;eyebrow=Tabelle%20%C2%B7%20Keywords%20Naming%20variants"
+         target="_blank" rel="noopener"
+         data-tags="paris trojanerkrieg naming-variants keywords">
         <p class="card-type">Table · Naming variants</p>
         <p class="card-title">Keyword-List of naming variants for <em>Paris</em></p>
-        <p class="card-desc">Naming variants Keywords.</p>
+        <p class="card-desc">Naming variants keywords.</p>
         <div>
           <span class="tag tag-figure">Paris</span>
           <span class="tag tag-book">Trojanerkrieg</span>
@@ -396,11 +503,13 @@
         <span class="card-arrow">→</span>
       </a>
 
-      <a class="card" href="table.html?csv=data/Trojanerkrieg/analysis/keywords_Epitheta_Paris_Trojanerkrieg.csv"
-         target="_blank" rel="noopener">
+      <a class="card"
+         href="table.html?csv=data/Trojanerkrieg/analysis/keywords_Epitheta_Paris_Trojanerkrieg.csv&amp;title=Keyword-List%20epithets%20%3Cem%3EParis%3C%2Fem%3E&amp;desc=Epithets%20keywords.&amp;eyebrow=Tabelle%20%C2%B7%20Keywords%20Epithets"
+         target="_blank" rel="noopener"
+         data-tags="paris trojanerkrieg epithets keywords">
         <p class="card-type">Table · Epithets</p>
         <p class="card-title">Keyword-List of epithets for <em>Paris</em></p>
-        <p class="card-desc">Epithets Keywords.</p>
+        <p class="card-desc">Epithets keywords.</p>
         <div>
           <span class="tag tag-figure">Paris</span>
           <span class="tag tag-book">Trojanerkrieg</span>
@@ -411,12 +520,119 @@
     </div>
   </section>
 
-  <!-- ── Footer ──────────────────────────────────────────────────── -->
   <footer>
-    <span>Linda Beutel-Thurow· Dissertation · <em>Naming Poetics of Middle High German Epic</em></span>
+    <span>Linda Beutel-Thurow · Dissertation · <em>Naming Poetics of Middle High German Epic</em></span>
     <span>Paris Lodron Universität Salzburg</span>
   </footer>
 
 </div>
+
+<script>
+(function () {
+  'use strict';
+
+  const cards    = Array.from(document.querySelectorAll('.card'));
+  const sections = Array.from(document.querySelectorAll('.section'));
+
+  // ─── Build tag registry from visible .tag spans ──────────────────
+  const tagMeta = {};  // key -> { label, type }
+
+  cards.forEach(function (card) {
+    card.querySelectorAll('.tag').forEach(function (span) {
+      const label = span.textContent.trim();
+      const key   = label.toLowerCase().replace(/\s+/g, '-');
+      const type  = span.classList.contains('tag-figure') ? 'figure' : 'book';
+      if (!tagMeta[key]) tagMeta[key] = { label, type };
+    });
+  });
+
+  // Sort: books first, then figures; alphabetical within each group
+  const sortedKeys = Object.keys(tagMeta).sort(function (a, b) {
+    const ta = tagMeta[a].type, tb = tagMeta[b].type;
+    if (ta === tb) return tagMeta[a].label.localeCompare(tagMeta[b].label, 'de');
+    return ta === 'book' ? -1 : 1;
+  });
+
+  // ─── Build filter buttons ────────────────────────────────────────
+  const container = document.getElementById('filterTags');
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-tag type-all active';
+  allBtn.textContent = 'All';
+  allBtn.dataset.key = '';
+  container.appendChild(allBtn);
+
+  sortedKeys.forEach(function (key) {
+    const meta = tagMeta[key];
+    const btn  = document.createElement('button');
+    btn.className = 'filter-tag type-' + meta.type;
+    btn.textContent = meta.label;
+    btn.dataset.key = key;
+    container.appendChild(btn);
+  });
+
+  const countEl = document.createElement('span');
+  countEl.className = 'filter-count';
+  container.appendChild(countEl);
+
+  // ─── State ───────────────────────────────────────────────────────
+  let activeTag  = '';
+  let searchText = '';
+
+  // ─── Filter logic ────────────────────────────────────────────────
+  function cardMatches(card) {
+    const tags = (card.dataset.tags || '').toLowerCase();
+    const text = card.textContent.toLowerCase();
+    const tagOk  = activeTag === '' || tags.split(' ').includes(activeTag);
+    const textOk = searchText === '' || text.includes(searchText);
+    return tagOk && textOk;
+  }
+
+  function applyFilter() {
+    let visible = 0;
+    cards.forEach(function (card) {
+      const show = cardMatches(card);
+      card.classList.toggle('card-hidden', !show);
+      if (show) visible++;
+    });
+
+    // Hide entire section if all its cards are hidden
+    sections.forEach(function (section) {
+      const anyVisible = Array.from(section.querySelectorAll('.card'))
+        .some(function (c) { return !c.classList.contains('card-hidden'); });
+      section.classList.toggle('section-hidden', !anyVisible);
+    });
+
+    const total = cards.length;
+    countEl.textContent = visible === total
+      ? total + ' entries'
+      : visible + ' of ' + total + ' entries';
+
+    document.getElementById('emptyState').style.display =
+      visible === 0 ? 'block' : 'none';
+  }
+
+  // ─── Tag button clicks ───────────────────────────────────────────
+  container.addEventListener('click', function (e) {
+    const btn = e.target.closest('.filter-tag');
+    if (!btn) return;
+    activeTag = btn.dataset.key;
+    container.querySelectorAll('.filter-tag').forEach(function (b) {
+      b.classList.toggle('active', b === btn);
+    });
+    applyFilter();
+  });
+
+  // ─── Search input ────────────────────────────────────────────────
+  document.getElementById('filterSearch').addEventListener('input', function (e) {
+    searchText = e.target.value.trim().toLowerCase();
+    applyFilter();
+  });
+
+  // ─── Init ────────────────────────────────────────────────────────
+  applyFilter();
+})();
+</script>
+
 </body>
 </html>
