@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tabelle · Naming Poetics of Middle High German Epic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    /* ─── Variables (identisch zur Index-Seite) ─────────────────── */
+    :root {
+      --ink:        #1a1410;
+      --ink-mid:    #3a2e26;
+      --ink-soft:   #6b5c4e;
+      --ink-faint:  #a89880;
+      --parchment:  #f7f2eb;
+      --warm-white: #fdfaf5;
+      --gold:       #8C6A4A;   /* Naming-Braun     */
+      --gold-light: #EFE4D4;   /* Proper-name-Beige */
+      --navy:       #2F4A6D;   /* Epithets-Blau    */
+      --navy-light: #6A97B8;
+      --auxiliary:  #A3A39A;   /* AUXILIARY gray   */
+      --light-text: #F4F6F6;   /* LIGHT_TEXT       */
+      --rule:       rgba(140, 106, 74, 0.25);
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'EB Garamond', Georgia, serif;
+      --font-meta:    'Crimson Pro', Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--warm-white);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 64px 40px 120px;
+    }
+
+    /* ─── Back link ─────────────────────────────────────────────── */
+    .back {
+      display: inline-block;
+      font-family: var(--font-meta);
+      font-size: 14px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--ink-faint);
+      text-decoration: none;
+      margin-bottom: 36px;
+      transition: color 0.25s;
+    }
+    .back:hover { color: var(--gold); }
+
+    /* ─── Header ────────────────────────────────────────────────── */
+    header {
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 36px;
+      margin-bottom: 36px;
+      animation: fadeUp 0.6s ease both;
+    }
+    .header-eyebrow {
+      font-family: var(--font-meta);
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 300;
+      line-height: 1.2;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    h1 em { font-style: italic; color: var(--gold); }
+    .header-subtitle {
+      font-family: var(--font-meta);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--ink-soft);
+      font-style: italic;
+      margin-top: 12px;
+      max-width: 620px;
+    }
+
+    /* ─── Controls ──────────────────────────────────────────────── */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 18px;
+      animation: fadeUp 0.6s ease 0.1s both;
+    }
+    .search {
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: var(--ink);
+      background: var(--parchment);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 8px 14px;
+      width: 280px;
+      max-width: 100%;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .search:focus {
+      outline: none;
+      border-color: rgba(140, 106, 74, 0.55);
+      background: #f9f4ec;
+    }
+    .search::placeholder { color: var(--ink-faint); font-style: italic; }
+
+    .caption {
+      font-family: var(--font-meta);
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--auxiliary);
+    }
+
+    /* ─── Table (Stil "Diss") ───────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      animation: fadeUp 0.6s ease 0.15s both;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 16px;
+      background: var(--warm-white);
+    }
+    thead th {
+      background: var(--navy);              /* Header in Epithets-Blau */
+      color: var(--light-text);
+      font-family: var(--font-meta);
+      font-weight: 400;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 12px 16px;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      position: relative;
+      transition: background 0.2s;
+    }
+    thead th:hover { background: #36567f; }
+    thead th .arrow {
+      font-size: 10px;
+      margin-left: 6px;
+      opacity: 0.55;
+    }
+    thead th.numeric { text-align: right; }
+
+    tbody td {
+      padding: 11px 16px;
+      border: none;                          /* randlos */
+      color: var(--ink-mid);
+      vertical-align: top;
+    }
+    tbody td.numeric {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    tbody tr:nth-child(odd)  td { background: var(--warm-white); }  /* weiß  */
+    tbody tr:nth-child(even) td { background: var(--gold-light); }  /* Beige */
+    tbody tr:hover td { background: #f3e7d4; }
+
+    /* ─── States ────────────────────────────────────────────────── */
+    .state {
+      font-family: var(--font-meta);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--ink-soft);
+      font-style: italic;
+      padding: 40px 0;
+    }
+    .state.error {
+      color: var(--gold);
+      font-style: normal;
+      background: var(--parchment);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--gold);
+      border-radius: 2px;
+      padding: 24px 28px;
+    }
+    .state.error code {
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      font-size: 13px;
+      background: rgba(140,106,74,0.10);
+      padding: 1px 5px;
+      border-radius: 2px;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding-top: 24px;
+      margin-top: 48px;
+      font-family: var(--font-meta);
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--ink-faint);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    footer a { color: var(--ink-faint); text-decoration: none; transition: color 0.25s; }
+    footer a:hover { color: var(--gold); }
+    footer em { font-style: italic; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .page { padding: 40px 20px 80px; }
+      .search { width: 100%; }
+      table { font-size: 15px; }
+      tbody td, thead th { padding: 9px 12px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <a class="back" href="index.html">← Zurück zur Übersicht</a>
+
+  <header>
+    <p class="header-eyebrow" id="eyebrow">Tabelle</p>
+    <h1 id="title">Tabelle</h1>
+    <p class="header-subtitle" id="subtitle"></p>
+  </header>
+
+  <div class="controls">
+    <input type="text" class="search" id="search" placeholder="Filtern …" aria-label="Tabelle filtern" />
+    <span class="caption" id="caption"></span>
+  </div>
+
+  <div class="table-wrap">
+    <div class="state" id="state">Lade Daten …</div>
+    <table id="table" hidden>
+      <thead><tr id="thead-row"></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <footer>
+    <span>Linda Beutel-Thurow · <em>Naming Poetics of Middle High German Epic</em></span>
+    <a id="download" href="#" download>CSV herunterladen</a>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ─── Query-Parameter lesen ──────────────────────────────────────
+  // Aufruf:  table.html?csv=<pfad>&title=<titel>&desc=<beschreibung>&eyebrow=<label>
+  const params  = new URLSearchParams(window.location.search);
+  const csvPath  = params.get('csv')     || 'beispiel_tabelle.csv';
+  const title    = params.get('title')   || 'CSV-Tabelle';
+  const desc     = params.get('desc')    || '';
+  const eyebrow  = params.get('eyebrow') || 'Tabelle';
+
+  document.title = title + ' · Naming Poetics of Middle High German Epic';
+  document.getElementById('eyebrow').textContent = eyebrow;
+  document.getElementById('title').innerHTML = title;          // erlaubt <em> im Titel
+  const sub = document.getElementById('subtitle');
+  if (desc) { sub.textContent = desc; } else { sub.remove(); }
+  document.getElementById('download').href = csvPath;
+
+  const stateEl  = document.getElementById('state');
+  const tableEl  = document.getElementById('table');
+  const theadRow = document.getElementById('thead-row');
+  const tbody    = document.getElementById('tbody');
+  const search   = document.getElementById('search');
+  const caption  = document.getElementById('caption');
+
+  let fields = [];
+  let rows   = [];
+  let numericCols = {};          // feldname -> true/false
+  let sortCol = null;
+  let sortDir = 1;               // 1 = aufsteigend, -1 = absteigend
+
+  // ─── Numerik-Erkennung (inkl. deutscher Dezimalkomma & %) ───────
+  function parseNumber(v) {
+    if (v === null || v === undefined) return NaN;
+    let s = String(v).trim();
+    if (s === '') return NaN;
+    s = s.replace(/%/g, '').replace(/\s/g, '');
+    // deutsches Format 1.234,5 -> 1234.5 ; sonst Punkt als Dezimaltrenner
+    if (/,\d+$/.test(s) && /\./.test(s)) s = s.replace(/\./g, '').replace(',', '.');
+    else if (/,/.test(s) && !/\./.test(s)) s = s.replace(',', '.');
+    const n = Number(s);
+    return isFinite(n) ? n : NaN;
+  }
+  function columnIsNumeric(field) {
+    let seen = 0;
+    for (const r of rows) {
+      const v = r[field];
+      if (v === null || v === undefined || String(v).trim() === '') continue;
+      seen++;
+      if (isNaN(parseNumber(v))) return false;
+    }
+    return seen > 0;
+  }
+
+  // ─── Rendern ────────────────────────────────────────────────────
+  function buildHead() {
+    theadRow.innerHTML = '';
+    fields.forEach(function (f) {
+      const th = document.createElement('th');
+      th.textContent = f;
+      if (numericCols[f]) th.classList.add('numeric');
+      const arrow = document.createElement('span');
+      arrow.className = 'arrow';
+      th.appendChild(arrow);
+      th.addEventListener('click', function () {
+        if (sortCol === f) { sortDir = -sortDir; }
+        else { sortCol = f; sortDir = 1; }
+        render();
+      });
+      theadRow.appendChild(th);
+    });
+  }
+
+  function sortedFilteredRows() {
+    const q = search.value.trim().toLowerCase();
+    let out = rows;
+    if (q) {
+      out = rows.filter(function (r) {
+        return fields.some(function (f) {
+          return String(r[f] ?? '').toLowerCase().includes(q);
+        });
+      });
+    }
+    if (sortCol !== null) {
+      const num = numericCols[sortCol];
+      out = out.slice().sort(function (a, b) {
+        const av = a[sortCol], bv = b[sortCol];
+        if (num) {
+          const an = parseNumber(av), bn = parseNumber(bv);
+          const aN = isNaN(an), bN = isNaN(bn);
+          if (aN && bN) return 0;
+          if (aN) return 1;          // Leeres ans Ende
+          if (bN) return -1;
+          return (an - bn) * sortDir;
+        }
+        return String(av ?? '').localeCompare(String(bv ?? ''), 'de') * sortDir;
+      });
+    }
+    return out;
+  }
+
+  function render() {
+    // Sortpfeile
+    theadRow.querySelectorAll('th').forEach(function (th, i) {
+      const a = th.querySelector('.arrow');
+      a.textContent = (fields[i] === sortCol) ? (sortDir === 1 ? '▲' : '▼') : '';
+    });
+
+    const data = sortedFilteredRows();
+    tbody.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    data.forEach(function (r) {
+      const tr = document.createElement('tr');
+      fields.forEach(function (f) {
+        const td = document.createElement('td');
+        td.textContent = (r[f] ?? '');
+        if (numericCols[f]) td.classList.add('numeric');
+        tr.appendChild(td);
+      });
+      frag.appendChild(tr);
+    });
+    tbody.appendChild(frag);
+
+    const total = rows.length;
+    const shown = data.length;
+    caption.textContent = (shown === total)
+      ? (total + (total === 1 ? ' Zeile' : ' Zeilen'))
+      : (shown + ' von ' + total + ' Zeilen');
+  }
+
+  // ─── CSV laden ──────────────────────────────────────────────────
+  Papa.parse(csvPath, {
+    download: true,
+    header: true,
+    skipEmptyLines: 'greedy',
+    // Delimiter wird automatisch erkannt ( , ; \t )
+    complete: function (results) {
+      if (!results.data || !results.data.length || !results.meta.fields) {
+        stateEl.innerHTML = 'Keine Daten gefunden in <code>' + csvPath + '</code>.';
+        stateEl.classList.add('error');
+        return;
+      }
+      fields = results.meta.fields.filter(function (f) { return f !== null && f !== ''; });
+      rows   = results.data;
+      fields.forEach(function (f) { numericCols[f] = columnIsNumeric(f); });
+
+      buildHead();
+      stateEl.hidden = true;
+      tableEl.hidden = false;
+      render();
+    },
+    error: function (err) {
+      stateEl.classList.add('error');
+      stateEl.innerHTML =
+        'Die Datei <code>' + csvPath + '</code> konnte nicht geladen werden.<br><br>' +
+        'Häufigster Grund: Die Seite wurde direkt per <code>file://</code> geöffnet. ' +
+        'CSV-Dateien lassen sich aus Sicherheitsgründen nur laden, wenn die Seite über einen ' +
+        'Server ausgeliefert wird (lokal z.&nbsp;B. <code>python3 -m http.server</code>, ' +
+        'oder über dein Hosting).<br><br><em>' + (err && err.message ? err.message : '') + '</em>';
+    }
+  });
+
+  // ─── Suche live ─────────────────────────────────────────────────
+  search.addEventListener('input', render);
+})();
+</script>
+</body>
+</html>

@@ -381,6 +381,57 @@
     </div>
   </section>
 
+  <!-- ══════════════════════════════════════════════════════════════
+       SECTION – Tabellen
+
+       Die Cards verlinken auf den generischen Viewer "table.html".
+       Die anzuzeigende CSV wird per Query-Parameter übergeben — es
+       braucht also KEINE neue HTML-Datei pro Tabelle, nur eine neue Card.
+
+       HOW TO ADD A NEW TABLE CARD:
+       Copy one <a class="card"> block below and set href so:
+
+         href="table.html?csv=<PFAD>&title=<TITEL>&desc=<BESCHREIBUNG>&eyebrow=<LABEL>"
+
+           csv      → Relativer Pfad zur CSV-Datei, z.B.:
+                        data/Trojanerkrieg/tables/epitheta_Paris.csv
+           title    → Überschrift der Tabellenseite. <em>…</em> ist erlaubt,
+                      muss in der URL aber kodiert werden:
+                        %3Cem%3EParis%3C%2Fem%3E   ergibt   <em>Paris</em>
+           desc     → Kurzbeschreibung (eine Zeile).
+           eyebrow  → Kleines Label über dem Titel (z.B. "Tabelle · Epitheta").
+
+         Alle Werte mit encodeURIComponent kodieren (Leerzeichen → %20,
+         Umlaute, & usw.). Tipp im Browser-Konsolenfenster:
+           encodeURIComponent('data/Trojanerkrieg/tables/epitheta_Paris.csv')
+
+       Hinweise zur CSV:
+         • Erste Zeile = Spaltenüberschriften.
+         • Trennzeichen ( , ; Tab ) wird automatisch erkannt.
+         • Spalten, deren Werte alle Zahlen sind (auch 1.234,5 oder 4,2%),
+           werden automatisch rechtsbündig gesetzt und numerisch sortiert.
+         • Wichtig: Damit die CSV geladen werden kann, muss die Seite über
+           einen Server ausgeliefert werden (Hosting oder lokal z.B.
+           `python3 -m http.server`), nicht per Doppelklick (file://).
+  ══════════════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-label"><h2>Tables</h2></div>
+    <div class="cards">
+
+      <a class="card" href="data/Trojanerkrieg/analysis/wordlist_Benannte_Figur_Trojanerkrieg.csv">
+        <p class="card-type">Table · Named Entities</p>
+        <p class="card-title">List of all <em>Named Entities</em> <span style="font-style:italic;color:var(--ink-faint);font-size:0.8em;">(Beispiel)</span></p>
+        <p class="card-desc">Total number of mentions of the named entities.</p>
+        <div>
+          <span class="tag tag-figure">All named entities</span>
+          <span class="tag tag-book">Trojanerkrieg</span>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+    </div>
+  </section>
+
   <!-- ── Footer ──────────────────────────────────────────────────── -->
   <footer>
     <span>Linda Beutel-Thurow· Dissertation · <em>Naming Poetics of Middle High German Epic</em></span>
