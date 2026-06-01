@@ -576,14 +576,15 @@
   container.appendChild(countEl);
 
   // ─── State ───────────────────────────────────────────────────────
-  let activeTag  = '';
+  let activeTags = new Set();  // empty = show all
   let searchText = '';
 
   // ─── Filter logic ────────────────────────────────────────────────
   function cardMatches(card) {
-    const tags = (card.dataset.tags || '').toLowerCase();
-    const text = card.textContent.toLowerCase();
-    const tagOk  = activeTag === '' || tags.split(' ').includes(activeTag);
+    const cardTags = new Set((card.dataset.tags || '').toLowerCase().split(' ').filter(Boolean));
+    const text     = card.textContent.toLowerCase();
+    // every active tag must be present on the card (AND logic)
+    const tagOk  = activeTags.size === 0 || Array.from(activeTags).every(function (t) { return cardTags.has(t); });
     const textOk = searchText === '' || text.includes(searchText);
     return tagOk && textOk;
   }
@@ -610,16 +611,40 @@
 
     document.getElementById('emptyState').style.display =
       visible === 0 ? 'block' : 'none';
+
+    // Keep "All" button active only when nothing else is selected
+    allBtn.classList.toggle('active', activeTags.size === 0);
   }
 
   // ─── Tag button clicks ───────────────────────────────────────────
   container.addEventListener('click', function (e) {
     const btn = e.target.closest('.filter-tag');
     if (!btn) return;
-    activeTag = btn.dataset.key;
+
+    const key = btn.dataset.key;
+
+    if (key === '') {
+      // "All" — clear all active tags
+      activeTags.clear();
+    } else {
+      // toggle this tag on/off
+      if (activeTags.has(key)) {
+        activeTags.delete(key);
+      } else {
+        activeTags.add(key);
+      }
+    }
+
+    // Update button active states
     container.querySelectorAll('.filter-tag').forEach(function (b) {
-      b.classList.toggle('active', b === btn);
+      const k = b.dataset.key;
+      if (k === '') {
+        b.classList.toggle('active', activeTags.size === 0);
+      } else {
+        b.classList.toggle('active', activeTags.has(k));
+      }
     });
+
     applyFilter();
   });
 
