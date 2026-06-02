@@ -1702,19 +1702,21 @@ def run_visualization_menu(paths, book_name, data):
         print("\nWhich visualization do you want to run?")
         print("[1] Verse-based naming variants/ epithets distribution")
         print("[2] Intra-Named-Figure co-occurrence heatmap")
-        print("[3] Sunburst visualization")
-        print("[4] Returning to analysis menu")
+        print("[3] Intra-Named-Figure co-occurrence bar chart (anchor token)")
+        print("[4] Sunburst visualization")
+        print("[5] Returning to analysis menu")
 
-        choice = ask_user_choice("> ", ["1", "2", "3", "4"])
+        choice = ask_user_choice("> ", ["1", "2", "3", "4", "5"])
 
         if choice == "1":
             visualize_verse_naming_distribution(paths, book_name)
         elif choice == "2":
             visualize_intra_figure_cooccurrence_heatmap(paths, book_name)
         elif choice == "3":
-            run_sunburst_visualization(paths, book_name, data)
-
+            visualize_intra_figure_cooccurrence_barchart(paths, book_name)
         elif choice == "4":
+            run_sunburst_visualization(paths, book_name, data)
+        elif choice == "5":
             print("Returning to analysis menu.")
             break
 
@@ -2483,6 +2485,285 @@ def visualize_intra_figure_cooccurrence_heatmap(paths: dict, book_name: str) -> 
 
     filename_label = "intra_figure_cooccurrence"
     filename = f"viz_{filename_label}_{figure_name}.html"
+    filename_stub = os.path.splitext(filename)[0]
+
+    export_visualization_output(
+        fig,
+        paths=paths,
+        book_name=book_name,
+        filename=filename,
+        filename_stub=filename_stub,
+        export_func=apply_global_visual_modebar_export,
+    )
+
+def visualize_intra_figure_cooccurrence_barchart(paths: dict, book_name: str) -> None:
+    """
+    Intra-figure co-occurrence bar chart for a freely selectable anchor token.
+
+    Companion to visualize_intra_figure_cooccurrence_heatmap: instead of the
+    full symmetric matrix, this renders the co-occurrence profile of a single
+    anchor token as a horizontal bar chart sorted by share. It answers "which
+    tokens are most strongly bound to the anchor", which a flat heatmap conveys
+    poorly.
+
+    Anchor selection:
+        - The anchor defaults to the figure name (proper-name profile) but may
+          be any token present in the shared Top-N pair pool (e.g. an epithet).
+        - With a non-name anchor, the proper name itself can appear among the
+          partners; it receives its own color category accordingly.
+
+    Normalization (anchor-relative):
+        - Shares are computed relative to the SUM OF THE ANCHOR'S OWN PAIR
+          COUNTS, i.e. "X% of the anchor's co-occurrences fall on partner Y".
+        - This differs from the heatmap, which normalizes over the full Top-N
+          pair pool. Percentage values are therefore NOT directly comparable
+          between the two visualizations; this is intentional so that the bar
+          shares remain interpretable for any anchor.
+
+    Coloring:
+        - Partners are colored by their category for the selected figure:
+          Proper name / Antonomasia (naming variants) / Epithets.
+        - Tokens occurring as both naming variant and epithet are marked
+          ambiguous and rendered in the auxiliary color.
+
+    Parameters:
+        paths (dict): Must include "categorization_json".
+        book_name (str): Active book identifier (used for export naming).
+
+    Returns:
+        None
+    """
+    categorization_path = paths.get("categorization_json")
+    if not categorization_path:
+        print("\nMissing path: paths['categorization_json'] is not set.")
+        return
+
+    # ======================================================================
+    # [1] User input: figure and labeling scope (mirrors heatmap function)
+    # ======================================================================
+    figure_name = ask_valid_figure_name(categorization_path)
+
+    print("\nWhat should be visualized?")
+    print("[1] Combined")
+    print("[2] Naming variants")
+    print("[3] Epithets")
+    variant_type = ask_user_choice("> ", ["1", "2", "3"])
+
+    include_naming_variants = (variant_type in ("1", "2"))
+    include_epithets = (variant_type in ("1", "3"))
+
+    # Fixed defaults (identical to heatmap for a shared pair pool)
+    min_pair_count = 2
+    top_n = 30
+
+    # ======================================================================
+    # [2] Load categorized data and restrict to target figure
+    # ======================================================================
+    entries = safe_read_json(categorization_path, default=[])
+    rows = [e for e in entries if isinstance(e, dict) and e.get("Benannte Figur") == figure_name]
+
+    # Resolve proper-name lemmas for this figure (naming-variant subclassing).
+    df_json_all = pd.DataFrame(entries)
+    _, _df_norm, _cols_norm = prepare_naming_data(book_name, df_json_all, None)
+    name_lemmas = resolve_name_lemmas_for_figure(df_json_all, _cols_norm, figure_name)
+
+    # ======================================================================
+    # [3] Per-row tokens WITH role tags, then pair counting
+    # ======================================================================
+    # Each token carries its role in the row it occurs in:
+    #   "Proper name" / "Antonomasia" (from Bezeichnung columns)
+    #   "Epithets"                    (from Epitheta columns)
+    # Roles are assigned per row so that the SAME token can enter different
+    # pairs in different roles. The bar category is later derived from the
+    # roles a partner actually takes in pairs WITH THE ANCHOR (see [6]).
+
+    def _row_tokens_with_roles(r: dict) -> list[tuple[str, str]]:
+        """Return [(token, role), ...] for one entry, scope-filtered."""
+        out: list[tuple[str, str]] = []
+        if include_naming_variants:
+            for i in range(1, 5):
+                v = r.get(f"Bezeichnung {i}")
+                if isinstance(v, str) and v.strip():
+                    tok = v.strip()
+                    role = "Proper name" if tok in name_lemmas else "Antonomasia"
+                    out.append((tok, role))
+        if include_epithets:
+            for i in range(1, 6):
+                v = r.get(f"Epitheta {i}")
+                if isinstance(v, str) and v.strip():
+                    out.append((v.strip(), "Epithets"))
+        return out
+
+    pair_counter: Counter = Counter()
+    # For each unordered token pair, record which roles each side took,
+    # across all rows in which the pair co-occurs.
+    pair_roles: dict[tuple[str, str], dict[str, set]] = {}
+
+    for r in rows:
+        tagged = _row_tokens_with_roles(r)
+        if len({t for t, _ in tagged}) < 2:
+            continue
+
+        # Per-row dedup on (token, role): a token may appear once per role.
+        tagged_unique = sorted(set(tagged))
+
+        # Build unordered token pairs; for each pair remember both roles.
+        for (ta, ra), (tb, rb) in combinations(tagged_unique, 2):
+            if ta == tb:
+                continue  # same token in two roles within one row → no self-pair
+            pair = tuple(sorted((ta, tb)))
+            pair_counter[pair] += 1
+            slot = pair_roles.setdefault(pair, {pair[0]: set(), pair[1]: set()})
+            # Map each side's role onto the ordered pair slots.
+            if pair[0] == ta:
+                slot[pair[0]].add(ra);
+                slot[pair[1]].add(rb)
+            else:
+                slot[pair[0]].add(rb);
+                slot[pair[1]].add(ra)
+
+    pair_counter = Counter({p: c for p, c in pair_counter.items() if c >= min_pair_count})
+    if not pair_counter:
+        print("\nNo co-occurring pairs met the minimum threshold.")
+        return
+
+    # ======================================================================
+    # [4] Shared Top-N pair pool (same pre-filter basis as heatmap)
+    # ======================================================================
+    top_pairs = pair_counter.most_common(top_n)
+
+    # ======================================================================
+    # [5] Anchor token selection (default = figure name)
+    # ======================================================================
+    pool_tokens = sorted(set(t for p, _ in top_pairs for t in p))
+
+    print(
+        f"\nAnchor token for the co-occurrence profile "
+        f"[Press Enter for default: {figure_name}]:"
+    )
+    raw_anchor = input("> ").strip()
+    anchor = raw_anchor if raw_anchor else figure_name
+
+    if anchor not in pool_tokens:
+        print(
+            f'Anchor token "{anchor}" does not occur in the Top-{top_n} '
+            f"co-occurrence pairs for {figure_name}. Nothing to display."
+        )
+        return
+
+    # ======================================================================
+    # [6] Extract the anchor's pairs; normalize anchor-relative
+    # ======================================================================
+    top_pairs = pair_counter.most_common(top_n)  # recompute after threshold
+
+    anchor_pairs: list[tuple[str, float, str]] = []  # (partner, count, category)
+    for (a, b), c in top_pairs:
+        if a == anchor:
+            partner = b
+        elif b == anchor:
+            partner = a
+        else:
+            continue
+
+        # Roles the PARTNER took in pairs with the anchor.
+        roles = pair_roles.get((a, b), {}).get(partner, set())
+        has_naming = bool(roles & {"Proper name", "Antonomasia"})
+        has_epithet = "Epithets" in roles
+        if has_naming and has_epithet:
+            category = "Both"
+        elif has_epithet:
+            category = "Epithets"
+        elif "Proper name" in roles:
+            category = "Proper name"
+        else:
+            category = "Antonomasia"
+
+        anchor_pairs.append((partner, float(c), category))
+
+    if not anchor_pairs:
+        print(f"No co-occurring partners for anchor '{anchor}'.")
+        return
+
+    anchor_total = float(sum(c for _, c, _ in anchor_pairs))
+    if anchor_total <= 0:
+        print("\nNo co-occurrence mass available for normalization.")
+        return
+
+    partners: list[tuple[str, float, float, str]] = []  # (token, share, count, category)
+    for partner, c, category in anchor_pairs:
+        share = (c / anchor_total) * 100.0
+        partners.append((partner, share, c, category))
+
+    partners.sort(key=lambda t: t[1])
+
+    # ======================================================================
+    # [7] Bar chart rendering (color by category)
+    # ======================================================================
+    cats = GLOBAL_VISUAL_STYLE["colors"]["categories"]
+    aux = GLOBAL_VISUAL_STYLE["colors"]["levels"]["AUXILIARY"]
+    color_by_cat = {
+        "Proper name": cats["Proper name"],
+        "Antonomasia": cats["Antonomasia"],
+        "Epithets": cats["Epithets"],
+        "Both": cats["Epithets (lexeme level)"],  # #6A97B8 — hybrid role
+    }
+
+    fig = go.Figure()
+
+    # One trace per category present (enables a compact legend),
+    # rendered in a fixed semantic order.
+    for cat in ("Proper name", "Antonomasia", "Epithets", "Both"):
+        sub = [p for p in partners if p[3] == cat]
+        if not sub:
+            continue
+        fig.add_trace(
+            go.Bar(
+                x=[p[1] for p in sub],
+                y=[f"<i>{p[0]}</i>" for p in sub],
+                orientation="h",
+                marker={"color": color_by_cat[cat]},
+                name=cat,
+                customdata=[p[2] for p in sub],
+                hovertemplate=(
+                    "Token %{y} × <i>" + anchor + "</i><br>"
+                    "Share: %{x:.1f}%<br>"
+                    "Count: %{customdata}<extra></extra>"
+                ),
+            )
+        )
+
+    # Preserve global ascending order across categories.
+    fig.update_yaxes(
+        categoryorder="array",
+        categoryarray=[f"<i>{p[0]}</i>" for p in partners],
+    )
+
+    fig.update_layout(
+        barmode="stack",
+        bargap=0.35,  # vertical spacing between token rows
+        title={
+            "text": f"Co-occurrence profile for the token <i>{anchor}</i> ({figure_name})",
+            "pad": {"t": 10},
+        },
+    )
+    fig.update_xaxes(title_text="Co-occurrence share (%)")
+    fig.update_yaxes(title_text="Token")
+
+    fig.update_yaxes(ticklabelstandoff=10)
+
+    # ======================================================================
+    # [8] Global visual defaults and plot-specific tuning
+    # ======================================================================
+    apply_global_visual_style(fig, tick_font_size=22, show_grid=True)
+    apply_global_visual_visibility(fig, show_legend=True)
+    fig.update_layout(margin={**GLOBAL_VISUAL_STYLE["layout"]["margins"], "t": 100})
+
+    # ======================================================================
+    # [9] Export (HTML)
+    # ======================================================================
+    safe_anchor = "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in str(anchor))
+    filename_label = "intra_figure_cooccurrence_bar"
+    filename = f"viz_{filename_label}_{figure_name}_{safe_anchor}.html"
     filename_stub = os.path.splitext(filename)[0]
 
     export_visualization_output(
