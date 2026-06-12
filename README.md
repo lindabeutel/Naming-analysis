@@ -8,7 +8,7 @@
 
 ## Visualizations an Tables
 
-Interactive visualizations accompanying the dissertation are available at:
+Interactive visualizations and tables accompanying the dissertation are available at:
 👉 **[lindabeutel.github.io/Naming-analysis](https://lindabeutel.github.io/Naming-analysis/)**
 
 ------------------------------------------------------------------------
