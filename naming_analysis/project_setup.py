@@ -68,7 +68,7 @@ def initialize_project() -> tuple[str, int, int, int, dict]:
         - No structural validation of progress JSON content is performed.
     """
     # Interactive corpus selection (no validation; Beta state)
-    book_name = input("Which book are we working on today? (e.g., Trojanerkrieg): ").strip()
+    book_name = input("Which book are we working on today? (e.g., Rolandslied): ").strip()
 
     # Normalize capitalization (first letter upper-case, rest unchanged)
     book_name = book_name[0].upper() + book_name[1:]

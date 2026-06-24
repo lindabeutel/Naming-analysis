@@ -1101,7 +1101,9 @@ def run_keyword_menu(_config_data, paths, _data, book_name):
 
     The user can choose between:
         - analyzing the whole book (with a reference corpus),
-        - analyzing a specific target figure within the book.
+        - analyzing a specific target figure within the book,
+        - profiling a specific token across all figures (token-anchored
+          keyword profile via generate_keyword_profile_for_token).
 
     For whole-book analysis, available reference books are derived from the
     data directory (excluding the current book). If none are detected, the
@@ -1142,12 +1144,13 @@ def run_keyword_menu(_config_data, paths, _data, book_name):
         output_dir = os.path.join("data", book_name, "analysis")
         os.makedirs(output_dir, exist_ok=True)
 
-        # Select analysis scope: whole book or specific figure
-        print("\nDo you want to analyze the whole book or a specific figure?")
+        # Select analysis scope: whole book, specific figure, or specific token
+        print("\nDo you want to analyze the whole book, a specific figure, or a specific token?")
         print("[1] Whole book")
         print("[2] Specific figure")
+        print("[3] Specific token")
 
-        target_choice = ask_user_choice("> ", ["1", "2"])
+        target_choice = ask_user_choice("> ", ["1", "2", "3"])
 
         reference_books = None  # default; only used for whole-book analysis
 
@@ -1157,6 +1160,16 @@ def run_keyword_menu(_config_data, paths, _data, book_name):
             if target is None:
                 return None
             target_type = "figure"
+
+        elif target_choice == "3":
+            # Token-anchored profile: one fixed token scored across all figures.
+            # Enter the token in its lemmatized form as stored in the data.
+            token = input("\nPlease enter the token to profile (e.g. helt):\n> ").strip()
+            if not token:
+                print("No token entered. Returning to analysis menu.")
+                return None
+            target = token
+            target_type = "token"
 
         else:
             # Whole-book analysis; current book acts as target corpus
@@ -1221,21 +1234,36 @@ def run_keyword_menu(_config_data, paths, _data, book_name):
         # Build output filename (normalized target label)
         target_label = target.replace(" ", "_")
         unit_file = {"bezeichnung": "Bezeichnung", "epitheta": "Epitheta", "combined": "combined"}[unit]
-        output_file = f"keywords_{unit_file}_{target_label}_{book_name}.csv"
-        output_path = os.path.join(output_dir, output_file)
 
-        # Dispatch to core keyword analysis function
-        target_figure = target if target_type == "figure" else None
-        ref_books = None if target_type == "figure" else reference_books
+        if target_type == "token":
+            # Token-anchored keyword profile across all figures
+            output_file = f"keyword_profile_{unit_file}_{target_label}_{book_name}.csv"
+            output_path = os.path.join(output_dir, output_file)
 
-        generate_keywords(
-            target_figure=target_figure,
-            reference_books=ref_books,
-            unit=unit,
-            threshold=threshold,
-            target_json=target_json,
-            output_path=output_path
-        )
+            generate_keyword_profile_for_token(
+                token=target,
+                unit=unit,
+                threshold=threshold,
+                target_json=target_json,
+                output_path=output_path
+            )
+        else:
+            # Whole-book or figure-anchored keyword analysis
+            output_file = f"keywords_{unit_file}_{target_label}_{book_name}.csv"
+            output_path = os.path.join(output_dir, output_file)
+
+            # Dispatch to core keyword analysis function
+            target_figure = target if target_type == "figure" else None
+            ref_books = None if target_type == "figure" else reference_books
+
+            generate_keywords(
+                target_figure=target_figure,
+                reference_books=ref_books,
+                unit=unit,
+                threshold=threshold,
+                target_json=target_json,
+                output_path=output_path
+            )
 
         print(f"Keyword analysis exported to: {output_path}")
 
@@ -1247,6 +1275,52 @@ def run_keyword_menu(_config_data, paths, _data, book_name):
         else:
             print("Returning to analysis menu.")
             return None
+
+def compute_g2_keyness(count_t, count_r, total_target, total_ref):
+    """
+    Log-Likelihood (G²) keyness of a single token against a reference corpus.
+
+    Shared statistical core so that the figure-anchored analysis
+    (generate_keywords) and the token-anchored analysis
+    (generate_keyword_profile_for_token) compute identical numbers.
+
+    The keyness is returned UNROUNDED so callers compare against the threshold
+    on the unrounded value (exactly as generate_keywords does) and round only
+    when writing the result row.
+
+    Parameters:
+        count_t (int): Token frequency in the target corpus.
+        count_r (int): Token frequency in the reference corpus.
+        total_target (int): Total token count of the target corpus.
+        total_ref (int): Total token count of the reference corpus.
+
+    Returns:
+        tuple[float, str]: (keyness, polarity), where polarity is
+            - "positive" if the token is more frequent in the target,
+            - "negative" if more frequent in the reference,
+            - "neutral" if both counts are equal.
+    """
+    total = total_target + total_ref
+    if total == 0 or (count_t + count_r) == 0:
+        return 0.0, "neutral"
+
+    p = (count_t + count_r) / total
+    expected_t = p * total_target
+    expected_r = p * total_ref
+
+    log_t = count_t * math.log2(count_t / expected_t) if count_t > 0 and expected_t > 0 else 0
+    log_r = count_r * math.log2(count_r / expected_r) if count_r > 0 and expected_r > 0 else 0
+    keyness = 2 * (log_t + log_r)
+
+    if count_t > count_r:
+        polarity = "positive"
+    elif count_r > count_t:
+        polarity = "negative"
+    else:
+        polarity = "neutral"
+
+    return keyness, polarity
+
 
 def generate_keywords(
     target_figure: str | None,
@@ -1392,6 +1466,105 @@ def generate_keywords(
         header=["Token", "Target count", "Reference count", "Keyness", "Polarity"],
         rows=results,
     )
+
+def generate_keyword_profile_for_token(token, unit, threshold, target_json, output_path):
+    """
+    Compute the keyword profile of ONE fixed token across all named figures.
+
+    Token-anchored counterpart to generate_keywords(...). Instead of fixing a
+    target figure and ranking its tokens, this fixes a single token (e.g.
+    "helt") and scores it for every figure, answering: "For which figure(s) is
+    this token a (positive or negative) keyword?".
+
+    For each figure the SAME G² (Log-Likelihood) statistic as in
+    generate_keywords is computed, with
+        - target corpus    = the designations of that figure,
+        - reference corpus = the whole book minus that figure
+          (including entries without a "Benannte Figur"),
+    so that a figure's keyness for the token is identical to running
+    generate_keywords on that figure and reading off the token's row.
+
+    Polarity distinguishes an enge/figure-specific designation ("positive")
+    from a wide appellative such as helt ("negative", i.e. under-represented).
+    Only figures that actually use the token (target count > 0) are profiled;
+    both positive and negative keywords pass the threshold, since the G²
+    magnitude is direction-agnostic.
+
+    Token extraction:
+        Tokens are derived via extract_tokens(...) according to the selected
+        unit ("bezeichnung", "epitheta", "combined"). The token must be entered
+        in the same (lemmatized) form as stored in the data.
+
+    Output:
+        A CSV file written to output_path with the columns:
+            Figure | Count (figure) | Count (rest) | Keyness | Polarity
+
+    Edge cases (BETA semantics):
+        - If the token does not occur in the selected unit, no file is written.
+        - If no figure reaches the threshold, no file is written.
+
+    Parameters:
+        token (str): The fixed token to profile (matched against the chosen unit).
+        unit (str): Token unit ("bezeichnung", "epitheta", "combined").
+        threshold (float): Minimum G² value required for inclusion.
+        target_json (str): Path to the categorized JSON file of the current book.
+        output_path (str): Destination path for the CSV export.
+
+    Returns:
+        None
+    """
+    all_entries = safe_read_json(target_json, default=[])
+
+    # Global reference over the WHOLE book (incl. entries without a figure) —
+    # identical to generate_keywords' default reference (book minus target).
+    global_counter = Counter(extract_tokens(all_entries, unit))
+    global_total = sum(global_counter.values())
+    global_token_count = global_counter.get(token, 0)
+
+    if global_token_count == 0:
+        print(f"The token '{token}' does not occur in unit '{unit}'.")
+        return
+
+    # Group entries by named figure (skip entries without a figure).
+    entries_by_figure = {}
+    for e in all_entries:
+        figure = e.get("Benannte Figur")
+        if not figure:
+            continue
+        entries_by_figure.setdefault(figure, []).append(e)
+
+    # Score the fixed token for every figure that uses it.
+    results = []
+    for figure, entries in entries_by_figure.items():
+        counter = Counter(extract_tokens(entries, unit))
+        count_t = counter.get(token, 0)
+        if count_t == 0:
+            continue  # token is not among this figure's designations
+
+        total_target = sum(counter.values())
+        count_r = global_token_count - count_t
+        total_ref = global_total - total_target
+
+        keyness, polarity = compute_g2_keyness(count_t, count_r, total_target, total_ref)
+
+        if keyness >= threshold:
+            results.append((figure, count_t, count_r, round(keyness, 2), polarity))
+
+    # Sort by descending keyness, then alphabetically by figure name.
+    results.sort(key=lambda x: (-x[3], x[0]))
+
+    # Do not write empty result files.
+    if not results:
+        print(f"No figure reaches keyness >= {threshold} for token '{token}'.")
+        return
+
+    # Export keyword profile as CSV.
+    write_csv_table(
+        output_path,
+        header=["Figure", "Count (figure)", "Count (rest)", "Keyness", "Polarity"],
+        rows=results,
+    )
+
 
 # =============================================================================
 # COLLOCATION ANALYSIS (menu + KWIC generation)
