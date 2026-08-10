@@ -87,6 +87,14 @@ characterizing descriptive expression (cf. Schirren 2009; Drews 2013).
 Epithets are understood as attributive additions to a designation
 (cf. Gondos 2013).
 
+### Instance Types
+
+Values in the field "Nennende Figur" may carry a marker indicating what
+kind of naming instance they are: a collective, an unnamed role figure,
+a non-personal source and so on. The markers, their patterns and the
+conventions behind them are documented in `data/instance_types.json`.
+Unmarked values denote individuals.
+
 ------------------------------------------------------------------------
 
 ## Language Layers in the System
