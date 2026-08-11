@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0",
+  "updated": "2026-08-11",
+  "description": "Registry of instance types for the field 'Nennende Figur'. Markers qualify an entity's role as a naming instance, not the entity itself; the field 'Benannte Figur' always stays unmarked. Resolving marker to type here removes the need for an additional, mostly empty data column.",
+
+  "default_type": "Individual",
+  "note_on_scope": "Type is derived from the marker alone; the marker definitions below are authoritative. The lists under 'example_values' are illustrative only and are NOT maintained as a complete inventory: they are not updated when works or entries are added, and code must not treat them as a closed vocabulary. Their purpose is to show how the types are applied in practice, in particular for 'Role figure' and 'Collective member', which share the marker '<…>' and cannot be told apart by pattern alone.",
+
+  "language_form": {
+    "rule": "If the text names the instance explicitly, the Middle High German wording is quoted and written in lower case. If the instance can only be captured by the editor's own paraphrase, it is written in New High German with an initial capital.",
+    "note": "The rule applies per work and was decided occurrence by occurrence against the text, not by dictionary lookup. The same term may therefore carry different forms in different works.",
+    "consolidation": "Where several distinct groups had been collected under one label, they were split apart during the 2026-08 revision: the Trojanerkrieg's former [MENGE] now resolves into [Menge], [die ritter], [fürsten], [manec] and [göte schar] depending on who is speaking."
+  },
+
+  "analysis": {
+    "strip_regex": "[\\[\\]<>{}]|^[#°]",
+    "note": "Markers are stripped before grouping or counting. Because mixed forms such as '[rechen] des Eneas' or 'Medeas <meisterîn>' do not carry the marker at the start of the string, the pattern must be searched for, not anchored.",
+    "group_separator": " & ",
+    "qualifier": "A disambiguating qualifier follows the marked value outside the marker, separated by one space: '[fürsten] (heidnisch)'. Parse with '^(?P<value>.+?) \\((?P<qual>[^()]+)\\)$'."
+  },
+
+  "types": [
+    {
+      "name": "Individual",
+      "german": "Individuum",
+      "marker": null,
+      "pattern": null,
+      "description": "Named or nameable single figure, including deities, angels and personifications. Default type for unmarked values. Also covers descriptive identifiers that the editor uses for unnamed figures which appear in 'Benannte Figur' as well, so that the same string denotes the same entity in both fields — for example 'Pförtner', 'Truchseß von Laudine', 'Die Teufelsritter' in the Iwein."
+    },
+    {
+      "name": "Collective",
+      "german": "Kollektiv",
+      "marker": "[…]",
+      "pattern": "^\\[(.+)\\]",
+      "description": "Group of people without individual identity."
+    },
+    {
+      "name": "Role figure",
+      "german": "Rollenfigur",
+      "marker": "<…>",
+      "pattern": "<([^>]+)>",
+      "description": "Unnamed single figure designated by an appellative: function, origin, rank or age. In mixed forms the marker encloses only the part taken from the text."
+    },
+    {
+      "name": "Collective member",
+      "german": "Kollektivmitglied",
+      "marker": "<…>",
+      "pattern": "<([^>]+)>",
+      "description": "Unspecified individual drawn from a collective. Shares its marker with 'Role figure' and is therefore not distinguishable from it by pattern alone."
+    },
+    {
+      "name": "Group",
+      "german": "Gruppe",
+      "marker": " & ",
+      "pattern": " & ",
+      "description": "Several named individuals forming a single naming act. Not split across rows, since one naming act is one occurrence."
+    },
+    {
+      "name": "Non-figure",
+      "german": "Nicht-Figur",
+      "marker": "{…}",
+      "pattern": "^\\{(.+)\\}$",
+      "description": "Source of a naming that is not a person."
+    },
+    {
+      "name": "Quoted",
+      "german": "Zitiert",
+      "marker": "#…",
+      "pattern": "^#(.+)$",
+      "description": "Named figure outside the plot who names only within a quotation. Without the marker the entry would suggest the figure is present in the action."
+    },
+    {
+      "name": "Immaterial",
+      "german": "Immateriell",
+      "marker": "°…",
+      "pattern": "^°(.+)$",
+      "description": "Disembodied instance, neither figure nor collective nor textual source."
+    }
+  ],
+
+  "example_values": {
+    "_comment": "Illustrative extract, not a complete inventory. Unmarked values default to 'Individual' and are not listed here.",
+    "Eneasroman": {
+      "Collective": ["[boten]", "[rechen] des Eneas"],
+      "Role figure": ["<ivngelinch>"],
+      "Non-figure": ["{Inschrift}"]
+    },
+    "Rolandslied": {
+      "Collective": [
+        "[haiden]",
+        "[cristen]",
+        "[karlinge]",
+        "[fürsten] (heidnisch)",
+        "[fürsten] (christlich)",
+        "[Genelûnes geslächte]",
+        "[Genelûns Männer]"
+      ],
+      "Role figure": ["<suriân>", "<bote>"],
+      "Group": ["Icalrions & Clariens"],
+      "Quoted": ["#David"],
+      "Immaterial": ["°diu stimme"]
+    },
+    "Iwein": {
+      "Collective": ["[liute]", "[alle]", "[gesinde]", "[alle die von der tavelrunde]"],
+      "Collective member": ["<Eine von den 300 Frauen>"],
+      "Non-figure": ["{Implizites Publikum}"]
+    },
+    "Trojanerkrieg": {
+      "Collective": [
+        "[boten]",
+        "[fürsten]",
+        "[wîber]",
+        "[liute]",
+        "[alle]",
+        "[Menge]",
+        "[die ritter]",
+        "[göte schar]",
+        "[manec]",
+        "[Töchter des Peleus]"
+      ],
+      "Role figure": ["<hirte>", "<wirt>", "<bote>", "<spilman>", "<priesterîn>", "<amme>", "Medeas <meisterîn>"],
+      "Group": ["Pallas & Juno", "Pollux & Castor & Achilles"]
+    }
+  }
+}
