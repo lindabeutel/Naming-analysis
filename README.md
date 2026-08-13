@@ -273,7 +273,7 @@ to other TEI-based corpora.
 
 ## Citation
 
-Beutel-Thurow, L. (2026). Naming-analysis (Version v0.2.0-beta) [Computer software]. https://doi.org/10.5281/zenodo.18770138
+Beutel-Thurow, L. (2026). Naming-analysis (Version v0.2.0-beta) [Computer software]. https://doi.org/10.5281/zenodo.21914260
 
 ------------------------------------------------------------------------
 
