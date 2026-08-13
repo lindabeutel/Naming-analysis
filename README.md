@@ -6,7 +6,7 @@
 
 ------------------------------------------------------------------------
 
-## Visualizations an Tables
+## Visualizations and Tables
 
 Interactive visualizations and tables accompanying the dissertation are available at:
 👉 **[lindabeutel.github.io/Naming-analysis](https://lindabeutel.github.io/Naming-analysis/)**
@@ -273,7 +273,7 @@ to other TEI-based corpora.
 
 ## Citation
 
-Beutel-Thurow, L. (2026). Naming-analysis (Version v0.1.0-beta) [Computer software]. https://doi.org/10.5281/zenodo.18770138
+Beutel-Thurow, L. (2026). Naming-analysis (Version v0.2.0-beta) [Computer software]. https://doi.org/10.5281/zenodo.18770138
 
 ------------------------------------------------------------------------
 
