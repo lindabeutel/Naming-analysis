@@ -38,6 +38,7 @@ It is invoked from controller.py during "analysis" sessions.
 import os
 import math
 import difflib
+import unicodedata
 from collections import Counter
 from datetime import datetime
 from itertools import combinations
@@ -46,6 +47,9 @@ from typing import Any, cast
 
 # Third-party libraries
 import numpy as np
+import openpyxl
+from openpyxl.styles import Font
+from openpyxl.utils import get_column_letter
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -75,6 +79,7 @@ from naming_analysis.shared import (
 )
 from naming_analysis.io_utils import (
     safe_read_json,
+    safe_write_json,
     write_csv_table,
     export_visualization_output,
 )
@@ -93,9 +98,9 @@ def run_analysis_menu(config_data, paths, data, book_name):
     Central interactive dispatcher for analysis workflows.
 
     This function provides the top-level CLI menu for selecting one of the
-    available analysis paths (wordlists, naming figure analysis, keywords,
-    collocations, or visualization). It delegates execution to the respective
-    submenu functions based on validated user input.
+    available analysis paths (wordlists, lemma search, naming figure analysis,
+    keywords, collocations, or visualization). It delegates execution to the
+    respective submenu functions based on validated user input.
 
     The function runs in a blocking loop until the user selects the exit option.
     It does not perform any data transformation itself but orchestrates calls
@@ -128,25 +133,28 @@ def run_analysis_menu(config_data, paths, data, book_name):
     while True:
         print("Which type of analysis do you want to run?")
         print("[1] Wordlist")
-        print("[2] Naming figure analysis")
-        print("[3] Keywords")
-        print("[4] Collocations")
-        print("[5] Visualization")
-        print("[6] Exit analysis menu")
+        print("[2] Lemma search")
+        print("[3] Naming figure analysis")
+        print("[4] Keywords")
+        print("[5] Collocations")
+        print("[6] Visualization")
+        print("[7] Exit analysis menu")
 
-        choice = ask_user_choice("> ", ["1", "2", "3", "4", "5","6"])
+        choice = ask_user_choice("> ", ["1", "2", "3", "4", "5", "6", "7"])
 
         if choice == "1":
             run_wordlist_menu(paths, book_name)
         elif choice == "2":
-            run_naming_figure_analysis(config_data, paths, data, book_name)
+            run_lemma_menu(paths, book_name)
         elif choice == "3":
-            run_keyword_menu(config_data, paths, data, book_name)
+            run_naming_figure_analysis(config_data, paths, data, book_name)
         elif choice == "4":
-            run_collocation_menu(config_data, paths, data, book_name)
+            run_keyword_menu(config_data, paths, data, book_name)
         elif choice == "5":
-            run_visualization_menu(paths, book_name, data)
+            run_collocation_menu(config_data, paths, data, book_name)
         elif choice == "6":
+            run_visualization_menu(paths, book_name, data)
+        elif choice == "7":
             print("Exiting analysis.")
             break
 
@@ -457,6 +465,789 @@ def generate_combined_naming_variants_epithets(named_figure: str, json_path: str
     )
 
     print(f"Naming variants and epithets for '{named_figure}' exported to: {output_path}")
+
+# =============================================================================
+# LEMMA SEARCH (menu + reverse lookup)
+# =============================================================================
+
+
+# Column groups of the categorization data (German field names, as in the data)
+NAMING_VARIANT_FIELDS = [f"Bezeichnung {i}" for i in range(1, 5)]
+
+EPITHET_FIELDS = [f"Epitheta {i}" for i in range(1, 6)]
+
+# Attribution labels for the Excel output (the JSON keeps the machine-readable
+# keys "narrator", "figure_speech", "self_naming", "unattributed")
+ATTRIBUTION_LABELS = {
+    "narrator": "Narrator",
+    "figure_speech": "Figure speech",
+    "self_naming": "Self-naming",
+    "unattributed": "Unattributed",
+}
+
+# Category labels for the Excel output (the JSON keeps the machine-readable
+# keys "naming_variant", "epithet", "both")
+CATEGORY_LABELS = {
+    "naming_variant": "Naming variant",
+    "epithet": "Epithet",
+    "both": "Both",
+}
+
+SCOPE_LABELS = {
+    "naming_variants": "naming variants",
+    "epithets": "epithets",
+    "both": "naming variants and epithets",
+}
+
+def run_lemma_menu(paths, book_name):
+    """
+    Interactive CLI menu for lemma-based reverse lookups.
+
+    Namings by the narrator and namings in figure speech are both included.
+
+    The menu reads the categorization JSON of the active work directly, in the
+    same way the wordlist path does. This keeps the attribution columns
+    ('Erzähler', 'Eigennennung') available, which the shared source selector
+    discards when it trims the DataFrame.
+
+    Available options:
+        1. Search the naming variant columns ("Bezeichnung 1-n")
+        2. Search the epithet columns ("Epitheta 1-n")
+        3. Search both column groups
+        4. Return to the main analysis menu
+
+    Several lemmas can be entered at once, separated by commas. They are then
+    written to a single output file, which also carries a comparison table.
+
+    A lemma that does not occur in the work exactly as entered is resolved
+    interactively: the project's normalization data supplies attested
+    spellings ("ritter" for "rîtaere"), and similar forms present in the work
+    are offered as well. See `resolve_lemma(...)`.
+
+    The output format (Excel workbook, JSON, or both) is chosen once when the
+    menu is entered and applies to every lookup of that session.
+
+    Output files are written to:
+        data/<book_name>/analysis/
+
+    The function runs in a blocking loop until the user selects the option
+    to return to the main analysis menu, so several lookups can be made
+    in one session without reloading the data.
+
+    Parameters:
+        paths (dict):
+            Dictionary of resolved project paths. Must include the key
+            "categorization_json".
+
+        book_name (str):
+            Identifier of the active work. Used for output directory and
+            filename construction.
+
+    Returns:
+        None
+
+    Behavior:
+        - Loads the categorization entries once, before the menu loop.
+        - Aborts with a message if the data is empty or structurally unusable.
+        - Resolves the entered lemmas against the forms present in the work.
+        - Delegates each lookup to `analyze_figures_by_lemma(...)`.
+    """
+    # --- Load categorization entries once for the whole menu session ---
+    entries = safe_read_json(paths["categorization_json"], default=[])
+
+    if not entries:
+        print(f"No categorization data found for {book_name}.")
+        return
+
+    # --- Structural check: named figures and at least one lemma column group ---
+    available_keys = set()
+    for entry in entries:
+        available_keys.update(entry.keys())
+
+    missing = []
+    if "Benannte Figur" not in available_keys:
+        missing.append("'Benannte Figur'")
+    if not available_keys & set(NAMING_VARIANT_FIELDS + EPITHET_FIELDS):
+        missing.append("Bezeichnung*/Epitheta*")
+
+    if missing:
+        print("[Lemma search] Analysis cannot proceed — missing required data: "
+              + ", ".join(missing))
+        return
+
+    # --- Spelling index for lemma resolution (project-wide, not per work) ---
+    spelling_index = build_spelling_index(
+        safe_read_json(paths["lemma_normalization_json"], default={})
+    )
+
+    output_dir = os.path.join("data", book_name, "analysis")
+    os.makedirs(output_dir, exist_ok=True)
+
+    # --- Output format: asked once, kept for the whole menu session ---
+    print("\nWhich output format should be written?")
+    print("[1] Excel workbook (.xlsx)")
+    print("[2] JSON")
+    print("[3] Both")
+
+    output_format = {
+        "1": "xlsx",
+        "2": "json",
+        "3": "both",
+    }[ask_user_choice("> ", ["1", "2", "3"])]
+
+    # Map menu choices to the column groups searched by the analysis function
+    scopes = {
+        "1": "naming_variants",
+        "2": "epithets",
+        "3": "both",
+    }
+
+    while True:
+        print("\nWhich category do you want to search for a specific lemma?")
+        print("[1] Bezeichnungen (naming variants)")
+        print("[2] Epitheta (epithets)")
+        print("[3] Both")
+        print("[4] Back to main analysis menu")
+
+        menu_choice = ask_user_choice("> ", ["1", "2", "3", "4"])
+
+        if menu_choice == "4":
+            print("Returning to analysis menu.")
+            return
+
+        # Interactive lemma input (empty input returns to this menu)
+        raw_lemmas = input("\nPlease enter the lemma "
+                           "(several separated by commas): ").strip()
+        if not raw_lemmas:
+            print("No lemma provided.")
+            continue
+
+        # Split on commas, drop empty parts, remove duplicates (case-insensitive)
+        # while preserving the order and the spelling of the input.
+        query_lemmas = []
+        seen = set()
+        for part in raw_lemmas.split(","):
+            lemma = part.strip()
+            if lemma and lemma.lower() not in seen:
+                seen.add(lemma.lower())
+                query_lemmas.append(lemma)
+
+        if not query_lemmas:
+            print("No lemma provided.")
+            continue
+
+        # Resolve each lemma against the forms present in this work: an exact
+        # match passes through, anything else is offered for confirmation.
+        scope = scopes[menu_choice]
+        available = build_available_lemmas(
+            entries,
+            scope in ("naming_variants", "both"),
+            scope in ("epithets", "both"),
+        )
+
+        resolved_lemmas = []
+        for lemma in query_lemmas:
+            resolved = resolve_lemma(lemma, available, spelling_index)
+            if resolved and resolved not in resolved_lemmas:
+                resolved_lemmas.append(resolved)
+
+        if not resolved_lemmas:
+            continue
+
+        analyze_figures_by_lemma(
+            book_name,
+            entries,
+            output_dir,
+            resolved_lemmas,
+            scope=scope,
+            output_format=output_format,
+        )
+
+def field_text(value) -> str:
+    """
+    Return a trimmed string for a categorization field ("" for missing values).
+
+    JSON exports carry empty cells as null or as float NaN, and the source data
+    contains non-breaking spaces. Both are normalized here so that comparisons
+    and exports operate on plain, trimmed text.
+    """
+    if value is None:
+        return ""
+    if isinstance(value, float) and math.isnan(value):
+        return ""
+    return str(value).replace("\xa0", " ").strip()
+
+def count_label(count, singular, plural) -> str:
+    """Return '1 mention' or '4 mentions' — used in console output and titles."""
+    return f"{count} {singular if count == 1 else plural}"
+
+def build_available_lemmas(entries, search_naming_variants, search_epithets) -> dict:
+    """
+    Map every lemma form occurring in the searched columns to its spelling.
+
+    The keys are lowercased for comparison, the values keep the spelling as it
+    stands in the data, so that resolution can hand back the exact form.
+    """
+    fields = (NAMING_VARIANT_FIELDS if search_naming_variants else []) \
+        + (EPITHET_FIELDS if search_epithets else [])
+
+    available = {}
+    for entry in entries:
+        for field in fields:
+            value = field_text(entry.get(field))
+            if value:
+                available.setdefault(value.lower(), value)
+
+    return available
+
+def build_spelling_index(normalization) -> dict:
+    """
+    Map every attested spelling to its canonical lemma.
+
+    Built from data/lemma_normalization.json, which lists for each lemma the
+    spellings found in the texts ("Adalrôt": ["adalrot", "adelrot", "alroten",
+    "alterot"]). The canonical form itself is indexed as well, so that a lemma
+    entered in its dictionary form resolves even when the work spells it
+    differently.
+    """
+    index = {}
+    for lemma, spellings in normalization.items():
+        index.setdefault(str(lemma).strip().lower(), lemma)
+        for spelling in spellings or []:
+            index.setdefault(str(spelling).strip().lower(), lemma)
+
+    return index
+
+def resolve_lemma(query, available, spelling_index) -> str | None:
+    """
+    Resolve a lemma entered by the user against the forms present in the work.
+
+    Resolution strategy:
+        1. Exact match (case-insensitive) — returned without asking.
+        2. Attested spelling from the project's normalization data, provided
+           the canonical lemma occurs in this work.
+        2b. Spelling close to an attested one (difflib, cutoff 0.8), mapped to
+           its canonical lemma.
+        3. Similar lemma forms present in this work (difflib, cutoff 0.7).
+
+    Steps 2 to 3 are proposals, offered as a numbered list: the user picks one
+    or skips the lemma. No substitution happens silently, since a wrong one
+    would quietly distort every count in the output.
+
+    Both thresholds are stricter than the one in `resolve_figure_name`, because
+    lemmas are short: at 0.6 a query like 'recke' still draws unrelated forms
+    such as 'Torke' or 'rîche'.
+
+    Parameters:
+        query (str):
+            Lemma as entered by the user.
+
+        available (dict):
+            Lowercased lemma form to spelling, from `build_available_lemmas`.
+
+        spelling_index (dict):
+            Attested spelling to canonical lemma, from `build_spelling_index`.
+
+    Returns:
+        str | None:
+            The form to search for, or None if the lemma cannot be resolved
+            or the user skips it.
+    """
+    key = query.strip().lower()
+    if not key:
+        return None
+
+    # 1) The lemma occurs in this work exactly as entered
+    if key in available:
+        return available[key]
+
+    candidates = []
+    canonical = spelling_index.get(key)
+
+    # 2) An attested spelling is the stronger signal, so it is offered first
+    if canonical and canonical.lower() in available:
+        candidates.append((available[canonical.lower()], "attested spelling"))
+
+    # 2b) Near miss against an attested spelling. A query is usually a text
+    #     form rather than a lemma form, so the spellings are the better
+    #     material to compare against: 'heled' sits closer to 'helede' than
+    #     to 'helt'. The threshold is stricter than for lemma forms, because
+    #     spellings are concrete text witnesses.
+    for match in difflib.get_close_matches(key, list(spelling_index), n=6, cutoff=0.8):
+        lemma = spelling_index[match]
+        if lemma.lower() not in available:
+            continue
+        form = available[lemma.lower()]
+        if all(form != known for known, _ in candidates):
+            candidates.append((form, "similar spelling"))
+
+    # 3) Similar forms present in this work
+    for match in difflib.get_close_matches(key, list(available), n=3, cutoff=0.7):
+        form = available[match]
+        if all(form != known for known, _ in candidates):
+            candidates.append((form, "similar form"))
+
+    candidates = candidates[:3]
+
+    if not candidates:
+        if canonical:
+            print(f'"{query}" is a spelling of "{canonical}", '
+                  f"which does not occur in this work.")
+        else:
+            print(f'No lemma matching "{query}" was found.')
+        return None
+
+    print(f'\nLemma "{query}" was not found in this spelling.')
+    for number, (form, reason) in enumerate(candidates, start=1):
+        print(f"[{number}] {form} ({reason})")
+    print("[0] Skip this lemma")
+
+    choice = ask_user_choice("> ", [str(n) for n in range(len(candidates) + 1)])
+    if choice == "0":
+        return None
+
+    return candidates[int(choice) - 1][0]
+
+def resolve_attribution(entry) -> tuple[str, str | None, str]:
+    """
+    Determine who performs a naming, and return the verbatim wording with it.
+
+    Precedence follows the curation rule of the data: where a namer is given,
+    the naming belongs to figure speech; otherwise the narrator field decides;
+    otherwise it is a self-naming. Since the corpus was cleaned on 09.09.2026,
+    each row carries exactly one of the three, and "unattributed" should no
+    longer occur — it is kept as a defensive fallback rather than dropping rows.
+
+    Returns:
+        tuple: (attribution key, namer or None, verbatim naming)
+    """
+    namer = field_text(entry.get("Nennende Figur"))
+    if namer:
+        return "figure_speech", namer, field_text(entry.get("Bezeichnung"))
+
+    narrator = field_text(entry.get("Erzähler"))
+    if narrator:
+        return "narrator", None, narrator
+
+    self_naming = field_text(entry.get("Eigennennung"))
+    if self_naming:
+        return "self_naming", None, self_naming
+
+    return "unattributed", None, field_text(entry.get("Bezeichnung"))
+
+def collect_lemma_statistics(entries, lemma, search_naming_variants, search_epithets) -> dict:
+    """
+    Count which figures are named by a given lemma, and record every mention.
+
+    Matching is strict: the lemma must equal a field value after stripping and
+    lowercasing. No normalization or similarity heuristics are applied, which
+    keeps the result identical to the other lemma-based analysis paths.
+
+    Counting:
+        - One entry = one mention. An entry is counted once for its named
+          figure, even if the lemma occurs in several of its columns.
+        - "as_naming_variant" / "as_epithet" report in how many of those
+          mentions the lemma occurred in the respective column group. An entry
+          carrying it in both is counted in both, so the two may sum to more
+          than "mentions".
+
+    Returns:
+        dict: lemma record as described in the module docstring of the export,
+              with figures sorted by descending mentions, then alphabetically.
+    """
+    query = lemma.strip().lower()
+
+    naming_variant_fields = NAMING_VARIANT_FIELDS if search_naming_variants else []
+    epithet_fields = EPITHET_FIELDS if search_epithets else []
+
+    figures = {}
+    total_mentions = 0
+
+    for entry in entries:
+        figure = field_text(entry.get("Benannte Figur"))
+        if not figure:
+            continue
+
+        in_naming_variant = any(field_text(entry.get(f)).lower() == query
+                                for f in naming_variant_fields)
+        in_epithet = any(field_text(entry.get(f)).lower() == query
+                         for f in epithet_fields)
+
+        if not (in_naming_variant or in_epithet):
+            continue
+
+        attribution, namer, naming = resolve_attribution(entry)
+
+        record = figures.setdefault(figure, {
+            "figure": figure,
+            "mentions": 0,
+            "by_narrator": 0,
+            "in_figure_speech": 0,
+            "self_naming": 0,
+            "as_naming_variant": 0,
+            "as_epithet": 0,
+            "share_percent": 0,
+            "occurrences": [],
+        })
+
+        record["mentions"] += 1
+        total_mentions += 1
+
+        if attribution == "narrator":
+            record["by_narrator"] += 1
+        elif attribution == "figure_speech":
+            record["in_figure_speech"] += 1
+        elif attribution == "self_naming":
+            record["self_naming"] += 1
+
+        if in_naming_variant:
+            record["as_naming_variant"] += 1
+        if in_epithet:
+            record["as_epithet"] += 1
+
+        if in_naming_variant and in_epithet:
+            category = "both"
+        elif in_naming_variant:
+            category = "naming_variant"
+        else:
+            category = "epithet"
+
+        record["occurrences"].append({
+            "verse": serialize_verse_value(entry.get("Vers")),
+            "attribution": attribution,
+            "namer": namer,
+            "naming": naming,
+            "category": category,
+        })
+
+    # Share of the lemma's mentions, rounded to full percent
+    for record in figures.values():
+        record["share_percent"] = (
+            int(round((record["mentions"] / total_mentions) * 100)) if total_mentions else 0
+        )
+
+    ordered = sorted(figures.values(), key=lambda r: (-r["mentions"], r["figure"]))
+
+    return {
+        "lemma": lemma,
+        "total_mentions": total_mentions,
+        "figure_count": len(ordered),
+        "figures": ordered,
+    }
+
+def suggest_similar_lemmas(entries, lemma, search_naming_variants, search_epithets) -> list[str]:
+    """
+    Propose lemma forms present in the searched columns that resemble the query.
+
+    Used only when a query yields no match at all, so that a typo or a variant
+    spelling (helt / helet) does not end in a bare "no results" message.
+    """
+    available = build_available_lemmas(entries, search_naming_variants, search_epithets)
+
+    matches = difflib.get_close_matches(lemma.strip().lower(), list(available), n=5, cutoff=0.7)
+    return [available[m] for m in matches]
+
+def fold_to_ascii(text) -> str:
+    """
+    Reduce a Middle High German lemma to plain ASCII for use in filenames.
+
+    Diacritics are dropped (kunic, herre, salec), while ligatures without a
+    single base letter are expanded (ae, oe, ss). Everything that is still not
+    ASCII afterwards is removed, so the result is safe on any filesystem.
+    """
+    expanded = (
+        text.replace("æ", "ae").replace("Æ", "Ae")
+            .replace("œ", "oe").replace("Œ", "Oe")
+            .replace("ß", "ss")
+    )
+
+    # Split off combining marks (NFKD), then keep only the base characters
+    decomposed = unicodedata.normalize("NFKD", expanded)
+    stripped = "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+
+    return stripped.encode("ascii", "ignore").decode("ascii")
+
+def build_lemma_search_stem(lemmas, scope) -> str:
+    """
+    Build the shared filename stem for the workbook and the JSON file.
+
+    One lemma yields 'figures_by_lemma_helt_both', several are joined with
+    hyphens, and more than three are truncated with '-and-more' so that the
+    filename stays manageable. The scope is part of the name so that a naming
+    variant lookup does not overwrite an earlier epithet lookup.
+
+    Lemmas are reduced to ASCII, so 'künic' becomes 'kunic' in the filename
+    while the sheet titles and the file content keep the original spelling.
+    """
+    def safe(part):
+        folded = fold_to_ascii(part.strip())
+        return "".join(ch if (ch.isalnum() or ch in "-_") else "_" for ch in folded) or "lemma"
+
+    parts = [safe(lemma) for lemma in lemmas[:3]]
+    if len(lemmas) > 3:
+        parts.append("and-more")
+
+    return f"figures_by_lemma_{'-'.join(parts)}_{scope}"
+
+def build_sheet_title(lemma, used_titles) -> str:
+    """
+    Turn a lemma into a valid, unique Excel sheet title.
+
+    Excel allows at most 31 characters and forbids [ ] : * ? / \\ — such
+    characters are replaced, and a title already in use is numbered.
+    """
+    title = "".join("_" if ch in "[]:*?/\\" else ch for ch in lemma).strip()[:31]
+    if not title:
+        title = "lemma"
+
+    taken = {t.lower() for t in used_titles}
+    if title.lower() not in taken:
+        return title
+
+    for n in range(2, 100):
+        suffix = f"_{n}"
+        candidate = title[:31 - len(suffix)] + suffix
+        if candidate.lower() not in taken:
+            return candidate
+
+    return title[:28] + "_99"
+
+def write_comparison_sheet(workbook, results) -> None:
+    """
+    Write the leading comparison sheet (only used for more than one lemma).
+
+    Layout:
+        Named figure | <lemma 1> | <lemma 2> | … | Total
+
+    The first data row, "All figures", holds each lemma's total number of
+    mentions in the whole work, independent of the individual figures. The
+    figure rows below are sorted by their row total, descending.
+    """
+    sheet = workbook.create_sheet("Comparison")
+
+    header = ["Named figure"] + [r["lemma"] for r in results] + ["Total"]
+    sheet.append(header)
+
+    # Total row: the lemma counts for the whole work
+    totals = [r["total_mentions"] for r in results]
+    sheet.append(["All figures"] + totals + [sum(totals)])
+
+    # One row per figure, values in the column order of the query
+    per_figure = {}
+    for index, result in enumerate(results):
+        for figure in result["figures"]:
+            counts = per_figure.setdefault(figure["figure"], [0] * len(results))
+            counts[index] = figure["mentions"]
+
+    for figure, counts in sorted(per_figure.items(), key=lambda t: (-sum(t[1]), t[0])):
+        sheet.append([figure] + counts + [sum(counts)])
+
+    for cell in sheet[1]:
+        cell.font = Font(bold=True)
+    for cell in sheet[2]:
+        cell.font = Font(bold=True)
+
+    sheet.freeze_panes = "B3"
+    sheet.column_dimensions["A"].width = 28
+
+def write_lemma_sheet(workbook, book_name, scope, result, used_titles) -> None:
+    """
+    Write one sheet per lemma: figure rows with their mentions collapsed above
+    the individual mentions.
+
+    Layout:
+        row 1  title line with the totals for this lemma
+        row 3  header for both blocks
+        then   one bold row per figure (figure block), each followed by its
+               mentions as grouped rows (detail block), which the outline
+               buttons in the left margin fold away
+
+    The figure block occupies the left columns, the detail block the right
+    ones, so that a collapsed sheet reads as a plain summary table and no
+    column carries two meanings.
+    """
+    title = build_sheet_title(result["lemma"], used_titles)
+    used_titles.append(title)
+
+    sheet = workbook.create_sheet(title)
+
+    # Summary rows sit above their detail rows, so Excel must place the
+    # outline buttons accordingly.
+    sheet.sheet_properties.outlinePr.summaryBelow = False
+
+    sheet.append([
+        f"{result['lemma']} — "
+        f"{count_label(result['total_mentions'], 'mention', 'mentions')} across "
+        f"{count_label(result['figure_count'], 'figure', 'figures')} "
+        f"({book_name}, {SCOPE_LABELS.get(scope, scope)})"
+    ])
+    sheet["A1"].font = Font(bold=True)
+    sheet.append([])
+
+    figure_header = ["Named figure", "Mentions", "Narrator", "Figure speech", "Self-naming"]
+    if scope == "both":
+        figure_header += ["As naming variant", "As epithet"]
+    figure_header += ["Share (%)"]
+
+    detail_header = ["Verse", "Attribution", "Namer", "Naming"]
+    if scope == "both":
+        detail_header += ["Category"]
+
+    sheet.append(figure_header + detail_header)
+    for cell in sheet[3]:
+        cell.font = Font(bold=True)
+
+    detail_offset = len(figure_header)
+
+    for figure in result["figures"]:
+        row = [
+            figure["figure"],
+            figure["mentions"],
+            figure["by_narrator"],
+            figure["in_figure_speech"],
+            figure["self_naming"],
+        ]
+        if scope == "both":
+            row += [figure["as_naming_variant"], figure["as_epithet"]]
+        row += [figure["share_percent"]]
+
+        sheet.append(row)
+        for cell in sheet[sheet.max_row]:
+            cell.font = Font(bold=True)
+
+        for occurrence in figure["occurrences"]:
+            detail = [""] * detail_offset + [
+                occurrence["verse"],
+                ATTRIBUTION_LABELS.get(occurrence["attribution"], occurrence["attribution"]),
+                occurrence["namer"] or "",
+                occurrence["naming"],
+            ]
+            if scope == "both":
+                detail += [CATEGORY_LABELS.get(occurrence["category"], occurrence["category"])]
+
+            sheet.append(detail)
+            sheet.row_dimensions[sheet.max_row].outlineLevel = 1
+
+    sheet.freeze_panes = "A4"
+
+    # Excel only draws the outline pane — the +/- buttons that fold the mentions
+    # away — when the sheet declares how deep its outline goes. Without this the
+    # grouped rows exist but stay unreachable.
+    sheet.sheet_format.outlineLevelRow = 1
+
+    sheet.column_dimensions["A"].width = 28
+    for offset, width in enumerate((10, 22, 18, 34, 16), start=detail_offset + 1):
+        sheet.column_dimensions[get_column_letter(offset)].width = width
+
+def analyze_figures_by_lemma(book_name, entries, output_dir, query_lemmas,
+                             scope="both", output_format="xlsx") -> None:
+    """
+    Reverse lookup: which figures are named by the given lemmas, and how often.
+
+    Complementary to `analyze_figure_profile_by_lemma(...)`, which starts from a
+    figure and asks which namers use a lemma for it. This function starts from
+    the lemma. Namings by the narrator, in figure speech and by the figure
+    itself are all included and reported separately.
+
+    Output (in `output_dir`, English throughout):
+        figures_by_lemma_<lemmas>_<scope>.xlsx   comparison sheet (only for
+                                                 several lemmas) plus one sheet
+                                                 per lemma with collapsible
+                                                 mention details
+        figures_by_lemma_<lemmas>_<scope>.json   the same data as a nested
+                                                 structure
+
+    Lemmas without a single match are reported on the console together with
+    close forms found in the data; they do not appear in the output files. If
+    no lemma matches at all, no file is written.
+
+    Parameters:
+        book_name (str):
+            Identifier of the active work.
+
+        entries (list[dict]):
+            Categorization entries, already loaded by `run_lemma_menu(...)`.
+
+        output_dir (str):
+            Target directory, created by the caller.
+
+        query_lemmas (list[str]):
+            One or more lemmas, in the order the user entered them.
+
+        scope (str):
+            "naming_variants", "epithets" or "both".
+
+        output_format (str):
+            "xlsx", "json" or "both".
+
+    Returns:
+        None
+    """
+    search_naming_variants = scope in ("naming_variants", "both")
+    search_epithets = scope in ("epithets", "both")
+
+    results = []
+    unmatched = []
+
+    for lemma in query_lemmas:
+        result = collect_lemma_statistics(
+            entries, lemma, search_naming_variants, search_epithets
+        )
+        if result["total_mentions"] == 0:
+            unmatched.append(lemma)
+        else:
+            results.append(result)
+
+    # --- Report lemmas without any match, with close forms from the data ---
+    for lemma in unmatched:
+        print(f"No results found for: {lemma}")
+        suggestions = suggest_similar_lemmas(
+            entries, lemma, search_naming_variants, search_epithets
+        )
+        if suggestions:
+            print("  Did you mean: " + ", ".join(suggestions))
+
+    if not results:
+        return
+
+    # --- Console summary ---
+    for result in results:
+        print(f"\n'{result['lemma']}': "
+              f"{count_label(result['total_mentions'], 'mention', 'mentions')} across "
+              f"{count_label(result['figure_count'], 'figure', 'figures')}.")
+        for figure in result["figures"][:5]:
+            print(f"  {figure['figure']} ({figure['mentions']}) — "
+                  f"narrator: {figure['by_narrator']}, "
+                  f"figure speech: {figure['in_figure_speech']}, "
+                  f"self-naming: {figure['self_naming']}")
+        if result["figure_count"] > 5:
+            print(f"  ... and {result['figure_count'] - 5} more (see output file).")
+
+    # --- Write the requested formats ---
+    stem = build_lemma_search_stem([r["lemma"] for r in results], scope)
+
+    if output_format in ("xlsx", "both"):
+        workbook = openpyxl.Workbook()
+        workbook.remove(workbook.active)
+
+        if len(results) > 1:
+            write_comparison_sheet(workbook, results)
+
+        used_titles = []
+        for result in results:
+            write_lemma_sheet(workbook, book_name, scope, result, used_titles)
+
+        xlsx_path = os.path.join(output_dir, f"{stem}.xlsx")
+        workbook.save(xlsx_path)
+        print(f"\nWorkbook written to: {xlsx_path}")
+
+    if output_format in ("json", "both"):
+        json_path = os.path.join(output_dir, f"{stem}.json")
+        safe_write_json(
+            {"book": book_name, "scope": scope, "lemmas": results},
+            json_path,
+        )
+        print(f"JSON written to: {json_path}")
 
 # =============================================================================
 # NAMING FIGURE ANALYSIS (menu + profile generators)
