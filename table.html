@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tabelle · Naming Poetics of Middle High German Epic</title>
+  <title>Table · Naming Poetics of Middle High German Epic</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
@@ -392,11 +392,11 @@
 <body>
 <div class="page">
 
-  <a class="back" href="index.html">← Zurück zur Übersicht</a>
+  <a class="back" href="index.html">← Back to the overview</a>
 
   <header>
-    <p class="header-eyebrow" id="eyebrow">Tabelle</p>
-    <h1 id="title">Tabelle</h1>
+    <p class="header-eyebrow" id="eyebrow">Table</p>
+    <h1 id="title">Table</h1>
     <p class="header-subtitle" id="subtitle"></p>
   </header>
 
@@ -414,7 +414,7 @@
   <p class="hint" id="hint" hidden></p>
 
   <div class="table-wrap">
-    <div class="state" id="state">Lade Daten …</div>
+    <div class="state" id="state">Loading data …</div>
     <table id="table" hidden>
       <thead><tr id="thead-row"></tr></thead>
       <tbody id="tbody"></tbody>
@@ -423,7 +423,7 @@
 
   <footer>
     <span>Linda Beutel-Thurow · <em>Naming Poetics of Middle High German Epic</em></span>
-    <a id="download" href="#" download>CSV herunterladen</a>
+    <a id="download" href="#" download>Download CSV</a>
   </footer>
 
 </div>
@@ -441,9 +441,9 @@
   const params   = new URLSearchParams(window.location.search);
   const jsonPath = params.get('json');
   const csvPath  = params.get('csv') || (jsonPath ? '' : 'beispiel_tabelle.csv');
-  const title    = params.get('title')   || (jsonPath ? '' : 'CSV-Tabelle');
+  const title    = params.get('title')   || (jsonPath ? '' : 'CSV table');
   const desc     = params.get('desc')    || '';
-  const eyebrow  = params.get('eyebrow') || (jsonPath ? 'Lemma search' : 'Tabelle');
+  const eyebrow  = params.get('eyebrow') || (jsonPath ? 'Lemma search' : 'Table');
 
   document.getElementById('eyebrow').textContent = eyebrow;
   const titleEl = document.getElementById('title');
@@ -568,8 +568,8 @@
     const total = rows.length;
     const shown = data.length;
     caption.textContent = (shown === total)
-      ? (total + (total === 1 ? ' Zeile' : ' Zeilen'))
-      : (shown + ' von ' + total + ' Zeilen');
+      ? (total + (total === 1 ? ' row' : ' rows'))
+      : (shown + ' of ' + total + ' rows');
   }
 
   // ─── CSV laden ──────────────────────────────────────────────────
@@ -582,7 +582,7 @@
     // Delimiter wird automatisch erkannt ( , ; \t )
     complete: function (results) {
       if (!results.data || !results.data.length || !results.meta.fields) {
-        stateEl.innerHTML = 'Keine Daten gefunden in <code>' + csvPath + '</code>.';
+        stateEl.innerHTML = 'No data found in <code>' + csvPath + '</code>.';
         stateEl.classList.add('error');
         return;
       }
