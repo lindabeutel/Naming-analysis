@@ -322,6 +322,79 @@
       border: 1px solid rgba(163,163,154,0.45);
     }
 
+    /* ─── Library: one work per block, its kinds inside ─────────── */
+    .library { margin-top: 8px; }
+
+    details.book { border-top: 1px solid var(--rule); }
+    details.book[open] { padding-bottom: 28px; }
+    details.book:last-of-type { border-bottom: 1px solid var(--rule); }
+
+    .book-summary {
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      padding: 26px 0 18px;
+    }
+    .book-summary::-webkit-details-marker { display: none; }
+    .book-summary::before {
+      content: '▸';
+      display: inline-block;
+      font-size: 13px;
+      color: var(--gold);
+      transition: transform 0.2s;
+    }
+    details.book[open] > .book-summary::before { transform: rotate(90deg); }
+    .book-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    .book-summary:hover .book-title { color: var(--gold); }
+
+    details.kind { margin-left: 28px; }
+    .kind-summary {
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 0;
+      font-family: var(--font-meta);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      transition: color 0.2s;
+    }
+    .kind-summary:hover { color: var(--gold); }
+    .kind-summary::-webkit-details-marker { display: none; }
+    .kind-summary::before {
+      content: '▸';
+      display: inline-block;
+      font-size: 11px;
+      color: var(--auxiliary);
+      transition: transform 0.2s;
+    }
+    details.kind[open] > .kind-summary::before { transform: rotate(90deg); }
+    .group-count {
+      font-family: var(--font-meta);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      color: var(--auxiliary);
+    }
+    details.kind > .cards { padding: 8px 0 20px; }
+
+    .group-hidden { display: none; }
+
     /* ─── Footer ────────────────────────────────────────────────── */
     footer {
       border-top: 1px solid var(--rule);
@@ -379,6 +452,10 @@
     </div>
     <p class="empty-state" id="emptyState">No entries match your filter.</p>
   </div>
+
+  <!-- Built by the script below from the flat sections that follow:
+       one block per work, inside it one group per kind. -->
+  <div class="library" id="library"></div>
 
   <!-- ══════════════════════════════════════════════════════════════
        SECTION – Visualizations
@@ -576,8 +653,104 @@
 (function () {
   'use strict';
 
-  const cards    = Array.from(document.querySelectorAll('.card'));
-  const sections = Array.from(document.querySelectorAll('.section'));
+  // ─── Group the cards: one block per work, its kinds inside ───────
+  // The cards stay flat in the source. A card's kind comes from the section
+  // it is written in, its work from the tag-book span. The hierarchy is built
+  // here, so adding a card never means touching the structure — and without
+  // JavaScript the flat sections remain readable as they are.
+  const CORPUS_ORDER = ['Eneasroman', 'Rolandslied', 'Iwein', 'Trojanerkrieg'];
+  const NO_BOOK = 'Across works';
+
+  function buildLibrary() {
+    const library = document.getElementById('library');
+    const sourceSections = Array.from(document.querySelectorAll('.section'));
+    if (!library || !sourceSections.length) return;
+
+    const byBook = new Map();          // work -> kind -> [cards]
+    const kindOrder = [];              // kinds in the order of the sections
+
+    sourceSections.forEach(function (section) {
+      const heading = section.querySelector('.section-label h2');
+      const kind = heading ? heading.textContent.trim() : 'Entries';
+      if (kindOrder.indexOf(kind) === -1) kindOrder.push(kind);
+
+      Array.from(section.querySelectorAll('.card')).forEach(function (card) {
+        const books = Array.from(card.querySelectorAll('.tag-book'))
+          .map(function (tag) { return tag.textContent.trim(); })
+          .filter(Boolean);
+
+        (books.length ? books : [NO_BOOK]).forEach(function (book) {
+          if (!byBook.has(book)) byBook.set(book, new Map());
+          const kinds = byBook.get(book);
+          if (!kinds.has(kind)) kinds.set(kind, []);
+          kinds.get(kind).push(card);
+        });
+      });
+    });
+
+    // Corpus order first, unknown works alphabetically, "Across works" last
+    const books = Array.from(byBook.keys()).sort(function (a, b) {
+      if (a === NO_BOOK) return 1;
+      if (b === NO_BOOK) return -1;
+      const ia = CORPUS_ORDER.indexOf(a), ib = CORPUS_ORDER.indexOf(b);
+      if (ia !== -1 && ib !== -1) return ia - ib;
+      if (ia !== -1) return -1;
+      if (ib !== -1) return 1;
+      return a.localeCompare(b, 'de');
+    });
+
+    books.forEach(function (book) {
+      const bookEl = document.createElement('details');
+      bookEl.className = 'book';
+      bookEl.open = true;                       // works open, kinds closed
+
+      const bookSummary = document.createElement('summary');
+      bookSummary.className = 'book-summary';
+      const bookTitle = document.createElement('span');
+      bookTitle.className = 'book-title';
+      bookTitle.textContent = book;
+      bookSummary.appendChild(bookTitle);
+      bookEl.appendChild(bookSummary);
+
+      const kinds = byBook.get(book);
+      kindOrder.forEach(function (kind) {
+        if (!kinds.has(kind)) return;
+
+        const kindEl = document.createElement('details');
+        kindEl.className = 'kind';
+
+        const kindSummary = document.createElement('summary');
+        kindSummary.className = 'kind-summary';
+        const kindTitle = document.createElement('span');
+        kindTitle.textContent = kind;
+        kindSummary.appendChild(kindTitle);
+        const count = document.createElement('span');
+        count.className = 'group-count';
+        kindSummary.appendChild(count);
+        kindEl.appendChild(kindSummary);
+
+        const cardsEl = document.createElement('div');
+        cardsEl.className = 'cards';
+        kinds.get(kind).forEach(function (card) {
+          cardsEl.appendChild(card.cloneNode(true));
+        });
+        kindEl.appendChild(cardsEl);
+
+        bookEl.appendChild(kindEl);
+      });
+
+      library.appendChild(bookEl);
+    });
+
+    // The flat sections have served as the source and are replaced by the blocks
+    sourceSections.forEach(function (section) { section.remove(); });
+  }
+
+  buildLibrary();
+
+  const cards      = Array.from(document.querySelectorAll('.card'));
+  const kindGroups = Array.from(document.querySelectorAll('details.kind'));
+  const bookGroups = Array.from(document.querySelectorAll('details.book'));
 
   // ─── Build tag registry from visible .tag spans ──────────────────
   const tagMeta = {};  // key -> { label, type }
@@ -645,11 +818,29 @@
       if (show) visible++;
     });
 
-    // Hide entire section if all its cards are hidden
-    sections.forEach(function (section) {
-      const anyVisible = Array.from(section.querySelectorAll('.card'))
+    // A group without visible cards disappears; while a filter is active the
+    // groups that do have hits open themselves, so no hit stays folded away.
+    const filtering = activeTags.size > 0 || searchText !== '';
+
+    kindGroups.forEach(function (group) {
+      const all   = Array.from(group.querySelectorAll('.card'));
+      const shown = all.filter(function (c) { return !c.classList.contains('card-hidden'); });
+
+      group.classList.toggle('group-hidden', shown.length === 0);
+      if (filtering && shown.length > 0) group.open = true;
+
+      const count = group.querySelector('.group-count');
+      if (count) {
+        count.textContent = (shown.length === all.length)
+          ? String(all.length)
+          : shown.length + ' / ' + all.length;
+      }
+    });
+
+    bookGroups.forEach(function (group) {
+      const anyVisible = Array.from(group.querySelectorAll('.card'))
         .some(function (c) { return !c.classList.contains('card-hidden'); });
-      section.classList.toggle('section-hidden', !anyVisible);
+      group.classList.toggle('group-hidden', !anyVisible);
     });
 
     const total = cards.length;
