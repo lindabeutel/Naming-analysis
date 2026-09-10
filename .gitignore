@@ -20,3 +20,8 @@
 /python
 /data/Eneasroman/TEST_Eneasroman_collocations.xlsx
 /TR.tei.xml
+
+# Local working artefacts
+/.idea/
+/data/tmp/
+__pycache__/
