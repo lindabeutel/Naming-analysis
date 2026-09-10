@@ -1,5 +1,5 @@
 Token;Count
-Gott_(christlich);386
+Gott (christlich);386
 Karl;362
 Ruolant;204
 Marsilie;166
@@ -12,16 +12,16 @@ Teufel;36
 Christus;33
 Blandscandîz;20
 Naimes;20
+Malprimes;15
 Tirrich;14
 Gergers;12
 Jorfalir;12
 Brechmundâ;12
-Malprimes;12
 Apollo;11
 Anseîs;10
 Engelirs;10
 Falsaron;10
-Der_heilige_Geist;9
+Der heilige Geist;9
 Samsôn;8
 David;8
 Maria;8
@@ -54,33 +54,34 @@ Amurafel;4
 Amarezur;4
 Eschermunt;4
 Antel;4
-Heinrich_(Herzog);4
+Heinrich (Herzog);4
 Dreieinigkeit;3
+Michael;3
 Diebalt;3
 Mantel;3
 Judas;3
 Algafiles;3
 Ekerîch;3
 Gerhart;3
-Malprimis;3
+Dionysius;3
 Prutan;3
 Richart;3
 Regenbalt;3
 Jocerans;3
 Anshelm;2
 Josias;2
-Michael;2
-Clargis_(Heide);2
+Clargis (Heide);2
 Stramariz;2
 Jomel;2
 Milun;2
 Saturn;2
+Ägidius;2
 Ammirat;2
 Witel;2
-Ilmar_(Agremuntin);2
+Ilmar (Agremuntin);2
 Marcelle;2
 Ciciron;2
-Alrich_(Christ);2
+Alrich (Christ);2
 Herodes;2
 Regenfrit;2
 Gideon;2
@@ -89,12 +90,11 @@ Alfric;2
 Abysse;2
 Urtanne;2
 Pegôn;2
-Dionysius;2
 Rapoto;2
 Herman;2
 Haimunt;2
 Joleun;2
-Ludewîc_(Sohn Karls);2
+Ludewîc (Sohn Karls);2
 Pipin;1
 Wernes;1
 Estropiz;1
@@ -105,7 +105,6 @@ Malbrant;1
 Matheus;1
 Salomon;1
 Ingram;1
-Michaeli;1
 Dierrîch;1
 Wido;1
 Ritschart;1
@@ -120,27 +119,25 @@ Glibon;1
 Gersîz;1
 Plangirz;1
 Oliboris;1
-Alrich_(Heide);1
-Ilmar_(Ultor);1
+Alrich (Heide);1
+Ilmar (Ultor);1
 Ilaz;1
 Antelun;1
 Maglirte;1
 Jupiter;1
 Mars;1
-Ägidius;1
 Philon;1
 Denis;1
 Alexander;1
-Dionisius;1
 Garpîn;1
 Arthan;1
-Clargis_(Christ);1
+Clargis (Christ);1
 Tortan;1
 Orte;1
 Maximîn;1
 Waldram;1
 Muralan;1
-Ludewîc_(Christ);1
+Ludewîc (Christ);1
 Nêre;1
 Martian;1
 Pandolt;1
@@ -160,7 +157,7 @@ Estorke;1
 Justîn;1
 Sigelot;1
 Spemvalrîz;1
-Sohn_(Marsilie);1
+Sohn (Marsilie);1
 Pharao;1
 Alfabîn;1
 Laurentius;1
@@ -168,7 +165,6 @@ Falbin;1
 Ebelin;1
 Degiôn;1
 Algarich;1
-Aegidius;1
 Blasius;1
 Abraham;1
 Gabriel;1
