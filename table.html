@@ -31,6 +31,7 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
     html { scroll-behavior: smooth; }
 
     body {
@@ -195,6 +196,141 @@
     tbody tr:nth-child(even) td { background: var(--gold-light); }  /* Beige */
     tbody tr:hover td { background: #f3e7d4; }
 
+    /* ─── JSON view: hierarchical lemma tables ──────────────────── */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--rule);
+      animation: fadeUp 0.6s ease 0.12s both;
+    }
+    .tab {
+      font-family: var(--font-meta);
+      font-size: 15px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--ink-soft);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 9px 18px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tab:hover { color: var(--gold); }
+    .tab.active { color: var(--ink); border-bottom-color: var(--gold); }
+    .tab em { font-style: italic; }
+
+    .hint {
+      font-family: var(--font-meta);
+      font-size: 15px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--ink-soft);
+      margin-bottom: 14px;
+    }
+    .bulk-wrap { display: flex; gap: 8px; }
+    .bulk {
+      font-family: var(--font-meta);
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--ink-soft);
+      background: var(--parchment);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .bulk:hover {
+      color: var(--gold);
+      border-color: rgba(140, 106, 74, 0.55);
+      background: #f9f4ec;
+    }
+
+    tr.figure-row { cursor: pointer; }
+    tr.figure-row td { background: var(--warm-white); }
+    tr.figure-row.alt td { background: var(--gold-light); }
+    tr.figure-row:hover td { background: #f3e7d4; }
+    tr.figure-row.open td { background: #f3e7d4; }
+    td.twisty {
+      width: 1.4em;
+      padding-right: 0;
+      color: var(--gold);
+      font-size: 11px;
+      user-select: none;
+    }
+    td.figure-name { font-weight: 500; }
+
+    tr.detail-row > td {
+      background: var(--parchment);
+      padding: 4px 16px 18px 46px;
+    }
+    table.detail {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+      background: none;
+    }
+    table.detail th {
+      font-family: var(--font-meta);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: left;
+      color: var(--ink-faint);
+      background: none;
+      padding: 8px 12px 6px;
+      border-bottom: 1px solid var(--rule);
+      cursor: default;
+      white-space: nowrap;
+    }
+    table.detail td {
+      padding: 7px 12px;
+      color: var(--ink-mid);
+      background: none;
+      vertical-align: top;
+    }
+    table.detail td.numeric { text-align: right; font-variant-numeric: tabular-nums; }
+    table.detail tr + tr td { border-top: 1px solid rgba(140, 106, 74, 0.12); }
+    table.detail td.naming { font-style: italic; }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--font-meta);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 9px;
+      border-radius: 2px;
+      color: var(--light-text);
+      white-space: nowrap;
+    }
+    .badge-narrator     { background: var(--navy); }
+    .badge-speech       { background: var(--gold); }
+    .badge-self         { background: var(--auxiliary); }
+    .badge-unattributed { background: var(--ink-faint); }
+
+    .summary {
+      font-family: var(--font-meta);
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--ink-soft);
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .summary strong {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-style: italic;
+      color: var(--gold);
+    }
+
     /* ─── States ────────────────────────────────────────────────── */
     .state {
       font-family: var(--font-meta);
@@ -266,8 +402,16 @@
 
   <div class="controls">
     <input type="text" class="search" id="search" placeholder="Filter …" aria-label="Filter table" />
+    <span class="bulk-wrap" id="bulk-wrap" hidden>
+      <button type="button" class="bulk" id="expand-all">Expand all</button>
+      <button type="button" class="bulk" id="collapse-all">Collapse all</button>
+    </span>
     <span class="caption" id="caption"></span>
   </div>
+
+  <div class="tabs" id="tabs" hidden></div>
+  <p class="summary" id="summary" hidden></p>
+  <p class="hint" id="hint" hidden></p>
 
   <div class="table-wrap">
     <div class="state" id="state">Lade Daten …</div>
@@ -289,19 +433,32 @@
   'use strict';
 
   // ─── Query-Parameter lesen ──────────────────────────────────────
-  // Aufruf:  table.html?csv=<pfad>&title=<titel>&desc=<beschreibung>&eyebrow=<label>
-  const params  = new URLSearchParams(window.location.search);
-  const csvPath  = params.get('csv')     || 'beispiel_tabelle.csv';
-  const title    = params.get('title')   || 'CSV-Tabelle';
+  // CSV :  table.html?csv=<pfad>&title=<titel>&desc=<beschreibung>&eyebrow=<label>
+  // JSON:  table.html?json=<pfad>[&title=…&desc=…&eyebrow=…]
+  //        erwartet die Ausgabe der Lemma-Suche: {book, scope, lemmas:[…]}
+  //        Titel und Untertitel werden dort aus den Daten gebaut, wenn sie
+  //        nicht als Parameter mitgegeben sind.
+  const params   = new URLSearchParams(window.location.search);
+  const jsonPath = params.get('json');
+  const csvPath  = params.get('csv') || (jsonPath ? '' : 'beispiel_tabelle.csv');
+  const title    = params.get('title')   || (jsonPath ? '' : 'CSV-Tabelle');
   const desc     = params.get('desc')    || '';
-  const eyebrow  = params.get('eyebrow') || 'Tabelle';
+  const eyebrow  = params.get('eyebrow') || (jsonPath ? 'Lemma search' : 'Tabelle');
 
-  document.title = title + ' · Naming Poetics of Middle High German Epic';
   document.getElementById('eyebrow').textContent = eyebrow;
-  document.getElementById('title').innerHTML = title;          // erlaubt <em> im Titel
+  const titleEl = document.getElementById('title');
   const sub = document.getElementById('subtitle');
-  if (desc) { sub.textContent = desc; } else { sub.remove(); }
-  document.getElementById('download').href = csvPath;
+  if (title) {
+    document.title = title + ' · Naming Poetics of Middle High German Epic';
+    titleEl.innerHTML = title;                                 // erlaubt <em> im Titel
+  }
+  if (desc) { sub.textContent = desc; }
+
+  const downloadEl = document.getElementById('download');
+  downloadEl.href = jsonPath || csvPath;
+  if (jsonPath) { downloadEl.textContent = 'Download JSON'; }
+
+  let searchHandler = render;      // wird in der JSON-Ansicht umgehaengt
 
   const stateEl  = document.getElementById('state');
   const tableEl  = document.getElementById('table');
@@ -416,6 +573,8 @@
   }
 
   // ─── CSV laden ──────────────────────────────────────────────────
+  function loadCsv(csvPath) {
+  if (!desc) { sub.remove(); }
   Papa.parse(csvPath, {
     download: true,
     header: true,
@@ -446,9 +605,435 @@
         'or via your hosting).<br><br><em>' + (err && err.message ? err.message : '') + '</em>';
     }
   });
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  JSON view — hierarchical tables from the lemma search
+  //
+  //  Expects {book, scope, lemmas:[{lemma, total_mentions, figure_count,
+  //  figures:[{figure, mentions, by_narrator, …, occurrences:[…]}]}]}.
+  //  A figure row can be unfolded to show its individual mentions, so the
+  //  evidence behind every number stays one click away.
+  // ═══════════════════════════════════════════════════════════════
+  const SCOPE_LABELS = {
+    naming_variants: 'naming variants',
+    epithets:        'epithets',
+    both:            'naming variants and epithets'
+  };
+  const ATTRIBUTION = {
+    narrator:      { label: 'Narrator',      cls: 'badge-narrator' },
+    figure_speech: { label: 'Figure speech', cls: 'badge-speech' },
+    self_naming:   { label: 'Self-naming',   cls: 'badge-self' },
+    unattributed:  { label: 'Unattributed',  cls: 'badge-unattributed' }
+  };
+  const CATEGORY = {
+    naming_variant: 'Naming variant',
+    epithet:        'Epithet',
+    both:           'Both'
+  };
+
+  const tabsEl    = document.getElementById('tabs');
+  const hintEl    = document.getElementById('hint');
+  const summaryEl = document.getElementById('summary');
+  const bulkEl    = document.getElementById('bulk-wrap');
+
+  let payload       = null;
+  let hasComparison = false;   // only from two lemmas onwards
+  let activeTab     = 0;       // 0 = comparison when present, else the lemma
+  let expanded      = new Set();
+  let jsonSortKey   = 'mentions';
+  let jsonSortDir   = -1;      // -1 = descending
+
+  function figureColumns(scope) {
+    const cols = [
+      { key: 'figure',           label: 'Named figure',  numeric: false },
+      { key: 'mentions',         label: 'Mentions',      numeric: true  },
+      { key: 'by_narrator',      label: 'Narrator',      numeric: true  },
+      { key: 'in_figure_speech', label: 'Figure speech', numeric: true  },
+      { key: 'self_naming',      label: 'Self-naming',   numeric: true  }
+    ];
+    if (scope === 'both') {
+      cols.push({ key: 'as_naming_variant', label: 'As naming variant', numeric: true });
+      cols.push({ key: 'as_epithet',        label: 'As epithet',        numeric: true });
+    }
+    cols.push({ key: 'share_percent', label: 'Share (%)', numeric: true });
+    return cols;
+  }
+
+  function comparisonColumns() {
+    const cols = [{ key: 'figure', label: 'Named figure', numeric: false }];
+    payload.lemmas.forEach(function (lemma, i) {
+      cols.push({ key: 'l' + i, label: lemma.lemma, numeric: true });
+    });
+    cols.push({ key: 'total', label: 'Total', numeric: true });
+    return cols;
+  }
+
+  function currentLemma() {
+    return payload.lemmas[hasComparison ? activeTab - 1 : activeTab];
+  }
+
+  function inComparison() {
+    return hasComparison && activeTab === 0;
+  }
+
+  // ─── Head with sort arrows ──────────────────────────────────────
+  function buildJsonHead(cols, leadingTwisty) {
+    theadRow.innerHTML = '';
+
+    if (leadingTwisty) {
+      const th = document.createElement('th');
+      th.style.cursor = 'default';
+      th.innerHTML = '&nbsp;';
+      theadRow.appendChild(th);
+    }
+
+    cols.forEach(function (col) {
+      const th = document.createElement('th');
+      th.textContent = col.label;
+      if (col.numeric) th.classList.add('numeric');
+
+      const arrow = document.createElement('span');
+      arrow.className = 'arrow';
+      arrow.textContent = (jsonSortKey === col.key) ? (jsonSortDir === 1 ? '▲' : '▼') : '';
+      th.appendChild(arrow);
+
+      th.addEventListener('click', function () {
+        if (jsonSortKey === col.key) { jsonSortDir = -jsonSortDir; }
+        else { jsonSortKey = col.key; jsonSortDir = col.numeric ? -1 : 1; }
+        renderJson();
+      });
+
+      theadRow.appendChild(th);
+    });
+  }
+
+  function sortJsonRows(data, cols) {
+    const col = cols.filter(function (c) { return c.key === jsonSortKey; })[0];
+    if (!col) return data;
+
+    return data.slice().sort(function (a, b) {
+      if (col.numeric) {
+        return ((Number(a[col.key]) || 0) - (Number(b[col.key]) || 0)) * jsonSortDir;
+      }
+      return String(a[col.key] || '').localeCompare(String(b[col.key] || ''), 'de') * jsonSortDir;
+    });
+  }
+
+  function filterByFigure(data) {
+    const q = search.value.trim().toLowerCase();
+    if (!q) return data;
+    return data.filter(function (row) {
+      return String(row.figure || '').toLowerCase().includes(q);
+    });
+  }
+
+  // ─── Detail table: the individual mentions of one figure ────────
+  function buildDetailTable(figure, scope) {
+    const table = document.createElement('table');
+    table.className = 'detail';
+
+    const headers = ['Verse', 'Attribution', 'Namer', 'Naming'];
+    if (scope === 'both') headers.push('Category');
+
+    const thead = document.createElement('thead');
+    const headRow = document.createElement('tr');
+    headers.forEach(function (label, i) {
+      const th = document.createElement('th');
+      th.textContent = label;
+      if (i === 0) th.classList.add('numeric');
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    const tb = document.createElement('tbody');
+    (figure.occurrences || []).forEach(function (occ) {
+      const tr = document.createElement('tr');
+
+      const verse = document.createElement('td');
+      verse.className = 'numeric';
+      verse.textContent = occ.verse || '';
+      tr.appendChild(verse);
+
+      const attribution = document.createElement('td');
+      const info = ATTRIBUTION[occ.attribution] ||
+                   { label: occ.attribution || '', cls: 'badge-unattributed' };
+      const badge = document.createElement('span');
+      badge.className = 'badge ' + info.cls;
+      badge.textContent = info.label;
+      attribution.appendChild(badge);
+      tr.appendChild(attribution);
+
+      const namer = document.createElement('td');
+      namer.textContent = occ.namer || '—';
+      tr.appendChild(namer);
+
+      const naming = document.createElement('td');
+      naming.className = 'naming';
+      naming.textContent = occ.naming || '';
+      tr.appendChild(naming);
+
+      if (scope === 'both') {
+        const category = document.createElement('td');
+        category.textContent = CATEGORY[occ.category] || occ.category || '';
+        tr.appendChild(category);
+      }
+
+      tb.appendChild(tr);
+    });
+
+    table.appendChild(tb);
+    return table;
+  }
+
+  // ─── Figure view of one lemma ───────────────────────────────────
+  function renderFigures() {
+    const lemma = currentLemma();
+    const scope = payload.scope;
+    const cols  = figureColumns(scope);
+
+    summaryEl.hidden = false;
+    summaryEl.innerHTML = '';
+    summaryEl.appendChild(document.createTextNode('The lemma '));
+    const strong = document.createElement('strong');
+    strong.textContent = lemma.lemma;
+    summaryEl.appendChild(strong);
+    summaryEl.appendChild(document.createTextNode(
+      ' names ' + lemma.figure_count + (lemma.figure_count === 1 ? ' figure' : ' figures') +
+      ' in ' + lemma.total_mentions + (lemma.total_mentions === 1 ? ' mention' : ' mentions') +
+      ' — searched in the ' + (SCOPE_LABELS[scope] || scope) + ' of the ' + payload.book + '.'
+    ));
+
+    hintEl.hidden = false;
+    hintEl.textContent = 'Click a figure to show its individual mentions.';
+    bulkEl.hidden = false;
+
+    buildJsonHead(cols, true);
+
+    const data = sortJsonRows(filterByFigure(lemma.figures), cols);
+    tbody.innerHTML = '';
+    const frag = document.createDocumentFragment();
+
+    data.forEach(function (figure, index) {
+      const isOpen = expanded.has(figure.figure);
+
+      const tr = document.createElement('tr');
+      tr.className = 'figure-row' + (index % 2 ? ' alt' : '') + (isOpen ? ' open' : '');
+
+      const twisty = document.createElement('td');
+      twisty.className = 'twisty';
+      twisty.textContent = isOpen ? '▼' : '▶';
+      tr.appendChild(twisty);
+
+      cols.forEach(function (col) {
+        const td = document.createElement('td');
+        td.textContent = figure[col.key] !== undefined ? figure[col.key] : '';
+        if (col.numeric) td.classList.add('numeric');
+        if (col.key === 'figure') td.classList.add('figure-name');
+        tr.appendChild(td);
+      });
+
+      tr.addEventListener('click', function () {
+        if (expanded.has(figure.figure)) { expanded.delete(figure.figure); }
+        else { expanded.add(figure.figure); }
+        renderJson();
+      });
+
+      frag.appendChild(tr);
+
+      if (isOpen) {
+        const detailRow = document.createElement('tr');
+        detailRow.className = 'detail-row';
+        const cell = document.createElement('td');
+        cell.colSpan = cols.length + 1;
+        cell.appendChild(buildDetailTable(figure, scope));
+        detailRow.appendChild(cell);
+        frag.appendChild(detailRow);
+      }
+    });
+
+    tbody.appendChild(frag);
+
+    const total = lemma.figures.length;
+    caption.textContent = (data.length === total)
+      ? total + (total === 1 ? ' figure' : ' figures')
+      : data.length + ' of ' + total + ' figures';
+  }
+
+  // ─── Comparison of all lemmas ───────────────────────────────────
+  function renderComparison() {
+    const cols = comparisonColumns();
+
+    summaryEl.hidden = false;
+    summaryEl.textContent =
+      'Mentions per figure for ' + payload.lemmas.length + ' lemmas in the ' + payload.book +
+      ', searched in the ' + (SCOPE_LABELS[payload.scope] || payload.scope) +
+      '. The first row counts the whole work, independent of the individual figures.';
+
+    hintEl.hidden = true;
+    bulkEl.hidden = true;
+
+    buildJsonHead(cols, false);
+
+    // One row per figure, plus the totals of the whole work
+    const byFigure = {};
+    payload.lemmas.forEach(function (lemma, i) {
+      lemma.figures.forEach(function (figure) {
+        const row = byFigure[figure.figure] ||
+                    (byFigure[figure.figure] = { figure: figure.figure, total: 0 });
+        row['l' + i] = figure.mentions;
+        row.total += figure.mentions;
+      });
+    });
+
+    const rows = Object.keys(byFigure).map(function (name) {
+      const row = byFigure[name];
+      payload.lemmas.forEach(function (lemma, i) {
+        if (row['l' + i] === undefined) row['l' + i] = 0;
+      });
+      return row;
+    });
+
+    tbody.innerHTML = '';
+    const frag = document.createDocumentFragment();
+
+    const totalsRow = document.createElement('tr');
+    totalsRow.className = 'figure-row';
+    const totalsCell = document.createElement('td');
+    totalsCell.className = 'figure-name';
+    totalsCell.textContent = 'All figures';
+    totalsRow.appendChild(totalsCell);
+
+    let grandTotal = 0;
+    payload.lemmas.forEach(function (lemma) {
+      const td = document.createElement('td');
+      td.className = 'numeric';
+      td.textContent = lemma.total_mentions;
+      grandTotal += lemma.total_mentions;
+      totalsRow.appendChild(td);
+    });
+    const grandCell = document.createElement('td');
+    grandCell.className = 'numeric';
+    grandCell.textContent = grandTotal;
+    totalsRow.appendChild(grandCell);
+    totalsRow.style.fontWeight = '500';
+    frag.appendChild(totalsRow);
+
+    sortJsonRows(filterByFigure(rows), cols).forEach(function (row, index) {
+      const tr = document.createElement('tr');
+      tr.className = 'figure-row' + (index % 2 ? '' : ' alt');
+      tr.style.cursor = 'default';
+      cols.forEach(function (col) {
+        const td = document.createElement('td');
+        td.textContent = row[col.key] !== undefined ? row[col.key] : '';
+        if (col.numeric) td.classList.add('numeric');
+        if (col.key === 'figure') td.classList.add('figure-name');
+        tr.appendChild(td);
+      });
+      frag.appendChild(tr);
+    });
+
+    tbody.appendChild(frag);
+    caption.textContent = rows.length + (rows.length === 1 ? ' figure' : ' figures');
+  }
+
+  function renderJson() {
+    renderTabs();
+    if (inComparison()) { renderComparison(); } else { renderFigures(); }
+  }
+
+  function renderTabs() {
+    if (!hasComparison) { tabsEl.hidden = true; return; }
+
+    tabsEl.hidden = false;
+    tabsEl.innerHTML = '';
+
+    const labels = ['Comparison'].concat(payload.lemmas.map(function (l) { return l.lemma; }));
+    labels.forEach(function (label, index) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'tab' + (index === activeTab ? ' active' : '');
+
+      if (index === 0) {
+        button.textContent = label;
+      } else {
+        const em = document.createElement('em');
+        em.textContent = label;
+        button.appendChild(em);
+      }
+
+      button.addEventListener('click', function () {
+        activeTab = index;
+        expanded.clear();
+        jsonSortKey = (index === 0) ? 'total' : 'mentions';
+        jsonSortDir = -1;
+        renderJson();
+      });
+
+      tabsEl.appendChild(button);
+    });
+  }
+
+  // ─── JSON laden ─────────────────────────────────────────────────
+  function loadJson(path) {
+    fetch(path)
+      .then(function (response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+      })
+      .then(function (data) {
+        if (!data || !Array.isArray(data.lemmas) || !data.lemmas.length) {
+          stateEl.innerHTML = 'No lemma data found in <code>' + path + '</code>.';
+          stateEl.classList.add('error');
+          return;
+        }
+
+        payload = data;
+        hasComparison = data.lemmas.length > 1;
+        activeTab = 0;
+        jsonSortKey = hasComparison ? 'total' : 'mentions';
+
+        if (!title) {
+          const names = data.lemmas.map(function (l) { return l.lemma; });
+          titleEl.innerHTML = 'Figures named by <em>' + names.join('</em>, <em>') + '</em>';
+          document.title = 'Lemma search · Naming Poetics of Middle High German Epic';
+        }
+        if (!desc) {
+          sub.textContent = data.book + ' · ' + (SCOPE_LABELS[data.scope] || data.scope);
+        }
+
+        searchHandler = renderJson;
+        stateEl.hidden = true;
+        tableEl.hidden = false;
+        renderJson();
+      })
+      .catch(function (err) {
+        stateEl.classList.add('error');
+        stateEl.innerHTML =
+          'The file <code>' + path + '</code> could not be loaded.<br><br>' +
+          'Most common reason: The page was opened directly via <code>file://</code>. ' +
+          'For security reasons, JSON files can only be loaded if the page is served via a ' +
+          'server (e.g., locally <code>python3 -m http.server</code>, ' +
+          'or via your hosting).<br><br><em>' + (err && err.message ? err.message : '') + '</em>';
+      });
+  }
+
+  document.getElementById('expand-all').addEventListener('click', function () {
+    if (!payload || inComparison()) return;
+    currentLemma().figures.forEach(function (f) { expanded.add(f.figure); });
+    renderJson();
+  });
+  document.getElementById('collapse-all').addEventListener('click', function () {
+    expanded.clear();
+    renderJson();
+  });
 
   // ─── Suche live ─────────────────────────────────────────────────
-  search.addEventListener('input', render);
+  search.addEventListener('input', function () { searchHandler(); });
+
+  // ─── Quelle waehlen ─────────────────────────────────────────────
+  if (jsonPath) { loadJson(jsonPath); } else { loadCsv(csvPath); }
 })();
 </script>
 </body>

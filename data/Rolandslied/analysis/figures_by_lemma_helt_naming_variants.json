@@ -1,0 +1,823 @@
+{
+  "book": "Rolandslied",
+  "scope": "naming_variants",
+  "lemmas": [
+    {
+      "lemma": "helt",
+      "total_mentions": 78,
+      "figure_count": 22,
+      "figures": [
+        {
+          "figure": "Ruolant",
+          "mentions": 34,
+          "by_narrator": 31,
+          "in_figure_speech": 3,
+          "self_naming": 0,
+          "as_naming_variant": 34,
+          "as_epithet": 0,
+          "share_percent": 44,
+          "occurrences": [
+            {
+              "verse": "109",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Ruolant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "146",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "305",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "867",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant.",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "911",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "1140",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "1364",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "1985",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "den helt Rovlanden",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "3180",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt guote",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "3224",
+              "attribution": "figure_speech",
+              "namer": "Karl",
+              "naming": "helt",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "3290",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "deme helede",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "3292",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "3340",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt iunge",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "3369",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "3871",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "3961",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "4077",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "4095",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "4172",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "4195",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rolant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5352",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "den helt Rovlanten",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5586",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5650",
+              "attribution": "figure_speech",
+              "namer": "Margarîz",
+              "naming": "der helt guot",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5900",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6210",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der mare helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6301",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6317",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6366",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6481",
+              "attribution": "figure_speech",
+              "namer": "Olivier",
+              "naming": "helt",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6540",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6735",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6752",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6796",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt mare",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6892",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Rovlant",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Olivier",
+          "mentions": 14,
+          "by_narrator": 11,
+          "in_figure_speech": 3,
+          "self_naming": 0,
+          "as_naming_variant": 14,
+          "as_epithet": 0,
+          "share_percent": 18,
+          "occurrences": [
+            {
+              "verse": "937",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "Oliuir der helt guot",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "4232",
+              "attribution": "figure_speech",
+              "namer": "Falsaron",
+              "naming": "helt",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "4234",
+              "attribution": "figure_speech",
+              "namer": "Falsaron",
+              "naming": "helt",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "4272",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Oliuir",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5069",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "dem helde Oliuire",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5081",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Oliuir",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5381",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Oliuir",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5686",
+              "attribution": "figure_speech",
+              "namer": "Margarîz",
+              "naming": "ain helt snellen",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5881",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Oliuir",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6005",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Oliuir",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6196",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Oliuir",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6375",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "ain helt uil ziren",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6387",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Oliuir",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6480",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Oliuir",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Turpîn",
+          "mentions": 4,
+          "by_narrator": 1,
+          "in_figure_speech": 3,
+          "self_naming": 0,
+          "as_naming_variant": 4,
+          "as_epithet": 0,
+          "share_percent": 5,
+          "occurrences": [
+            {
+              "verse": "3970",
+              "attribution": "figure_speech",
+              "namer": "Ruolant",
+              "naming": "helt Turpin",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "4394",
+              "attribution": "figure_speech",
+              "namer": "Cursabile",
+              "naming": "helt",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5404",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt mare",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "6653",
+              "attribution": "figure_speech",
+              "namer": "Ruolant",
+              "naming": "du helt mare",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Naimes",
+          "mentions": 3,
+          "by_narrator": 0,
+          "in_figure_speech": 3,
+          "self_naming": 0,
+          "as_naming_variant": 3,
+          "as_epithet": 0,
+          "share_percent": 4,
+          "occurrences": [
+            {
+              "verse": "2778",
+              "attribution": "figure_speech",
+              "namer": "Genelûn",
+              "naming": "helt",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "2782",
+              "attribution": "figure_speech",
+              "namer": "Genelûn",
+              "naming": "helt",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "2805",
+              "attribution": "figure_speech",
+              "namer": "Genelûn",
+              "naming": "helt palt",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Samsôn",
+          "mentions": 3,
+          "by_narrator": 3,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 3,
+          "as_epithet": 0,
+          "share_percent": 4,
+          "occurrences": [
+            {
+              "verse": "3272",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "Samson ain helt snel",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "4625",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Samson",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5101",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Samson",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Genelûn",
+          "mentions": 2,
+          "by_narrator": 0,
+          "in_figure_speech": 2,
+          "self_naming": 0,
+          "as_naming_variant": 2,
+          "as_epithet": 0,
+          "share_percent": 3,
+          "occurrences": [
+            {
+              "verse": "1497",
+              "attribution": "figure_speech",
+              "namer": "Karl",
+              "naming": "helt ture",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "2333",
+              "attribution": "figure_speech",
+              "namer": "Marsilie",
+              "naming": "helt",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Gergers",
+          "mentions": 2,
+          "by_narrator": 2,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 2,
+          "as_epithet": 0,
+          "share_percent": 3,
+          "occurrences": [
+            {
+              "verse": "4537",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "Egeriers, ain helt chuone unt snel",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "5929",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "den helt gesunden",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Tirrich",
+          "mentions": 2,
+          "by_narrator": 2,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 2,
+          "as_epithet": 0,
+          "share_percent": 3,
+          "occurrences": [
+            {
+              "verse": "8947",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Tirrich",
+              "category": "naming_variant"
+            },
+            {
+              "verse": "8966",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Tirrich",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Anshelm",
+          "mentions": 1,
+          "by_narrator": 1,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "126",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "ein helt chuone unde snel",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Antel",
+          "mentions": 1,
+          "by_narrator": 1,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "8256",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "ain helt chuone unt snel",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Ekerîch",
+          "mentions": 1,
+          "by_narrator": 1,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "5336",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "ain helt herlichen",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Gebewîn",
+          "mentions": 1,
+          "by_narrator": 1,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "8199",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Gebewin",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Grandon",
+          "mentions": 1,
+          "by_narrator": 0,
+          "in_figure_speech": 1,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "5222",
+              "attribution": "figure_speech",
+              "namer": "Marsilie",
+              "naming": "helt",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Haimunt",
+          "mentions": 1,
+          "by_narrator": 1,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "8229",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Haimunt",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Hatte",
+          "mentions": 1,
+          "by_narrator": 1,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "4889",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Hatte",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Mantel",
+          "mentions": 1,
+          "by_narrator": 1,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "1627",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "ein helt chuone unde snel",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Maximîn",
+          "mentions": 1,
+          "by_narrator": 1,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "4293",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Maximin",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Oigir",
+          "mentions": 1,
+          "by_narrator": 0,
+          "in_figure_speech": 1,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "7799",
+              "attribution": "figure_speech",
+              "namer": "Karl",
+              "naming": "du helt Oigir",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Regenfrit",
+          "mentions": 1,
+          "by_narrator": 1,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "4923",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "ain helt uil guot",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Richart",
+          "mentions": 1,
+          "by_narrator": 1,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "8245",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "der helt Richart",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Walther",
+          "mentions": 1,
+          "by_narrator": 0,
+          "in_figure_speech": 1,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "3372",
+              "attribution": "figure_speech",
+              "namer": "Ruolant",
+              "naming": "helt mere",
+              "category": "naming_variant"
+            }
+          ]
+        },
+        {
+          "figure": "Witel",
+          "mentions": 1,
+          "by_narrator": 1,
+          "in_figure_speech": 0,
+          "self_naming": 0,
+          "as_naming_variant": 1,
+          "as_epithet": 0,
+          "share_percent": 1,
+          "occurrences": [
+            {
+              "verse": "4128",
+              "attribution": "narrator",
+              "namer": null,
+              "naming": "ain helt chune unt snel",
+              "category": "naming_variant"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
