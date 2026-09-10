@@ -2,7 +2,7 @@
 
 ## Semi-Automatic Collection and Analysis of Naming Variants in Middle High German Epic
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22248457.svg)](https://doi.org/10.5281/zenodo.22248457)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21914259.svg)](https://doi.org/10.5281/zenodo.21914259)
 
 ------------------------------------------------------------------------
 
@@ -256,6 +256,7 @@ transparent, research-oriented infrastructure for philological analysis.
 The analysis module includes:
 
 -   Wordlists
+-   Lemma search (figures named by a given lemma, split by attribution)
 -   Keyword analysis (inspired by AntConc; Anthony 2024)
 -   Figure profiles
 -   Collocation analysis
@@ -273,7 +274,9 @@ to other TEI-based corpora.
 
 ## Citation
 
-Beutel-Thurow, L. (2026). Naming-analysis (Version v0.2.2-beta) [Computer software]. https://doi.org/10.5281/zenodo.22248457
+Beutel-Thurow, L. (2026). Naming-analysis [Computer software]. https://doi.org/10.5281/zenodo.21914259
+
+This DOI represents all versions and always resolves to the latest release. To cite one specific version, use its own DOI from the [Zenodo record](https://doi.org/10.5281/zenodo.21914259).
 
 ------------------------------------------------------------------------
 
