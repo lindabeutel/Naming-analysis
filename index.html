@@ -12,6 +12,7 @@
       --ink:        #1a1410;
       --ink-mid:    #3a2e26;
       --ink-soft:   #6b5c4e;
+      --auxiliary:  #A3A39A;   /* AUXILIARY gray – lemma tags */
       --ink-faint:  #a89880;
       --parchment:  #f7f2eb;
       --warm-white: #fdfaf5;
@@ -153,6 +154,17 @@
       background: var(--navy);
       color: var(--warm-white);
       border-color: var(--navy);
+    }
+    .filter-tag.type-lemma {
+      background: rgba(163,163,154,0.14);
+      color: var(--ink-soft);
+      border-color: rgba(163,163,154,0.45);
+    }
+    .filter-tag.type-lemma:hover,
+    .filter-tag.type-lemma.active {
+      background: var(--auxiliary);
+      color: var(--warm-white);
+      border-color: var(--auxiliary);
     }
     .filter-tag.type-all {
       background: transparent;
@@ -303,6 +315,11 @@
       background: rgba(47,74,109,0.08);
       color: var(--navy);
       border: 1px solid rgba(47,74,109,0.2);
+    }
+    .tag-lemma {
+      background: rgba(163,163,154,0.14);
+      color: var(--ink-soft);
+      border: 1px solid rgba(163,163,154,0.45);
     }
 
     /* ─── Footer ────────────────────────────────────────────────── */
@@ -531,6 +548,20 @@
         <span class="card-arrow">→</span>
       </a>
 
+      <a class="card"
+         href="table.html?json=data/Rolandslied/analysis/figures_by_lemma_helt_naming_variants.json"
+         target="_blank" rel="noopener"
+         data-tags="helt rolandslied lemma-overview">
+        <p class="card-type">Table · Lemma overview</p>
+        <p class="card-title">List of figures named by lemma <em>helt</em></p>
+        <p class="card-desc">Lemma overview.</p>
+        <div>
+          <span class="tag tag-lemma">helt</span>
+          <span class="tag tag-book">Rolandslied</span>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
     </div>
   </section>
 
@@ -555,16 +586,19 @@
     card.querySelectorAll('.tag').forEach(function (span) {
       const label = span.textContent.trim();
       const key   = label.toLowerCase().replace(/\s+/g, '-');
-      const type  = span.classList.contains('tag-figure') ? 'figure' : 'book';
+      const type  = span.classList.contains('tag-figure') ? 'figure'
+                  : span.classList.contains('tag-lemma')  ? 'lemma'
+                  : 'book';
       if (!tagMeta[key]) tagMeta[key] = { label, type };
     });
   });
 
-  // Sort: books first, then figures; alphabetical within each group
+  // Sort: books first, then figures, then lemmas; alphabetical within each group
+  const TYPE_ORDER = { book: 0, figure: 1, lemma: 2 };
   const sortedKeys = Object.keys(tagMeta).sort(function (a, b) {
-    const ta = tagMeta[a].type, tb = tagMeta[b].type;
+    const ta = TYPE_ORDER[tagMeta[a].type], tb = TYPE_ORDER[tagMeta[b].type];
     if (ta === tb) return tagMeta[a].label.localeCompare(tagMeta[b].label, 'de');
-    return ta === 'book' ? -1 : 1;
+    return ta - tb;
   });
 
   // ─── Build filter buttons ────────────────────────────────────────
